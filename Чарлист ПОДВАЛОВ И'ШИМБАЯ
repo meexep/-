@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>DnD Чарлист</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      padding: 30px;
+    }
+
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .stats {
+      border: solid 3px #797979;
+      border-radius: 3%;
+      background: #dadada78;
+      text-align: center;
+      padding-top: 0%;
+      margin-top: 5%;
+      padding-bottom: 3%;
+      padding-left: 3%;
+    }
+
+    .modifier {
+      margin-top: 20px;
+      font-size: 0, 9rem;
+    }
+
+    #profbonus {
+      width: 4rem;
+      text-align: center;
+      font-size: medium;
+    }
+
+    input[readonly] {
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      margin-top: 10px;
+    }
+
+    .row label {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.9rem;
+    }
+
+    .savetrow {
+      margin-left: 0px;
+      pointer-events: none;
+    }
+
+    .tooltip {
+      position: absolute;
+      background: #333;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      max-width: 250px;
+      word-wrap: break-word;
+      white-space: normal;
+      z-index: 999;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    #abilities-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .ability {
+      flex: 1 1 calc(33.333% - 10px);
+      /* 3 в ряд, с учётом gap */
+      box-sizing: border-box;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #fafafa;
+      position: relative;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Лист персонажа</h1>
+
+    <label>ФИО "Кличка":
+      <input type="text" id="name">
+    </label>
+
+    <label>Раса:
+      <select id="race" onchange="applyBonuses(); updateAll()">
+        <option value="">-- выбери расу --</option>
+        <option value="человек">Человек</option>
+        <option value="деген">Дегенерат</option>
+        <option value="зверолюд">Зверолюд</option>
+        <option value="рептилоид">Рептилоид</option>
+        <option value="гоблин">Гоблин</option>
+        <option value="орк">Орк</option>
+        <option value="эволюд">Эволюд</option>
+      </select>
+    </label>
+
+    <div class="row"><label>Класс:
+        <select id="class" onchange="updateSubclassOptions(); applyBonuses(); updateAll()">
+          <option value="">-- выбери класс --</option>
+          <option value="бомж">Бомж</option>
+          <option value="наёмник">Наёмник</option>
+          <option value="охранник">Охранник</option>
+          <option value="вор">Вор</option>
+          <option value="проститут">Проститут</option>
+          <option value="музыкант">Музыкант</option>
+          <option value="продавец">Продавец</option>
+          <option value="инженер">Инженер</option>
+          <option value="депутат">Депутат</option>
+        </select>
+      </label>
+
+      <div id="subclass-container" style="display: none;">
+        <label>Подкласс:
+          <select id="subclass" onchange="applyBonuses()">
+            <option value="">--выбери подкласс--</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="row">
+      <label>Мировоззрение:
+        <select id="alignment" style="width: 13rem; text-align: center;">
+          <option value="" style="background: #808080;">--моральные наклонности--</option>
+          <option value="lawful-good" style="background: #1e8507; color: #ffffff;">Законно Доброе</option>
+          <option value="neutral-good" style="background: #95d088;">Нейтрально Доброе</option>
+          <option value="chaotic-good" style="background: #30e208;">Хаотично Доброе</option>
+          <option value="lawful-neutral" style="background: #ffffff;">Законно Нейтральное</option>
+          <option value="true-neutral" style="background: #7d7d7d; color: #ffffff;">Истинно Нейтральное</option>
+          <option value="chaotic-neutral" style="background: #000000; color: #ffffff;">Хаотично Нейтральное</option>
+          <option value="lawful-evil" style="background: #850707; color: #ffffff;">Законно Злое</option>
+          <option value="neutral-evil" style="background: #d08888; color: #ffffff;">Нейтрально Злое</option>
+          <option value="chaotic-evil" style="background: #e60808; color: #ffffff;">Хаотично Злое</option>
+        </select>
+      </label>
+
+      <div id="background-container" style="display: none;">
+        <label>Предыстория:
+          <select id="background" onchange="applyBonuses()">
+            <option value="">--кем был?--</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="row"
+      style="border: 3px groove #dec85b; background: #dec85b64; width: 22rem; height: 5rem; border-radius: 4%; padding: 2%; padding-top: 0%;">
+      <label>
+        Уровень:
+        <input type="number" id="level" value="0" readonly
+          style="width: 2.5rem; text-align: center; font-size: medium; font-style: oblique; background: #bba741ac;">
+      </label>
+
+      <label>
+        Текущий опыт:
+        <input type="number" id="xp" value="-1" readonly
+          style="width: 5rem; text-align: center; background: #bba741ac;">
+      </label>
+
+      <label style="text-align: center;">
+        +Опыт:
+        <input type="number" id="xpToAdd" style="width: 5rem; text-align: center; background: #bba741ac;">
+      </label>
+      <button onclick="addXp(); toggleUpgradeButtons();"
+        style="border: 3px groove #dec85b; background: #bba641;">+</button>
+    </div>
+
+    <div
+      style="text-align: center; border: 3px groove #8a3c9059; background: #8a3c900d; width: 23rem; border-radius: 4%; padding: 1%; padding-top: 0%;">
+      <label
+        style="color: #d01818; background: #d0181833; width: 23rem; display: flex; align-items: baseline;">Здоровье:
+        <input type="number" id="hp" value="0" readonly
+          style="font-size: medium; background:#d01818; font-weight:700; color:#ffffff; width: 3rem; text-align: center;">
+        <label style="color: #d01818;">из</label>
+        <input type="number" id="maxHp" value="0" readonly
+          style="font-size: medium; background:#d018189f; font-weight:700; color:#ffffff; width: 3rem; text-align: center;">
+
+        <input type="number" id="hpToAdd" style="width: 3rem; background: #ff9696; text-align: right;"
+          placeholder="урон" style="width: 5rem; background: #ff9696; font-weight: 500; color: #ffffff;">
+        <button onclick="addHp()"
+          style="background: #ea7e7e; color: #380e0e; border: 2px groove #da8484;">Получить</button>
+      </label>
+
+      <label style="color: #52598f; background: #52598f48; width: 23rem;">Класс Брони(КБ):
+        <input type="number" id="ac" value="10"
+          style="background: #52598f; font-size: medium; width: 4rem; font-weight:700; color:#ffffff; width: 5rem; text-align: center;"
+          readonly>
+      </label>
+    </div>
+
+    <label style="color: #82eb0a;">Скорость:
+      <input type="number" id="spd" value="0"
+        style="width: 4rem; text-align: center; font-weight:700; font-size: medium; color: #4b5911; background: #82eb0a;"
+        readonly>
+    </label>
+
+    <div class="modifier">
+      <label style="color: #5f5d5a;">Бонус мастерства:
+        <input type="text" id="profbonus" value="+2" readonly style="background: #9a9692; width: 2rem;">
+      </label>
+    </div>
+
+    <div>Очки прокачки: <span id="upgradeLeft">0</span></div>
+
+
+    <div class="stats">
+      <h3 style="font-weight: bolder;">Х А Р А К Т Е Р И С Т И К И</h3>
+      <div class="row">
+        <label style="color: #4f4236; font-weight: bolder;">СИЛ: <span style="display: flex; gap: 6px;"><input
+              type="number" id="str" value="10" onchange="updateAll()" readonly
+              style="background: #4f4236; color: #f5f5f5; width: 2rem;"><button style="display: none;"
+              onclick="increaseStat('str');">+</button>
+            <input type="text" id="str_mod" readonly
+              style="background: #726252; text-align: center; color: #f5f5f5; font-weight: 700; width: 2rem;">
+            <input type="checkbox" id="str_save" onchange="updateAll" class="savetrow"></span></label>
+
+        <label style=" color: #5e7d5a; font-weight: bolder;">ЛОВ: <span style="display: flex; gap: 6px;"><input
+              type="number" id="dex" value="10" onchange="updateAll()" readonly
+              style="background: #5e7d5a; color: #f5f5f5; width: 2rem;"><button style="display: none;"
+              onclick="increaseStat('dex');">+</button>
+            <input type="text" id="dex_mod" readonly
+              style="background: #7c9e78; text-align: center; color: #f5f5f5; font-weight: 700; width: 2rem;">
+            <input type="checkbox" id="dex_save" onchange="updateAll" class="savetrow"></span></label>
+
+        <label style="color: #813b3b; font-weight: bolder;">ТЕЛ: <span style="display: flex; gap: 6px;"><input
+              type="number" id="con" value="10" onchange="updateAll()" readonly
+              style="background: #813b3b; color: #f5f5f5; width: 2rem;"><button style="display: none;"
+              onclick="increaseStat('con');">+</button>
+            <input type="text" id="con_mod" readonly
+              style="background: #9d5252; text-align: center; color: #f5f5f5; font-weight: 700; width: 2rem;">
+            <input type="checkbox" id="con_save" onchange="updateAll" class="savetrow"></span></label>
+      </div>
+
+      <div class="row">
+        <label style="color: #cd9a49; font-weight: bolder;">ИНТ: <span style="display: flex; gap: 6px;"><input
+              type="number" id="int" value="10" onchange="updateAll()" readonly
+              style="background: #cd9a49; color: #f5f5f5; width: 2rem;"><button style="display: none;"
+              onclick="increaseStat('int');">+</button>
+            <input type="text" id="int_mod" readonly
+              style="background: #d7a95d; text-align: center; color: #f5f5f5; font-weight: 700; width: 2rem;">
+            <input type="checkbox" id="int_save" onchange="updateAll" class="savetrow"></span></label>
+
+        <label style="color: #4a2470; font-weight: bolder;">МУД: <span style="display: flex; gap: 6px;"><input
+              type="number" id="wis" value="10" onchange="updateAll()" readonly
+              style="background: #4a2470; color: #f5f5f5; width: 2rem;"><button style="display: none;"
+              onclick="increaseStat('wis');">+</button>
+            <input type="text" id="wis_mod" readonly
+              style="background: #5e3587; text-align: center; color: #f5f5f5; font-weight: 700; width: 2rem;">
+            <input type="checkbox" id="wis_save" onchange="updateAll" class="savetrow"></span></label>
+
+        <label style="color: #374297; font-weight: bolder;">ХАР: <span style="display: flex; gap: 6px;"><input
+              type="number" id="chr" value="10" onchange="updateAll()" readonly
+              style="background: #374297; color: #f5f5f5; width: 2rem;"><button style="display: none;"
+              onclick="increaseStat('chr');">+</button>
+            <input type="text" id="chr_mod" readonly
+              style="background: #4e5ab0; text-align: center; color: #f5f5f5; font-weight: 700; width: 2rem;">
+            <input type="checkbox" id="chr_save" onchange="updateAll" class="savetrow"></span></label>
+      </div>
+    </div>
+
+    <h4 style="border: 1px solid #0000007f; padding: 1%; border-radius: 2%;">Навыки:
+      <div id="skills-list" class="row" style="margin-top: 0%;"></div>
+    </h4>
+
+
+    <div style="background: #0000000c;">
+      <h3>Умения и способности</h3>
+
+      <div id="abilities-list">
+        <div class="ability">
+          <input type="text" class="ability-name" placeholder="Название">
+          <textarea class="ability-desc" placeholder="Описание"></textarea>
+        </div>
+      </div>
+    </div>
+
+
+    <div style="background: #503a0627;">
+      <h3>Инвентарь:</h3>
+      <div id="inventory" class="row"></div>
+      <div id="inventory-weight" style="margin-top: 5px; font-size: 0.9rem;"></div>
+    </div>
+
+
+    <div style="background: #2dba0d2d;">
+      <h3 style="margin-top: 2rem;">Баланс</h3>
+      <div class="row" style="align-items: flex-end;">
+        <label>Подрубли (₽):
+          <input type="number" id="pdr" value="0" readonly
+            style="width: 7rem; text-align: center; font-weight: bold; background: #cfcfcf;">
+        </label>
+        <label style="margin-left: 1rem;">Изменить:
+          <input type="number" id="pdrChange" style="width: 5rem; text-align: center; background: #eaeaea;">
+        </label>
+        <button onclick="changePDR()" style="height: 2.4rem; background: #b8ffba; font-weight: bold;">⇅</button>
+      </div>
+    </div>
+
+
+  </div>
+
+
+  <script>
+
+    let activeBonusesSources = [];
+
+    const races = {
+      человек: {
+        abilities: ['versatility'],
+        bonuses: { str: 1, dex: 1, con: 1, int: 1, wis: 1, chr: 1, spd: 10, },
+        backgrounds: ['артист', 'бандит', 'бедняк', 'беспризорник', 'бизнесмен', 'блогер', 'богач', 'бунтарь', 'герой', 'горожанин', 'деревенщина', 'дикарь', 'лох', 'маньяк', 'мудрец', 'обворованный', 'опустившийся', 'помощник', 'преподаватель', 'преступник', 'путешественник', 'раб', 'работяга', 'ремесленник', 'священник', 'семьянин', 'силовик', 'солдат', 'студент', 'творец', 'устремлённый', 'фермер', 'физрук', 'художник', 'хулиган', 'шарлатан', 'шахтер',],
+      },
+      деген: {
+        abilities: ['defectiveness', 'dogEater'],
+        bonuses: { con: -2, int: -1, wis: 1, spd: 7, },
+        skills: ['animalHandling'],
+        backgrounds: ['бедняк', 'беспризорник', 'деревенщина', 'дикарь', 'лох', 'маньяк', 'мудрец', 'обворованный', 'опустившийся', 'помощник', 'преподаватель', 'преступник', 'раб', 'работяга', 'ремесленник', 'семьянин', 'творец', 'устремлённый', 'фермер', 'шарлатан',],
+      },
+      зверолюд: {
+        abilities: ['simplification', 'breakLeash'],
+        bonuses: { str: 1, con: 2, int: -2, wis: 3, chr: -4, spd: 9 },
+        saves: ['wis_save'],
+        skills: ['perception', 'survival'],
+        alignmentsForbidden: ['lawful-good', 'lawful-neutral', 'lawful-evil', 'chaotic-good', 'chaotic-neutral', 'chaotic-evil'],
+        backgrounds: ['бедняк', 'беспризорник', 'бунтарь', 'герой', 'дикарь', 'маньяк', 'мудрец', 'помощник', 'путешественник', 'раб', 'работяга', 'солдат', 'фермер', 'шахтер',],
+      },
+      рептилоид: {
+        abilities: ['prospects', 'adjustment'],
+        bonuses: { dex: 3, con: -3, int: 2, wis: 1, spd: 13 },
+        skills: ['acrobatics'],
+        saves: ['dex_save'],
+        backgrounds: ['артист', 'бандит', 'бедняк', 'беспризорник', 'бизнесмен', 'богач', 'герой', 'дикарь', 'лох', 'маньяк', 'мудрец', 'помощник', 'преподаватель', 'преступник', 'раб', 'работяга', 'ремесленник', 'священник', 'семьянин', 'солдат', 'студент', 'творец', 'устремлённый', 'фермер', 'физрук', 'художник', 'хулиган', 'шарлатан', 'шахтер',],
+      },
+      гоблин: {
+        abilities: ['nastiness', 'cleverEscape'],
+        bonuses: { dex: 2, con: -2, int: -2, chr: 1, spd: 9 },
+        saves: ['chr_save'],
+        skills: ['stealth'],
+        alignmentsForbidden: ['lawful-good', 'lawful-neutral', 'lawful-evil', 'neutral-good', 'true-neutral', 'neutral-evil'],
+        backgrounds: ['артист', 'бандит', 'бедняк', 'беспризорник', 'блогер', 'бунтарь', 'горожанин', 'деревенщина', 'дикарь', 'лох', 'маньяк', 'обворованный', 'опустившийся', 'преступник', 'путешественник', 'ремесленник', 'солдат', 'творец', 'фермер', 'художник', 'хулиган', 'шарлатан',],
+      },
+      орк: {
+        abilities: ['aggressiveness', 'burst'],
+        bonuses: { str: 2, con: 2, int: -2, spd: 11 },
+        skills: ['intimidation'],
+        saves: ['str_save'],
+        alignmentsForbidden: ['lawful-good'],
+        backgrounds: ['артист', 'бандит', 'бедняк', 'беспризорник', 'бизнесмен', 'блогер', 'богач', 'горожанин', 'деревенщина', 'дикарь', 'маньяк', 'обворованный', 'опустившийся', 'преподаватель', 'преступник', 'путешественник', 'раб', 'работяга', 'священник', 'семьянин', 'силовик', 'солдат', 'фермер', 'физрук', 'хулиган', 'шахтер',],
+      },
+      эволюд: {
+        abilities: ['arrogance', 'telekinesis'],
+        bonuses: { dex: 2, int: 3, wis: -2, chr: 1, spd: 12, pdr: 10000, },
+        skills: ['arcana', 'persuasion'],
+        saves: ['int_save'],
+        backgrounds: ['артист', 'бандит', 'бизнесмен', 'блогер', 'богач', 'герой', 'горожанин', 'лох', 'маньяк', 'мудрец', 'помощник', 'преподаватель', 'преступник', 'путешественник', 'ремесленник', 'семьянин', 'силовик', 'студент', 'творец', 'устремлённый', 'фермер', 'художник', 'хулиган', 'шарлатан',],
+      },
+    };
+
+    const classes = {
+      бомж: {
+        items: ['тёплая_куртка', 'мешок_объедков',],
+        bonuses: { dex: 1, con: 1, int: -1, wis: 1, chr: -2, pdr: 100 },
+        abilities: ['searchForFood'],
+        proficiency: ['Лёгкие доспехи', 'Простое оружие',],
+        skillsOption: ['perception', 'survival', 'intimidation', 'medicine', 'insight', 'animalHandling',],
+        skillsOptionCount: 1,
+        saves: ['wis_save'],
+        hpDie: 8,
+        backgrounds: ['опустившийся', 'обворованный'],
+      },
+      наёмник: {
+        items: ['булава', 'куртка', 'кинжал', 'скотч',],
+        bonuses: { str: 2, dex: 2, int: -2, wis: -1, chr: 1, pdr: 300 },
+        hpDie: 10,
+        proficiency: ['Лёгкие доспехи', 'Простое оружие',],
+        skillsOption: ['athletics', 'acrobatics', 'stealth', 'intimidation'],
+        skillsOptionCount: 2,
+        saves: ['str_save'],
+        abilities: ['secondWind'],
+        backgrounds: ['солдат', 'хулиган'],
+      },
+      охранник: {
+        items: ['дубинка', 'кираса', 'наручники', 'рация',],
+        bonuses: { str: 2, con: 2, int: -1, chr: -1, pdr: 400 },
+        hpDie: 12,
+        proficiency: ['Лёгкие доспехи', 'Средние доспехи', 'Тяжёлые доспехи', 'Простое оружие', 'Огнестрельное оружие',],
+        saves: ['con_save'],
+        skills: ['athletics'],
+        skillsOption: ['perception', 'intimidation',],
+        skillsOptionCount: 1,
+        abilities: ['tough'],
+        backgrounds: ['солдат', 'физрук'],
+      },
+      вор: {
+        items: ['чётки', 'кинжал', 'удавка', 'воровские_инструменты',],
+        bonuses: { str: -1, dex: 2, int: -1, pdr: 1000 },
+        hpDie: 8,
+        proficiency: ['Простое оружие', 'Огнестрельное оружие', 'Воровские инструменты',],
+        skillsOption: ['acrobatics', 'investigation', 'perception', 'intimidation', 'sleightOfHand', 'deception'],
+        skillsOptionCount: 1,
+        saves: ['dex_save'],
+        backgrounds: ['хулиган', 'бунтарь'],
+      },
+      проститут: {
+        items: ['стринги', 'плащ', 'кнут', 'презерватив',],
+        bonuses: { dex: 2, con: -2, int: -1, chr: 3, pdr: 2000 },
+        hpDie: 8,
+        proficiency: ['Лёгкие доспехи', 'Боевые посохи', 'Кнуты',],
+        skills: ['deception'],
+        skillsOption: ['acrobatics', 'sleightOfHand', 'persuasion', 'athletics',],
+        skillsOptionCount: 1,
+        saves: ['chr_save'],
+        abilities: ['seduction'],
+        backgrounds: ['раб', 'опустившийся'],
+      },
+      музыкант: {
+        items: ['гитара', 'куртка', 'кинжал', 'набор_для_грима',],
+        bonuses: { str: -2, dex: 1, int: -1, wis: 1, chr: 3, pdr: 1500 },
+        hpDie: 6,
+        proficiency: ['Лёгкие доспехи', 'Гитара',],
+        proficiencyOption: ['Барабан', 'Виола', 'Волынка', 'Лира', 'Рожок', 'Свирель', 'Флейта', 'Цимбалы', 'Шалмей',],
+        skills: ['performance'],
+        skillsOption: ['acrobatics', 'animalHandling', 'arcana', 'athletics', 'deception', 'history', 'insight', 'intimidation', 'investigation', 'medicine', 'nature', 'perception', 'persuasion', 'religion', 'sleightOfHand', 'stealth', 'survival'],
+        skillsOptionCount: 1,
+        saves: ['chr_save'],
+        abilities: ['inspirationOfBard', 'lifeOfTheParty'],
+        backgrounds: ['студент', 'творец'],
+      },
+      продавец: {
+        items: ['дробовик', 'патрон_средний', 'плащ', 'основной_товар', 'карты',],
+        bonuses: { str: -1, dex: -1, int: 1, wis: 1, chr: 2, pdr: 5000 },
+        hpDie: 8,
+        proficiency: ['Лёгкие доспехи', 'Средние доспехи', 'Простое оружие', 'Карты',],
+        skillsOption: ['sleightOfHand', 'investigation', 'history', 'perception', 'medicine', 'insight', 'deception', 'persuasion'],
+        skillsOptionCount: 2,
+        saves: ['wis_save'],
+        abilities: ['sellNonsense'],
+        backgrounds: ['бизнесмен', 'путешественник'],
+      },
+      инженер: {
+        items: ['разводной_ключ', 'куртка', 'каска_строительная', 'книга',],
+        bonuses: { con: -1, int: 3, pdr: 3000 },
+        hpDie: 6,
+        proficiency: ['Лёгкие доспехи',],
+        skillsOption: ['investigation', 'history', 'arcana', 'nature', 'religion', 'perception', 'medicine', 'performance'],
+        skillsOptionCount: 2,
+        saves: ['int_save'],
+        abilities: ['constructor'],
+        backgrounds: ['студент', 'работяга'],
+      },
+      депутат: {
+        items: ['пиджак', 'кастет', 'ксива', 'пистолет',],
+        bonuses: { con: 1, int: -2, chr: 1, pdr: 8000 },
+        hpDie: 10,
+        proficiency: ['Лёгкие доспехи', 'Средние доспехи', 'Огнестрельное оружие',],
+        skillsOption: ['athletics', 'intimidation', 'medicine', 'persuasion', 'performance'],
+        skillsOptionCount: 1,
+        abilities: ['promise'],
+        backgrounds: ['устремлённый'],
+      },
+    };
+
+    const subclasses = {
+      бомж: {
+        отшельник: {
+          bonuses: { str: 1, con: 1, },
+          skills: ['perception'],
+          items: ['боевой_посох'],
+        },
+        попрошайка: {
+          bonuses: { chr: 2, },
+          skills: ['persuasion'],
+          items: ['щит'],
+        }
+      },
+      вор: {
+        ссученый: {
+          skills: ['stealth'],
+          abilities: ['sneakAttack'],
+        },
+        законник: {
+          bonuses: { wis: 1, chr: 1, },
+          skills: ['persuasion'],
+          abilities: ['thievesJargon'],
+        }
+      },
+      депутат: {
+        чинуша: {
+          bonuses: { str: 1, con: 1, },
+          saves: ['con_save'],
+          skills: ['deception'],
+          backgrounds: ['хулиган'],
+        },
+        слугаНарода: {
+          bonuses: { wis: 2, },
+          saves: ['wis_save'],
+          skills: ['insight'],
+          backgrounds: ['студент'],
+        }
+      },
+    }
+
+    const backgrounds = [
+      'артист',
+      'бандит',
+      'бедняк',
+      'беспризорник',
+      'бизнесмен',
+      'блогер',
+      'богач',
+      'бунтарь',
+      'герой',
+      'горожанин',
+      'деревенщина',
+      'дикарь',
+      'лох',
+      'маньяк',
+      'мудрец',
+      'обворованный',
+      'опустившийся',
+      'помощник',
+      'преподаватель',
+      'преступник',
+      'путешественник',
+      'раб',
+      'работяга',
+      'ремесленник',
+      'священник',
+      'семьянин',
+      'силовик',
+      'солдат',
+      'студент',
+      'творец',
+      'устремлённый',
+      'фермер',
+      'физрук',
+      'художник',
+      'хулиган',
+      'шарлатан',
+      'шахтер',
+    ];
+
+
+    const abilitiesData = {
+      versatility: {
+        name: 'Универсальность',
+        desc: 'Все харак-ки увеличены на 1. Базовая скорость = 10.',
+      },
+      defectiveness: {
+        name: 'Дефективность',
+        desc: 'ТЕЛ -2, ИНТ -1, МУД +1. Наркозависимый невежда. Базовая скорость = 7.',
+      },
+      dogEater: {
+        name: 'Собакоед',
+        desc: '+Навык Ухода за животными. Проверки характеристик касательно собак — с преимуществом.',
+      },
+      simplification: {
+        name: 'Упрощённость',
+        desc: '+1 СИЛ, +2 ТЕЛ, -2 ИНТ, +3 МУД, -4 ХАР. +Спасбр. Мудрости. +Навыки Внимательности и Выживания. Не доступны законные и хаотичные мировоз. Базовая скорость = 9.',
+      },
+      breakLeash: {
+        name: 'Порвав поводок',
+        desc: 'Сбрасывает остатки человечности на 1 минуту. После требует уединения в 1 раунд. +2 СИЛ, +2 к скорости, +1 к попаданию врукопашную. Все проверки ИНТ и ХАР авт. проваливаются. Тяжело опознать как гуманоида. Только инстинкты и заранее намеченная цель.',
+      },
+      prospects: {
+        name: 'Перспективность',
+        desc: 'ЛОВ +3, ТЕЛ -3, ИНТ +2, МУД +1. +Спасбр. Ловкости, +навык Акробатики. Баз. скорость = 13.',
+      },
+      adjustment: {
+        name: 'Подстройка',
+        desc: 'Может с помехой повторить способность, увиденную в успешном исполнении за последние сутки. При удачном повторении — использует её свободно до конца суток, согласно условиям способности. Проведя сутки в окружении незнакомой речи, начинает понимать её на слух.',
+      },
+      nastiness: {
+        name: 'Пакостность',
+        desc: '+2 ЛОВ, -2 ТЕЛ, -2 ИНТ, +1 ХАР. +Спасбр. Харизмы, +навык Скрытности. Только хаотичное мировоз. Ни дня без пакости. Баз. скорость = 9.',
+      },
+      cleverEscape: {
+        name: 'Ловкий побег',
+        desc: 'Гоблин может в каждом своём ходу бонусным действием совершать действие Засада или Отход.',
+      },
+      aggressiveness: {
+        name: 'Агрессивность',
+        desc: 'СИЛ и ТЕЛ +2, ИНТ -2, + навык Запугивания и спасбр. Силы. Законно-доброе мировоз.недоступно. Базовая скорость = 11.',
+      },
+      burst: {
+        name: 'Врыв',
+        desc: 'Орк может бонусным действием переместиться на расстояние, не превышающее его скорость, в сторону видимого враждебного существа.',
+      },
+      arrogance: {
+        name: 'Надменность',
+        desc: '+2 ЛОВ, +3 ИНТ, -2 МУД, +1 ХАР. +Спасбр. Интеллекта. +Навыки Магии и Убеждения. Проверки ХАР против НЕ Эволюдов с помехой. Сразу имеет 10 000пруб. Баз. скорость = 12.',
+      },
+      telekinesis: {
+        name: 'Телекинез',
+        desc: 'Силой мысли контролирует предметы в радиусе 5м, будто одной рукой.',
+      },
+      searchForFood: {
+        name: 'Поиск еды',
+        desc: 'Раз в сутки может учуять самое ароматное съедобное в радиусе 30м. Без проверок, но если съедобного нет — умение потрачено впустую.',
+      },
+      secondWind: {
+        name: 'Второе дыхание',
+        desc: 'В свой ход вы можете бонусным действием восстановить ХП в размере 1д10 + ваш уровень. Откат: любой отдых.',
+      },
+      tough: {
+        name: 'Стойкость',
+        desc: 'Получает на единицу меньше урона из всех источников.',
+      },
+      sneakAttack: {
+        name: 'Скрытая атака',
+        desc: 'Один раз в ход вы можете причинить дополнительный урон 1д6 одному из существ, по которому вы попали атакой, совершённой с преимуществом к броску атаки. Атака должна использовать дальнобойное оружие или оружие со свойством «фехтовальное». Вам не нужно иметь преимущество при броске атаки, если другой враг цели находится в пределах 5 футов от неё. Этот враг не должен быть недееспособным, и у вас не должно быть помехи для броска атаки.',
+      },
+      thievesJargon: {
+        name: 'Воровской жаргон',
+        desc: 'Вы выучили воровской жаргон, тайную смесь диалекта, жаргона и шифра, который позволяет скрывать сообщения в, казалось бы, обычном разговоре. Только другое существо, знающее воровской жаргон, понимает такие сообщения. Это занимает в четыре раза больше времени, нежели передача тех же слов прямым текстом.',
+      },
+      seduction: {
+        name: 'Соблазнение',
+        desc: 'Пытаетесь соблазнить гуманоида. Состязание вашей ХАР, против его спасбр. МУД (с преимуществом, если его атакуют). Если вы преуспели, гуманоид считает вас своим другом пока не выспится или не получит вред от вас. Он обязательно поймет, что его обманули.',
+      },
+      inspirationOfBard: {
+        name: 'Вдохновение барда',
+        desc: 'Своими словами или музыкой вы можете вдохновлять других. Для этого вы должны бонусным действием выбрать одно существо, отличное от вас, в пределах 20м, которое может вас слышать. Это существо получает 1д6 вдохновения. В течение следующих 10 минут оно может один раз бросить эту кость и добавить результат к проверке характеристики, броску атаки или спасброску. Вы можете использовать это умение количество раз, равное модификатору вашей Харизмы, но как минимум один раз. Потраченные использования этого умения восстанавливаются после продолжительного отдыха.',
+      },
+      lifeOfTheParty: {
+        name: 'Душа компании',
+        desc: 'Раз в сутки может воспеть один из своих навыков или спасбросков. Все товарищи, услышавшие песню, получают этот навык (или спасбр.) до конца суток.',
+      },
+      sellNonsense: {
+        name: 'Втереть дичь',
+        desc: 'Вербальная атака. Издевательски предлагает купить ерунду слышащей цели. Цель должна преуспеть в спасбр. Мудрости, по сложности заданной атакующим (ХАР), иначе получит урон равный 1 + мод. ХАР атакующего.',
+      },
+      constructor: {
+        name: 'Конструктор',
+        desc: 'Из окружающего хлама пытается собрать небольшое устройство. Проверка ИНТ: 15 - механический прибор за 10 мин; 20 - электроприбор за 1 ч. Безделушка не требует проверки и занимает минуту.',
+      },
+      promise: {
+        name: 'Обещание',
+        desc: 'У вас есть запас общественного доверия равный (уровень * 5) + мод. ХАР, который восстанавливается после короткого отдыха. Вы можете действием похлопать союзника по плечу и заверить, что в будущем всё будет хорошо. Восстановите ему ХП из своего запаса доверия.',
+      },
+      coldResistance: {
+        name: 'Сопротивление холоду',
+        desc: 'Вы получаете вдвое меньше урона от холода.',
+      }
+
+    };
+
+    const skills = {
+      acrobatics: {
+        name: 'Акробатика',
+        stat: 'dex',
+        id: 'acrobatics',
+      },
+      animalHandling: {
+        name: 'Уход за животными',
+        stat: 'wis',
+        id: 'animalHandling',
+      },
+      arcana: {
+        name: 'Магия',
+        stat: 'int',
+        id: 'arcana',
+      },
+      athletics: {
+        name: 'Атлетика',
+        stat: 'str',
+        id: 'athletics',
+      },
+      deception: {
+        name: 'Обман',
+        stat: 'chr',
+        id: 'deception',
+      },
+      history: {
+        name: 'История',
+        stat: 'int',
+        id: 'history',
+      },
+      insight: {
+        name: 'Проницательность',
+        stat: 'wis',
+        id: 'insight',
+      },
+      intimidation: {
+        name: 'Запугивание',
+        stat: 'chr',
+        id: 'intimidation',
+      },
+      investigation: {
+        name: 'Анализ',
+        stat: 'int',
+        id: 'investigation',
+      },
+      medicine: {
+        name: 'Медицина',
+        stat: 'wis',
+        id: 'medicine',
+      },
+      nature: {
+        name: 'Природа',
+        stat: 'int',
+        id: 'nature',
+      },
+      perception: {
+        name: 'Внимательность',
+        stat: 'wis',
+        id: 'perception',
+      },
+      performance: {
+        name: 'Выступление',
+        stat: 'chr',
+        id: 'performance',
+      },
+      persuasion: {
+        name: 'Убеждение',
+        stat: 'chr',
+        id: 'persuasion',
+      },
+      religion: {
+        name: 'Религия',
+        stat: 'int',
+        id: 'religion',
+      },
+      sleightOfHand: {
+        name: 'Ловкость рук',
+        stat: 'dex',
+        id: 'sleightOfHand',
+      },
+      stealth: {
+        name: 'Скрытность',
+        stat: 'dex',
+        id: 'stealth',
+      },
+      survival: {
+        name: 'Выживание',
+        stat: 'wis',
+        id: 'survival',
+      },
+    };
+
+
+    const items = {
+      тёплая_куртка: {
+        itemType: 'Стёганный доспех',
+        desc: 'Надёжная куртка для холодной погоды. КБ = 11 + мод ЛОВ. Скрытность с помехой.',
+        abilities: ['coldResistance'],
+        weight: 0.8,
+      },
+      мешок_объедков: {
+        desc: '2 дневных порции разного вида огрызков.',
+        weight: 0.2,
+      },
+      боевой_посох: {
+        itemType: 'Боевой посох',
+        desc: 'Крепкая палка длиной около 130см. 1д6 дробящего урона. Универсальное оружие(1д8).',
+        attacks: ['Удар посохом (1 рука): 1д6 + мод СИЛ дробящий.', 'Удар посохом (2 руки): 1д8 + мод СИЛ дробящий.'],
+        weight: 2,
+      },
+      щит: {
+        itemType: 'Щит',
+        desc: 'Простая широкая доска из дерева или пластика, которую можно прикрепить к руке. +2 КБ.',
+        weight: 3,
+      },
+      булава: {
+        itemType: 'Булава',
+        desc: 'Палка длиной около 1м, с мощным утолщением на конце. 1д6 дробящего урона.',
+        attacks: ['Удар булавой: 1д6 + мод СИЛ дробящий.'],
+        weight: 2,
+      },
+      куртка: {
+        itemType: 'Стёганный доспех',
+        desc: 'Обычная одежда для нормальной погоды и минимальной защиты в бою. КБ = 11 + мод ЛОВ. Скрытность с помехой.',
+        weight: 0.6,
+      },
+      кинжал: {
+        itemType: 'Кинжал',
+        desc: 'Готовый убивать нож. 1д4 колющего урона. Лёгкое, метательное(7/20), фехтовальное оружие.',
+        attacks: ['Удар кинжалом(лёгк): 1д4 + мод СИЛ/ЛОВ колющий.', 'Метание кинжала(лёгк): 7/20м, 1д4 + мод СИЛ/ЛОВ колющий.'],
+        weight: 0.45,
+      },
+      скотч: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 0.15,
+      },
+      дубинка: {
+        itemType: 'Дубинка',
+        desc: 'Палка из дерева, пластика или резины длиной около 60см. 1д4 дробящего урона. Лёгкое оружие.',
+        attacks: ['Удар дубинкой(лёгк): 1д4 + мод СИЛ дробящий.'],
+        weight: 1,
+      },
+      кираса: {
+        itemType: 'Кираса',
+        desc: 'Бронежилет любого типа. Защищает торс и жизненно важные органы. КБ = 14 + мод ЛОВ (макс. 2) ',
+        weight: 9,
+      },
+      наручники: {
+        desc: 'Эти металлические оковы удерживают существ Маленького и Среднего размера. Для того чтобы сбежать из наручников, требуется успешная проверка ЛОВ со Сл 20. Для того чтобы их сломать, требуется проверка СИЛ со Сл 20. Каждый набор наручников идёт с одним ключом. Без ключа существо, владеющее воровскими инструментами, может вскрыть замок наручников успешной проверкой ЛОВ со Сл 15. У наручников 15 ХП.',
+        weight: 0.5,
+      },
+      рация: {
+        desc: 'Портативный приёмопередатчик. Полного заряда хватит на неделю. Досягаемость = 1д10 * 10м.',
+        weight: 0.4,
+      },
+      чётки: {
+        desc: 'Религиозный аттрибут, помогающий в медитации и молитве. +1 ХАР.',
+        bonuses: {chr:1},
+        weight: 0.1,
+      },
+      удавка: {
+        desc: 'Гибкое оружие для удушающих приёмов.',
+        weight: 0.1,
+      },
+      воровские_инструменты: {
+        itemType: 'Воровские инструменты',
+        desc: 'В этот набор инструментов входят небольшой напильник, набор отмычек, небольшое зеркальце на длинной ручке, ножницы и пара щипчиков. Владение этими инструментами позволяет добавлять бонус мастерства ко всем проверкам характеристик, сделанным для отключения ловушек и взлома замков.',
+        weight: 0.5,
+      },
+      стринги: {
+        desc: 'Мини-трусы с максимальным открытием ягодиц.',
+        weight: 0.1,
+      },
+      плащ: {
+        desc: 'Плотный тяжёлый плащ из кожи, латекса или т.п. КБ = 11 + мод ЛОВ.',
+        weight: 2,
+      },
+      кнут: {
+        desc: 'Длинный плетёный ремень на ручке. 1д4 рубящего урона. Фехтовальное оружие с увеличенной досягаемостью.',
+        attacks: ['Удар кнутом(досяг): 1д4 + мод СИЛ/ЛОВ рубящий.'],
+        itemType: 'Кнут',
+        weight: 1.5,
+      },
+      презерватив: {
+        desc: 'Символ безопасности и веселья.',
+        weight: 0,
+      },
+      гитара: {
+        desc: 'Струнный щипковый музыкальный инструмент. Самый популярный и душевный во всём Подвале.',
+        itemType: 'Гитара',
+        weight: 2.7,
+      },
+      набор_для_грима: {
+        itemType: 'Набор для грима',
+        desc: 'Этот набор косметики, красителей для волос и бутафории позволяет изменятьваш внешний облик. Владение этим набором позволяет добавлять бонус мастерства к проверкам характеристик, совершённым для визуальной маскировки.',
+        weight: 1.5,
+      },
+      дробовик: {
+        desc: 'Гладкоствольный огнестрел, стреляющий маленькими шариками. 4д4 колющего урона. Хаотичное дальнобойное(5/9) оружие с боеприпасами и перезарядкой. Использует патроны Среднего калибра.',
+        itemType: 'Дробовик',
+        attacks: ['Выстрел из дробовика: 5/9м, 4д4 колющий. Средний патрон. Перезарядка 1 действие.'],
+        weight: 3.2,
+      },
+      патрон_малый: {
+        desc: 'Используется для простых пистолетов.',
+        weight: 0.01,
+      },
+      патрон_средний: {
+        desc: 'Используется для большинства опасных огнестрелов.',
+        weight: 0.01,
+      },
+      патрон_крупный: {
+        desc: 'Используется для спецоружия и пулемётов на военной технике.',
+        weight: 0.01,
+      },
+      основной_товар: {
+        desc: 'Что вы туда наложили на 5кг??? ПУХ?!',
+        weight: 5,
+      },
+      карты: {
+        itemType: 'Карты',
+        desc: 'Популярное средство для раздевания дураков. Полезные навыки: Проницательность, Ловкость рук, Обман.',
+        weight: 0.2,
+      },
+      разводной_ключ: {
+        itemType: 'Дубинка',
+        desc: 'Металический инструмент на все случаи жизни. Достаточно тяжелый и удобный, чтобы использовать не по назначению. 1д4 дробящего урона. Лёгкое оружие.',
+        attacks: ['Удар ключём(лёгк): 1д4 + мод СИЛ дробящий.'],
+        weight: 1,
+      },
+      каска_строительная: {
+        desc: 'Кто зыбыл каску, сам скоро будет забыт. Уменьшает крит. урон по вам на 3.',
+        weight: 0.24,
+      },
+      книга: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 150,
+      },
+      пиджак: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 150,
+      },
+      кастет: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 150,
+      },
+      ксива: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 150,
+      },
+      пистолет: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 150,
+      },
+      тест: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 150,
+      },
+      тест: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 150,
+      },
+      тест: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 150,
+      },
+      тест: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 150,
+      },
+      тест: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 150,
+      },
+      тест: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 150,
+      },
+    };
+
+    const attributeIncreases = [4, 8, 12, 16, 19];
+
+
+    function collectBonusesSources() {
+      const raceKey = document.getElementById('race').value;
+      const classKey = document.getElementById('class').value;
+      const subclassKey = document.getElementById('subclass')?.value;
+
+      const sources = [];
+
+      const race = races[raceKey];
+      const cls = classes[classKey];
+      const sub = subclasses[classKey]?.[subclassKey];
+
+      if (race) sources.push(race);
+      if (cls) sources.push(cls);
+      if (sub) sources.push(sub);
+
+      // Сюда собираем умения от всех источников
+      const allAbilities = [
+        ...(race?.abilities || []),
+        ...(cls?.abilities || []),
+        ...(sub?.abilities || []),
+      ];
+
+      allAbilities.forEach(id => {
+        const ability = abilitiesData[id];
+        if (ability) sources.push(ability);
+      });
+
+      return sources;
+    }
+
+    function collectAbilitiesFromSources() {
+      return activeBonusesSources
+        .flatMap(source => source.abilities || []);
+    }
+
+
+    function applyBonuses() {
+      const base = { str: 10, dex: 10, con: 10, int: 10, wis: 10, chr: 10, spd: 0, pdr: 0 };
+      const total = { ...base };
+
+      activeBonusesSources = collectBonusesSources();
+
+      activeBonusesSources.forEach(source => {
+        if (source.bonuses) {
+          for (let stat in source.bonuses) {
+            total[stat] += source.bonuses[stat];
+          }
+        }
+      });
+
+      for (let stat in total) {
+        const input = document.getElementById(stat);
+        if (input) input.value = total[stat];
+      }
+
+      updateAll();
+      updateAlignmentOptions();
+      updateBackgroundOptions();
+
+      // Обновляем макс. здоровье
+      const conMod = parseInt(document.getElementById('con_mod').dataset.mod || 0);
+      const classData = classes[document.getElementById('class').value];
+      const level = parseInt(document.getElementById('level').value);
+      const maxHp = ((classData?.hpDie || 0) + conMod) * level;
+      document.getElementById('maxHp').value = maxHp;
+    }
+
+
+    function updateInventory() {
+      const invList = document.getElementById('inventory');
+      invList.innerHTML = '';
+
+      const collectedItems = [];
+
+      activeBonusesSources.forEach(source => {
+        if (source.items) {
+          collectedItems.push(...source.items);
+        }
+      });
+
+      let totalWeight = 0;
+
+      collectedItems.forEach(id => {
+        const item = items[id];
+        if (!item) return;
+
+        const box = document.createElement('div');
+        box.style.border = '1px solid #ccc';
+        box.style.borderRadius = '8px';
+        box.style.padding = '5px 10px';
+        box.style.margin = '5px';
+        box.style.background = '#f0f0f0';
+        box.style.flex = '1 1 auto';
+
+        const title = document.createElement('strong');
+        title.textContent = id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+        const desc = document.createElement('div');
+        desc.textContent = item.description;
+        desc.style.fontSize = '0.8rem';
+        desc.style.color = '#444';
+
+        box.appendChild(title);
+        box.appendChild(desc);
+        invList.appendChild(box);
+
+        totalWeight += item.weight || 0;
+      });
+
+      const weightInfo = document.getElementById('inventory-weight');
+      weightInfo.textContent = `Вес: ${totalWeight.toFixed(1)} кг`;
+    }
+
+
+    function updateBackgroundOptions() {
+      const current = document.getElementById('background').value;
+      const bgContainer = document.getElementById('background-container');
+      const bgSelect = document.getElementById('background');
+      const race = document.getElementById('race').value;
+      const cls = document.getElementById('class').value;
+      const sub = document.getElementById('subclass').value;
+
+      const optionsSet = new Set();
+
+      if (races[race]?.backgrounds) {
+        races[race].backgrounds.forEach(bg => optionsSet.add(bg));
+      }
+
+      if (classes[cls]?.backgrounds) {
+        classes[cls].backgrounds.forEach(bg => optionsSet.add(bg));
+      }
+
+      if (sub && subclasses[cls]?.[sub]?.backgrounds) {
+        subclasses[cls][sub].backgrounds.forEach(bg => optionsSet.add(bg));
+      }
+
+      if (optionsSet.size === 0) {
+        bgContainer.style.display = 'none';
+        return;
+      }
+
+      bgContainer.style.display = 'block';
+      bgSelect.innerHTML = '<option value="">--кем был?--</option>';
+
+      optionsSet.forEach(bg => {
+        const option = document.createElement('option');
+        option.value = bg;
+        option.textContent = bg[0].toUpperCase() + bg.slice(1); // или нормализуй через backgroundsData
+        bgSelect.appendChild(option);
+      });
+      bgSelect.value = current;
+    }
+
+
+    function updateSubclassOptions() {
+      const cls = document.getElementById('class').value;
+      const subclassContainer = document.getElementById('subclass-container');
+      const subclassSelect = document.getElementById('subclass');
+
+      subclassSelect.innerHTML = '<option value="">--выбери подкласс--</option>';
+
+      if (subclasses[cls]) {
+        subclassContainer.style.display = 'block';
+        Object.keys(subclasses[cls]).forEach(sub => {
+          const option = document.createElement('option');
+          option.value = sub;
+          option.textContent = sub[0].toUpperCase() + sub.slice(1);
+          subclassSelect.appendChild(option);
+        });
+      } else {
+        subclassContainer.style.display = 'none';
+      }
+    }
+
+    let selectedOptionalSkills = [];
+
+    function updateSkills() {
+      const skillsList = document.getElementById('skills-list');
+      skillsList.innerHTML = '';
+
+      let allSkills = [];
+      let options = [];
+      let optionsCount = 0;
+
+      activeBonusesSources.forEach(source => {
+        if (source.skills) allSkills.push(...source.skills);
+        if (source.skillsOption) {
+          options.push(...source.skillsOption);
+          optionsCount += source.skillsOptionCount || 0;
+        }
+      });
+      options = options.filter(opt => !allSkills.includes(opt));
+
+      // Фикс: Добавить уже выбранные опциональные
+      allSkills.push(...selectedOptionalSkills);
+
+      const totalOptionsAllowed = optionsCount;
+
+      const chosenCount = selectedOptionalSkills.length;
+
+      // Уникальные
+      const uniqueSkills = [...new Set([...allSkills, ...options])];
+
+      uniqueSkills.forEach(skillId => {
+        const skill = skills[skillId];
+        if (!skill) return;
+
+        const label = document.createElement('label');
+        label.textContent = `${skill.name} (${skill.stat.toUpperCase()})`;
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = 'skill_' + skillId;
+
+        if (allSkills.includes(skillId)) {
+          checkbox.checked = true;
+          checkbox.disabled = true;
+        } else if (options.includes(skillId)) {
+          checkbox.checked = selectedOptionalSkills.includes(skillId);
+          checkbox.disabled = chosenCount >= totalOptionsAllowed && !checkbox.checked;
+
+          checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+              selectedOptionalSkills.push(skillId);
+            } else {
+              selectedOptionalSkills = selectedOptionalSkills.filter(id => id !== skillId);
+            }
+            updateSkills();
+          });
+        }
+
+        label.appendChild(checkbox);
+        skillsList.appendChild(label);
+      });
+
+      // Подсчёт выбранных опциональных навыков
+      let selectedOptions = 0;
+      Object.keys(skills).forEach(id => {
+        const checkbox = document.getElementById('skill_' + id);
+        if (checkbox && checkbox.checked && options.includes(id)) {
+          selectedOptions++;
+        }
+      });
+
+      // Если все очки выбора использованы — заблокировать выбранные и удалить остальные
+      if (selectedOptions >= optionsCount) {
+        Object.keys(skills).forEach(id => {
+          const checkbox = document.getElementById('skill_' + id);
+          const label = checkbox?.parentElement;
+          if (!checkbox) return;
+
+          if (options.includes(id)) {
+            if (checkbox.checked) {
+              checkbox.disabled = true; // оставляем, но делаем некликабельным
+            } else {
+              label.remove(); // убираем невзятые
+            }
+          }
+        });
+      }
+    }
+
+    function collectSkillsFromSources() {
+      const fixed = new Set();
+      const optional = new Set();
+      let optionsCount = 0;
+
+      activeBonusesSources.forEach(source => {
+        (source.skills || []).forEach(s => fixed.add(s));
+        (source.skillsOption || []).forEach(s => optional.add(s));
+        if (source.skillsOptionCount) {
+          optionsCount += source.skillsOptionCount;
+        }
+      });
+
+      return { fixed, optional: Array.from(optional), optionsCount };
+    }
+
+
+    function updateAbilities() {
+      const allIds = activeBonusesSources
+        .flatMap(source => source.abilities || []);
+
+      const list = document.getElementById('abilities-list');
+      list.innerHTML = '';
+
+      allIds.forEach(id => {
+        const data = abilitiesData[id];
+        if (!data) return;
+
+        const div = document.createElement('div');
+        div.className = 'ability';
+        div.textContent = data.name;
+
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.style.display = 'none';
+        tooltip.innerText = data.desc;
+
+        div.addEventListener('mouseenter', () => {
+          tooltip.style.display = 'block';
+          div.appendChild(tooltip);
+        });
+
+        div.addEventListener('mouseleave', () => {
+          tooltip.style.display = 'none';
+          if (div.contains(tooltip)) div.removeChild(tooltip);
+        });
+
+
+        list.appendChild(div);
+      });
+    }
+
+
+    function updateLevel(xp) {
+      let level = 0;
+
+      if (xp >= -1) level = 0;
+      if (xp >= 0) level = 1;
+      if (xp >= 300) level = 2;
+      if (xp >= 900) level = 3;
+      if (xp >= 2700) level = 4;
+      if (xp >= 6500) level = 5;
+      if (xp >= 14000) level = 6;
+      if (xp >= 23000) level = 7;
+      if (xp >= 34000) level = 8;
+      if (xp >= 48000) level = 9;
+      if (xp >= 64000) level = 10;
+      if (xp >= 85000) level = 11;
+      if (xp >= 100000) level = 12;
+      if (xp >= 120000) level = 13;
+      if (xp >= 140000) level = 14;
+      if (xp >= 165000) level = 15;
+      if (xp >= 195000) level = 16;
+      if (xp >= 225000) level = 17;
+      if (xp >= 265000) level = 18;
+      if (xp >= 305000) level = 19;
+      if (xp >= 365000) level = 20;
+
+      document.getElementById('level').value = level;
+      document.getElementById('upgradeLeft').textContent = getUpgradePoints(level) - usedUpgradePoints;
+      applyBonuses()
+      toggleUpgradeButtons();
+    }
+
+    function toggleUpgradeButtons() {
+      const level = parseInt(document.getElementById('level').value);
+      if (level < 1) {
+        // Если персонаж ещё не создан, скрываем кнопки
+        document.querySelectorAll('.stats button').forEach(btn => btn.style.display = 'none');
+        return;
+      }
+
+      const available = getUpgradePoints(level) - usedUpgradePoints;
+      document.querySelectorAll('.stats button').forEach(btn => {
+        btn.style.display = (available > 0) ? 'inline-block' : 'none';
+      });
+    }
+
+
+    function addXp() {
+      const input =
+        document.getElementById('xpToAdd').value.trim();
+      const xpToAdd = Number(input);
+
+      if (isNaN(xpToAdd)) {
+        alert("Введи число");
+        return;
+      }
+
+      const currentXp = parseInt(document.getElementById('xp').value);
+      const totalXp = currentXp + xpToAdd;
+
+      document.getElementById('xp').value = totalXp;
+      updateLevel(totalXp);
+      updateProficiency();
+
+      document.getElementById('xpToAdd').value = '';
+    }
+
+    function updateProficiency() {
+      const level = parseInt(document.getElementById('level').value);
+      let profbonus = '+2';
+
+      if (level >= 5) profbonus = '+3';
+      if (level >= 9) profbonus = '+4';
+      if (level >= 13) profbonus = '+5';
+      if (level >= 17) profbonus = '+6';
+
+      document.getElementById('profbonus').value = profbonus;
+    }
+
+    function getUpgradePoints(level) {
+      const thresholds = [4, 8, 12, 16, 19];
+      return thresholds.filter(lvl => level >= lvl).length * 2;
+    }
+
+
+    let upgradePoints = 0;
+    let usedUpgradePoints = 0;
+
+    function resetUpgradePoints() {
+      usedUpgradePoints = 0;
+    }
+
+
+    function increaseStat(stat) {
+      const level = parseInt(document.getElementById('level').value);
+      const available = getUpgradePoints(level) - usedUpgradePoints;
+      const input = document.getElementById(stat);
+
+      if (available > 0) {
+        const current = parseInt(input.value);
+        if (current < 20) {
+          input.value = current + 1;
+          usedUpgradePoints++;
+          document.getElementById('upgradeLeft').textContent = getUpgradePoints(level) - usedUpgradePoints;
+          updateAll(); // пересчёт модификаторов, хп и т.д.
+          toggleUpgradeButtons();
+        } else {
+          alert("Максимум 20!");
+        }
+      } else {
+        alert("Недостаточно очков прокачки");
+      }
+    }
+
+    // Дамажимся
+    function addHp() {
+      const delta = Number(document.getElementById('hpToAdd').value.trim());
+      if (isNaN(delta)) {
+        alert("Введи число");
+        return;
+      }
+
+      const hp = parseInt(document.getElementById('hp').value);
+      const maxHp = parseInt(document.getElementById('maxHp').value);
+      const newHp = Math.max(0, Math.min(hp + delta, maxHp));
+
+      document.getElementById('hp').value = newHp;
+      document.getElementById('hpToAdd').value = '';
+    }
+    // Формула модификаторов хар-к
+    function updateModifiers() {
+      const stats = ['str', 'dex', 'con', 'int', 'wis', 'chr'];
+
+      stats.forEach(stat => {
+        const score = parseInt(document.getElementById(stat).value);
+        const mod = Math.floor((score - 10) / 2);
+        const modField = document.getElementById(`${stat}_mod`);
+
+        if (modField) {
+          modField.dataset.mod = mod;
+          modField.value = (mod >= 0 ? '+' : '') + mod.toString();
+        }
+      });
+    }
+
+    function updateSaves() {
+      const allSaves = ['str_save', 'dex_save', 'con_save', 'int_save', 'wis_save', 'chr_save'];
+
+      // Сбросить все чекбоксы
+      allSaves.forEach(id => {
+        const cb = document.getElementById(id);
+        if (cb) cb.checked = false;
+      });
+
+      // Получить активные источники бонусов (расы, классы, подклассы и т.п.)
+      const sources = collectBonusesSources();
+
+      // Активировать нужные спасброски
+      sources.forEach(source => {
+        const saves = source.saves || [];
+        saves.forEach(saveId => {
+          const cb = document.getElementById(saveId);
+          if (cb) cb.checked = true;
+        });
+      });
+    }
+
+
+    function updateAlignmentOptions() {
+      const race = document.getElementById('race').value;
+      const forbidden = races[race]?.alignmentsForbidden || [];
+
+      const options = document.querySelectorAll('#alignment option');
+
+      options.forEach(opt => {
+        // Скрываем запрещённые варианты
+        opt.hidden = forbidden.includes(opt.value);
+      });
+
+      const current = document.getElementById('alignment').value;
+      if (forbidden.includes(current)) {
+        document.getElementById('alignment').value = '';
+      }
+    }
+
+    // Подсчёт брони
+    function updateAC() {
+      const dexModField = document.getElementById('dex_mod');
+      const dexMod = parseInt(dexModField?.dataset.mod || 0);
+      document.getElementById('ac').value = 10 + dexMod;
+    }
+
+    function changePDR() {
+      const delta = parseInt(document.getElementById('pdrChange').value);
+      if (isNaN(delta)) return;
+
+      const current = parseInt(document.getElementById('pdr').value);
+      const total = current + delta;
+
+      document.getElementById('pdr').value = total;
+      document.getElementById('pdrChange').value = '';
+    }
+
+    // Обновляем жидкие параметры
+    function updateAll() {
+      updateModifiers();
+      updateSkills();
+      updateAbilities();
+      updateSaves();
+      updateAC();
+      updateInventory();
+    }
+
+  </script>
+</body>
+
+</html>
