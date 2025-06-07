@@ -325,9 +325,9 @@
       <div id="inventory" class="row"></div>
       <div id="inventory-weight" style="margin-top: 5px; font-size: 0.9rem;"></div>
 
-      <div id="addItemPanel" class="row" style="background: #503a0627; width: 17rem;;">
+      <div id="addItemPanel" class="row" style="background: #5c48155d; width: 17rem; border: solid 2px #44380935;">
         <input type="text" id="addItemInput" placeholder="--введи id предмета--"
-          style="width: 10rem; background: #503a0671; color: #ffffff; font-weight: 600;">
+          style="width: 10rem; background: #503a061e; color: #000000; font-weight: 600;">
         <button onclick="addItemManually();" style="background: #503a06a4; color: #ddcece;">Закинуть</button>
       </div>
     </div>
@@ -1371,6 +1371,11 @@ function addItemManually() {
   updateInventory();
   input.value = '';
 }
+document.getElementById('addItemInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    addItemManually();
+  }
+});
 
     function updateLevel(xp) {
       let level = 0;
@@ -1437,6 +1442,11 @@ function addItemManually() {
 
       document.getElementById('xpToAdd').value = '';
     }
+    document.getElementById('xpToAdd').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    addXp();
+  }
+});
 
     function updateProficiency() {
       const level = parseInt(document.getElementById('level').value);
@@ -1500,6 +1510,11 @@ function addItemManually() {
       document.getElementById('hp').value = newHp;
       document.getElementById('hpToAdd').value = '';
     }
+    document.getElementById('hpToAdd').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    addHp();
+  }
+});
     // Формула модификаторов хар-к
     function updateModifiers() {
       const stats = ['str', 'dex', 'con', 'int', 'wis', 'chr'];
@@ -1573,6 +1588,11 @@ function addItemManually() {
       document.getElementById('pdr').value = total;
       document.getElementById('pdrChange').value = '';
     }
+    document.getElementById('pdrChange').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    changePDR();
+  }
+});
 
     // Обновляем жидкие параметры
     function updateAll() {
