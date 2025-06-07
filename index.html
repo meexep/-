@@ -336,6 +336,7 @@ display: none;
       </div></div>
     </div>
           <button onclick="toggleBlock('inventoryContainer',this)">Скрыть инвентарь</button>
+          <div id="item-context-menu" class="hidden" style="position:absolute; z-index: 1000;"></div>
 
 
 
@@ -988,7 +989,70 @@ display: none;
         weight: 0.73,
         // equippable: yes,
       },
-      test: {
+      дилдо: {
+        itemType: 'Дубинка',
+        desc: 'Фалоиммитатор. Бей им по лбу и никак иначе!',
+        attacks: ['Шлепок пенисом(лёгк): 1д4 + мод СИЛ дробящий.'],
+        weight: 0.8,
+        // equippable: yes,
+      },
+      ноутбук: {
+        desc: 'Продай это.',
+        weight: 1.5,
+      },
+      телефон: {
+        desc: 'Зачем он тебе, если у тебя всегда есть свой? Продай это.',
+        weight: 0.2,
+      },
+      мячик: {
+        desc: 'Он теннисный или просто попрыгунчик? Я не знаю.',
+        weight: 0.08,
+      },
+      мяч: {
+        desc: 'Он футбольный или баскетбольный? Я не разбираюсь.',
+        weight: 0.3,
+      },
+      ручка: {
+        desc: 'Ты можешь начиркать что-нибудь.',
+        weight: 0.01,
+      },
+      карандаш: {
+        desc: 'Ты можешь начиркать что-нибудь.',
+        weight: 0.01,
+      },
+      закуска: {
+        desc: 'Чипсики наверное.',
+        weight: 0.15,
+      },
+      перекус: {
+        desc: 'Возможно это тарелка супа?.',
+        weight: 0.3,
+      },
+      комбо: {
+        desc: 'Это стопудово ОГРОМНЫЙ бургер!',
+        weight: 0.6,
+      },
+      бинты: {
+        desc: 'Перевяжись и востанови 3 ХП.',
+        weight: 0.05,
+      },
+      тест: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 150,
+      },
+      тест: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 150,
+      },
+      тест: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 150,
+      },
+      тест: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 150,
+      },
+      тест: {
         desc: 'Рулон почти бесконечной липкой ленты.',
         weight: 150,
       },
@@ -1115,6 +1179,10 @@ display: none;
         box.style.margin = '5px';
         box.style.background = '#f0f0f0';
         box.style.flex = '1 1 auto';
+        box.addEventListener('contextmenu', function(event) {
+          event.preventDefault();
+          openItemMenu(id, event.pageX, event.pageY);
+        })
 
         const title = document.createElement('strong');
         title.textContent = `${id.replace(/_/g, ' ').replace(/^./, l => l.toUpperCase())} (${inventory[id]})`;
@@ -1187,6 +1255,15 @@ display: none;
         addItemManually();
       }
     });
+
+    function dropItem(itemId) {
+  if (inventory[itemId]) {
+    inventory[itemId]--;
+    if (inventory[itemId] <= 0) delete inventory[itemId];
+    updateInventory();
+  }
+  document.getElementById('item-context-menu').classList.add('hidden');
+}
 
 
 
@@ -1625,6 +1702,22 @@ display: none;
 
     button.textContent = isHidden ? '📦 Показать' : originalText;
   }
+}
+
+function openItemMenu(itemId, x, y) {
+  const menu = document.getElementById('item-context-menu');
+  menu.innerHTML = `
+    <div style="background:#fff; border:1px solid #ccc; padding:5px; border-radius:6px; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
+      <button onclick="dropItem('${itemId}')">📤 Выбросить</button>
+    </div>
+  `;
+  menu.style.left = x + 'px';
+  menu.style.top = y + 'px';
+  menu.classList.remove('hidden');
+
+  document.addEventListener('click', function () {
+  document.getElementById('item-context-menu').classList.add('hidden');
+});
 }
 
     // Обновляем жидкие параметры
