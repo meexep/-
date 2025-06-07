@@ -324,6 +324,12 @@
       <h3>Инвентарь:</h3>
       <div id="inventory" class="row"></div>
       <div id="inventory-weight" style="margin-top: 5px; font-size: 0.9rem;"></div>
+
+      <div id="addItemPanel" class="row">
+        <input type="text" id="addItemInput" placeholder="--введи id предмета--"
+          style="width: 10rem; background: #503a0671; color: #ffffff; font-weight: 600;">
+        <button onclick="addItemManually();" style="background: #503a06a4; color: #ddcece;">Закинуть</button>
+      </div>
     </div>
 
 
@@ -348,6 +354,7 @@
   <script>
 
     let activeBonusesSources = [];
+    let inventory = {};
 
     const races = {
       человек: {
@@ -1057,6 +1064,15 @@
         if (input) input.value = total[stat];
       }
 
+      const sources = collectBonusesSources();
+      sources.forEach(source => {
+        if (source.items) {
+          source.items.forEach(id => {
+            inventory[id] = (inventory[id] || 0) + 1;
+          });
+        }
+      });
+
       updateAll();
       updateAlignmentOptions();
       updateBackgroundOptions();
@@ -1073,20 +1089,11 @@
     function updateInventory() {
       const invList = document.getElementById('inventory');
       invList.innerHTML = '';
-
-      const collectedItems = [];
-
-      activeBonusesSources.forEach(source => {
-        if (source.items) {
-          collectedItems.push(...source.items);
-        }
-      });
-
       let totalWeight = 0;
 
-      collectedItems.forEach(id => {
+      for (let id in inventory) {
         const item = items[id];
-        if (!item) return;
+        if (!item || inventory[id] <= 0) continue;
 
         const box = document.createElement('div');
         box.style.border = '1px solid #ccc';
@@ -1097,7 +1104,7 @@
         box.style.flex = '1 1 auto';
 
         const title = document.createElement('strong');
-        title.textContent = id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        title.textContent = id.replace(/_/g, ' ').replace(/^./, l => l.toUpperCase());
 
         const tooltip = document.createElement('div');
         tooltip.className = 'tooltip';
@@ -1119,7 +1126,7 @@
         invList.appendChild(box);
 
         totalWeight += item.weight || 0;
-      });
+      };
 
       const weightInfo = document.getElementById('inventory-weight');
       weightInfo.textContent = `Вес: ${totalWeight.toFixed(1)} кг`;
@@ -1324,6 +1331,25 @@
 
         list.appendChild(div);
       });
+    }
+
+
+    function addItemManually() {
+      const input = document.getElementById('addItemInput');
+      const id = input.value.trim().toLowerCase();
+
+      if (!items[id]) {
+        alert('Нет такого предмета');
+        return;
+      }
+
+      if (!inventory[id]) {
+        inventory[id] = 0;
+      }
+      inventory[id]++;
+      updateInventory();
+
+      input.value = '';
     }
 
 
