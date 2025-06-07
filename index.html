@@ -325,7 +325,7 @@
       <div id="inventory" class="row"></div>
       <div id="inventory-weight" style="margin-top: 5px; font-size: 0.9rem;"></div>
 
-      <div id="addItemPanel" class="row">
+      <div id="addItemPanel" class="row" style="background: #503a0627; width: 17rem;;">
         <input type="text" id="addItemInput" placeholder="--введи id предмета--"
           style="width: 10rem; background: #503a0671; color: #ffffff; font-weight: 600;">
         <button onclick="addItemManually();" style="background: #503a06a4; color: #ddcece;">Закинуть</button>
@@ -1104,7 +1104,7 @@
         box.style.flex = '1 1 auto';
 
         const title = document.createElement('strong');
-        title.textContent = id.replace(/_/g, ' ').replace(/^./, l => l.toUpperCase());
+        title.textContent = `${id.replace(/_/g, ' ').replace(/^./, l => l.toUpperCase())} (${inventory[id]})`;
 
         const tooltip = document.createElement('div');
         tooltip.className = 'tooltip';
@@ -1334,24 +1334,43 @@
     }
 
 
-    function addItemManually() {
-      const input = document.getElementById('addItemInput');
-      const id = input.value.trim().toLowerCase();
+function addItemManually() {
+  const input = document.getElementById('addItemInput');
+  let raw = input.value.trim().toLowerCase();
 
-      if (!items[id]) {
-        alert('Нет такого предмета');
-        return;
-      }
+  if (!raw) return;
 
-      if (!inventory[id]) {
-        inventory[id] = 0;
-      }
-      inventory[id]++;
-      updateInventory();
+  let id = raw;
+  let count = 1;
 
-      input.value = '';
+  // Если формат кастет*2
+  if (raw.includes('*')) {
+    const parts = raw.split('*');
+    id = parts[0].trim();
+    count = parseInt(parts[1].trim()) || 1;
+
+  // Если формат кастет2 (цифра в конце без *), парсим вручную
+  } else {
+    const match = raw.match(/^([^\d]+)(\d+)$/);
+    if (match) {
+      id = match[1];
+      count = parseInt(match[2]) || 1;
     }
+  }
 
+  // Проверка наличия предмета
+  if (!items[id]) {
+    alert('Нет такого предмета');
+    return;
+  }
+
+  // Добавляем в инвентарь
+  if (!inventory[id]) inventory[id] = 0;
+  inventory[id] += count;
+
+  updateInventory();
+  input.value = '';
+}
 
     function updateLevel(xp) {
       let level = 0;
