@@ -111,6 +111,9 @@
       position: relative;
       font-size: 0.9rem;
     }
+    .hidden {
+display: none;
+    }
   </style>
 </head>
 
@@ -125,7 +128,8 @@
 
 
     <div class="row"><label>Класс:
-        <select id="class" onchange="updateSubclassOptions(); applyBonuses(); updateAll()" style="font-weight: 600;">
+        <select id="class" onchange="updateSubclassOptions(); applyBonuses(); updateAll(); updateInventory();"
+          style="font-weight: 600;">
           <option value="">-- выбери класс --</option>
           <option value="бомж">Бомж</option>
           <option value="наёмник">Наёмник</option>
@@ -322,15 +326,17 @@
 
     <div style="background: #503a0627;">
       <h3>Инвентарь:</h3>
-      <div id="inventory" class="row"></div>
+      <div id="inventoryContainer"> <div id="inventory" class="row"></div>
       <div id="inventory-weight" style="margin-top: 5px; font-size: 0.9rem;"></div>
 
       <div id="addItemPanel" class="row" style="background: #5c48155d; width: 17rem; border: solid 2px #44380935;">
         <input type="text" id="addItemInput" placeholder="--введи id предмета--"
           style="width: 10rem; background: #503a061e; color: #000000; font-weight: 600;">
         <button onclick="addItemManually();" style="background: #503a06a4; color: #ddcece;">Закинуть</button>
-      </div>
+      </div></div>
     </div>
+          <button onclick="toggleBlock('inventoryContainer',this)">Скрыть инвентарь</button>
+
 
 
     <div style="background: #2dba0d2d;">
@@ -355,6 +361,8 @@
 
     let activeBonusesSources = [];
     let inventory = {};
+    const autoGrantedItems = new Set();
+
 
     const races = {
       человек: {
@@ -980,7 +988,7 @@
         weight: 0.73,
         // equippable: yes,
       },
-      тест: {
+      test: {
         desc: 'Рулон почти бесконечной липкой ленты.',
         weight: 150,
       },
@@ -1066,11 +1074,16 @@
 
       const sources = collectBonusesSources();
       sources.forEach(source => {
+
         if (source.items) {
           source.items.forEach(id => {
-            inventory[id] = (inventory[id] || 0) + 1;
+            if (!autoGrantedItems.has(id)) {
+              if (!inventory[id]) inventory[id] = 0;
+              inventory[id] += 1;
+              autoGrantedItems.add(id);
+            }
           });
-        }
+        };
       });
 
       updateAll();
@@ -1125,12 +1138,56 @@
         box.appendChild(tooltip);
         invList.appendChild(box);
 
-        totalWeight += item.weight || 0;
+        totalWeight += (item.weight || 0) * (inventory[id] || 1);
       };
 
       const weightInfo = document.getElementById('inventory-weight');
       weightInfo.textContent = `Вес: ${totalWeight.toFixed(1)} кг`;
     }
+
+    function addItemManually() {
+      const input = document.getElementById('addItemInput');
+      let raw = input.value.trim().toLowerCase();
+
+      if (!raw) return;
+
+      let id = raw;
+      let count = 1;
+
+      // Если формат кастет*2
+      if (raw.includes('*')) {
+        const parts = raw.split('*');
+        id = parts[0].trim();
+        count = parseInt(parts[1].trim()) || 1;
+
+        // Если формат кастет2 (цифра в конце без *), парсим вручную
+      } else {
+        const match = raw.match(/^([^\d]+)(\d+)$/);
+        if (match) {
+          id = match[1];
+          count = parseInt(match[2]) || 1;
+        }
+      }
+
+      // Проверка наличия предмета
+      if (!items[id]) {
+        alert('Нет такого предмета');
+        return;
+      }
+
+      // Добавляем в инвентарь
+      if (!inventory[id]) inventory[id] = 0;
+      inventory[id] += count;
+
+      updateInventory();
+      input.value = '';
+    }
+    document.getElementById('addItemInput').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        addItemManually();
+      }
+    });
+
 
 
     function updateBackgroundOptions() {
@@ -1334,49 +1391,6 @@
     }
 
 
-function addItemManually() {
-  const input = document.getElementById('addItemInput');
-  let raw = input.value.trim().toLowerCase();
-
-  if (!raw) return;
-
-  let id = raw;
-  let count = 1;
-
-  // Если формат кастет*2
-  if (raw.includes('*')) {
-    const parts = raw.split('*');
-    id = parts[0].trim();
-    count = parseInt(parts[1].trim()) || 1;
-
-  // Если формат кастет2 (цифра в конце без *), парсим вручную
-  } else {
-    const match = raw.match(/^([^\d]+)(\d+)$/);
-    if (match) {
-      id = match[1];
-      count = parseInt(match[2]) || 1;
-    }
-  }
-
-  // Проверка наличия предмета
-  if (!items[id]) {
-    alert('Нет такого предмета');
-    return;
-  }
-
-  // Добавляем в инвентарь
-  if (!inventory[id]) inventory[id] = 0;
-  inventory[id] += count;
-
-  updateInventory();
-  input.value = '';
-}
-document.getElementById('addItemInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-    addItemManually();
-  }
-});
-
     function updateLevel(xp) {
       let level = 0;
 
@@ -1442,11 +1456,11 @@ document.getElementById('addItemInput').addEventListener('keydown', function(e) 
 
       document.getElementById('xpToAdd').value = '';
     }
-    document.getElementById('xpToAdd').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-    addXp();
-  }
-});
+    document.getElementById('xpToAdd').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        addXp();
+      }
+    });
 
     function updateProficiency() {
       const level = parseInt(document.getElementById('level').value);
@@ -1510,11 +1524,11 @@ document.getElementById('addItemInput').addEventListener('keydown', function(e) 
       document.getElementById('hp').value = newHp;
       document.getElementById('hpToAdd').value = '';
     }
-    document.getElementById('hpToAdd').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-    addHp();
-  }
-});
+    document.getElementById('hpToAdd').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        addHp();
+      }
+    });
     // Формула модификаторов хар-к
     function updateModifiers() {
       const stats = ['str', 'dex', 'con', 'int', 'wis', 'chr'];
@@ -1588,11 +1602,30 @@ document.getElementById('addItemInput').addEventListener('keydown', function(e) 
       document.getElementById('pdr').value = total;
       document.getElementById('pdrChange').value = '';
     }
-    document.getElementById('pdrChange').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-    changePDR();
+    document.getElementById('pdrChange').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        changePDR();
+      }
+    })
+
+    function toggleBlock(blockId, button = null) {
+  const block = document.getElementById(blockId);
+  if (!block) return;
+
+  block.classList.toggle('hidden');
+
+  if (button) {
+    const isHidden = block.classList.contains('hidden');
+    const originalText = button.dataset.originalText || button.textContent;
+
+    // Запоминаем начальный текст
+    if (!button.dataset.originalText) {
+      button.dataset.originalText = originalText;
+    }
+
+    button.textContent = isHidden ? '📦 Показать' : originalText;
   }
-});
+}
 
     // Обновляем жидкие параметры
     function updateAll() {
@@ -1601,7 +1634,6 @@ document.getElementById('addItemInput').addEventListener('keydown', function(e) 
       updateAbilities();
       updateSaves();
       updateAC();
-      updateInventory();
     }
 
   </script>
