@@ -360,34 +360,34 @@
       <div style="border: dashed #2c310419;">
         <h3>Инвентарь:</h3>
         <div id="inventoryContainer">
-        <div id="inventory" class="row"></div>
-        <div id="weight" style="margin-top: 5px; font-size: 0.9rem;"></div>
+          <div id="inventory" class="row"></div>
+          <div id="weight" style="margin-top: 5px; font-size: 0.9rem;"></div>
 
-        <div id="addItemPanel" class="row" style="background: #5c48155d; width: 17rem; border: solid 2px #44380935;">
-          <input type="text" id="addItemInput" placeholder="--введи id предмета--"
-            style="width: 10rem; background: #503a061e; color: #000000; font-weight: 600;">
-          <button onclick="addItemManually();" style="background: #503a06a4; color: #ddcece;">Закинуть</button>
+          <div id="addItemPanel" class="row" style="background: #5c48155d; width: 17rem; border: solid 2px #44380935;">
+            <input type="text" id="addItemInput" placeholder="--введи id предмета--"
+              style="width: 10rem; background: #503a061e; color: #000000; font-weight: 600;">
+            <button onclick="addItemManually();" style="background: #503a06a4; color: #ddcece;">Закинуть</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <button onclick="toggleBlock('inventoryContainer',this)">Скрыть инвентарь</button>
+    <button onclick="toggleBlock('inventoryContainer',this)">Скрыть инвентарь</button>
 
 
 
-  <div style="background: #2dba0d2d;">
-    <h3 style="margin-top: 2rem;">Баланс</h3>
-    <div class="row" style="align-items: flex-end;">
-      <label>Подрубли (₽):
-        <input type="number" id="pdr" value="0" readonly
-          style="width: 7rem; text-align: center; font-weight: bold; background: #cfcfcf;">
-      </label>
-      <label style="margin-left: 1rem;">Изменить:
-        <input type="number" id="pdrChange" style="width: 5rem; text-align: center; background: #eaeaea;">
-      </label>
-      <button onclick="changePDR()" style="height: 2.4rem; background: #b8ffba; font-weight: bold;">⇅</button>
+    <div style="background: #2dba0d2d;">
+      <h3 style="margin-top: 2rem;">Баланс</h3>
+      <div class="row" style="align-items: flex-end;">
+        <label>Подрубли (₽):
+          <input type="number" id="pdr" value="0" readonly
+            style="width: 7rem; text-align: center; font-weight: bold; background: #cfcfcf;">
+        </label>
+        <label style="margin-left: 1rem;">Изменить:
+          <input type="number" id="pdrChange" style="width: 5rem; text-align: center; background: #eaeaea;">
+        </label>
+        <button onclick="changePDR()" style="height: 2.4rem; background: #b8ffba; font-weight: bold;">⇅</button>
+      </div>
     </div>
-  </div>
 
 
   </div>
@@ -845,7 +845,7 @@
         desc: 'Надёжная куртка для холодной погоды. КБ = 11 + мод ЛОВ. Скрытность с помехой.',
         abilities: ['coldResistance'],
         weight: 0.8,
-        // equippable: yes,
+        equipable: true,
       },
       мешок_объедков: {
         desc: 'Две дневных порции разного вида огрызков в старом мешке. Пополняйте его на мусорках.',
@@ -856,34 +856,34 @@
         desc: 'Крепкая палка длиной около 130см. 1д6 дробящего урона. Универсальное оружие(1д8).',
         attacks: ['Удар посохом (1 рука): 1д6 + мод СИЛ дробящий.', 'Удар посохом (2 руки): 1д8 + мод СИЛ дробящий.'],
         weight: 2,
-        // equippable: yes,
+        equipable: true,
       },
       щит: {
         itemType: 'Щит',
         desc: 'Простая широкая доска из дерева или пластика, которую можно прикрепить к руке. +2 КБ.',
         bonuses: { ac: 2 },
         weight: 3,
-        // equippable: yes,
+        equipable: true,
       },
       булава: {
         itemType: 'Булава',
         desc: 'Палка длиной около 1м, с мощным утолщением на конце. 1д6 дробящего урона.',
         attacks: ['Удар булавой: 1д6 + мод СИЛ дробящий.'],
         weight: 2,
-        // equippable: yes,
+        equipable: true,
       },
       куртка: {
         itemType: 'Стёганный доспех',
         desc: 'Обычная одежда для нормальной погоды и минимальной защиты в бою. КБ = 11 + мод ЛОВ. Скрытность с помехой.',
         weight: 0.6,
-        // equippable: yes,
+        equipable: true,
       },
       кинжал: {
         itemType: 'Кинжал',
         desc: 'Готовый убивать нож. 1д4 колющего урона. Лёгкое, метательное(7/20), фехтовальное оружие.',
         attacks: ['Удар кинжалом(лёгк): 1д4 + мод СИЛ/ЛОВ колющий.', 'Метание кинжала(лёгк): 7/20м, 1д4 + мод СИЛ/ЛОВ колющий.'],
         weight: 0.45,
-        // equippable: yes,
+        equipable: true,
       },
       скотч: {
         desc: 'Рулон почти бесконечной липкой ленты.',
@@ -894,13 +894,13 @@
         desc: 'Палка из дерева, пластика или резины длиной около 60см. 1д4 дробящего урона. Лёгкое оружие.',
         attacks: ['Удар дубинкой(лёгк): 1д4 + мод СИЛ дробящий.'],
         weight: 1,
-        // equippable: yes,
+        equipable: true,
       },
       кираса: {
         itemType: 'Кираса',
         desc: 'Бронежилет любого типа. Защищает торс и жизненно важные органы. КБ = 14 + мод ЛОВ (макс. 2) ',
         weight: 9,
-        // equippable: yes,
+        equipable: true,
       },
       наручники: {
         desc: 'Эти металлические оковы удерживают существ Маленького и Среднего размера. Для того чтобы сбежать из наручников, требуется успешная проверка ЛОВ со Сл 20. Для того чтобы их сломать, требуется проверка СИЛ со Сл 20. Каждый набор наручников идёт с одним ключом. Без ключа существо, владеющее воровскими инструментами, может вскрыть замок наручников успешной проверкой ЛОВ со Сл 15. У наручников 15 ХП.',
@@ -914,7 +914,7 @@
         desc: 'Религиозный аттрибут, помогающий в медитации и молитве. +1 ХАР.',
         bonuses: { chr: 1 },
         weight: 0.1,
-        // equippable: yes,
+        equipable: true,
       },
       удавка: {
         desc: 'Гибкое оружие для удушающих приёмов.',
@@ -932,14 +932,14 @@
       плащ: {
         desc: 'Плотный тяжёлый плащ из кожи, латекса или т.п. КБ = 11 + мод ЛОВ.',
         weight: 2,
-        // equippable: yes,
+        equipable: true,
       },
       кнут: {
         desc: 'Длинный плетёный ремень на ручке. 1д4 рубящего урона. Фехтовальное оружие с увеличенной досягаемостью.',
         attacks: ['Удар кнутом(досяг): 1д4 + мод СИЛ/ЛОВ рубящий.'],
         itemType: 'Кнут',
         weight: 1.5,
-        // equippable: yes,
+        equipable: true,
       },
       презерватив: {
         desc: 'Символ безопасности и веселья.',
@@ -949,7 +949,7 @@
         desc: 'Струнный щипковый музыкальный инструмент. Самый популярный и душевный во всём Подвале.',
         itemType: 'Гитара',
         weight: 2.7,
-        // equippable: yes,
+        equipable: true,
       },
       набор_для_грима: {
         itemType: 'Набор для грима',
@@ -961,7 +961,7 @@
         itemType: 'Дробовик',
         attacks: ['Выстрел из дробовика: 5/9м, 4д4 колющий. Средний патрон. Перезарядка 1 действие.'],
         weight: 3.2,
-        // equippable: yes,
+        equipable: true,
       },
       патрон_малый: {
         desc: 'Используется для простых пистолетов.',
@@ -989,12 +989,12 @@
         desc: 'Металический инструмент на все случаи жизни. Достаточно тяжелый и удобный, чтобы использовать не по назначению. 1д4 дробящего урона. Лёгкое оружие.',
         attacks: ['Удар ключём(лёгк): 1д4 + мод СИЛ дробящий.'],
         weight: 1,
-        // equippable: yes,
+        equipable: true,
       },
       каска_строительная: {
         desc: 'Кто зыбыл каску, сам скоро будет забыт. Уменьшает крит. урон по вам на 3.',
         weight: 0.24,
-        // equippable: yes,
+        equipable: true,
       },
       книга_навыков_интеллекта: {
         desc: 'Тяжёлая, скучная и пахнет пылью. Можно читать во время продолжительного отдыха. После чтения бросьте 1д6: 1 — ничего не происходит. 2–6 — на следующие сутки вы получаете один из следующих навыков ИНТ:  2) Анализ,  3) История,  4) Магия,  5) Природа,  6) Религия.  Если навык выпадает несколько дней подряд (минимум 2, максимум 5 - мод. ИНТ), вы навсегда запоминаете этот навык.',
@@ -1005,7 +1005,7 @@
         desc: 'В бою не поможет, но важный вид придаст обязательно. +1 ХАР. КБ = 11 + мод ЛОВ. Скрытность с помехой.',
         bonuses: { chr: 1 },
         weight: 0.5,
-        // equippable: yes,
+        equipable: true,
       },
       кастет: {
         desc: 'Хоть и не полноценное оружие, но боли приносит много. +2 к урону безоружными атаками.',
@@ -1022,14 +1022,14 @@
         itemType: 'Пистолет',
         attacks: ['Выстрел из пистолета(лёгк): 13/30м, 2д6 колющий. Малый патрон. Перезарядка 1 действие.'],
         weight: 0.73,
-        // equippable: yes,
+        equipable: true,
       },
       дилдо: {
         itemType: 'Дубинка',
         desc: 'Фалоиммитатор. Бей им по лбу и никак иначе!',
         attacks: ['Шлепок пенисом(лёгк): 1д4 + мод СИЛ дробящий.'],
         weight: 0.8,
-        // equippable: yes,
+        equipable: true,
       },
       ноутбук: {
         desc: 'Продай это.',
@@ -1058,62 +1058,87 @@
       закуска: {
         desc: 'Чипсики наверное.',
         weight: 0.15,
+        useable: true,
       },
       перекус: {
         desc: 'Возможно это тарелка супа?.',
         weight: 0.3,
+        useable: true,
       },
       комбо: {
         desc: 'Это стопудово ОГРОМНЫЙ бургер!',
         weight: 0.6,
+        useable: true,
       },
       бинты: {
-        desc: 'Перевяжись и востанови 3 ХП.',
+        desc: 'Перевяжись действием и востанови 3 ХП. ',
         weight: 0.05,
+        useable: true,
       },
-      тест: {
+      укол_адреналина: {
+        desc: 'Вколи бонусным действием и восстанови 10 ХП.',
+        weight: 0.15,
+        useable: true,
+      },
+      test: {
         desc: 'Рулон почти бесконечной липкой ленты.',
         weight: 150,
       },
-      тест: {
+      test: {
         desc: 'Рулон почти бесконечной липкой ленты.',
         weight: 150,
       },
-      тест: {
+      test: {
         desc: 'Рулон почти бесконечной липкой ленты.',
         weight: 150,
       },
-      тест: {
+      test: {
         desc: 'Рулон почти бесконечной липкой ленты.',
         weight: 150,
       },
-      тест: {
+      test: {
         desc: 'Рулон почти бесконечной липкой ленты.',
         weight: 150,
       },
-      тест: {
+      test: {
         desc: 'Рулон почти бесконечной липкой ленты.',
         weight: 150,
       },
-      тест: {
+      test: {
         desc: 'Рулон почти бесконечной липкой ленты.',
         weight: 150,
       },
-      тест: {
+      test: {
         desc: 'Рулон почти бесконечной липкой ленты.',
         weight: 150,
       },
-      тест: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 150,
-      },
-      тест: {
+      test: {
         desc: 'Рулон почти бесконечной липкой ленты.',
         weight: 150,
       },
     };
 
     const equipped = {};
+
+    const proficiencies = {
+      всё_оружие: { простое_рукопашное_оружие, простое_дальнобойное_оружие, воинское_рукопашное_оружие, воинское_дальнобойное_оружие, огнестрельное_оружие },
+      простое_рукопашное_оружие: { боевые_посохи, булавы, дубинки, кинжалы, копья, лёгкие_молоты, метательные_копья, палицы, ручные_топоры, серпы, },
+      простое_дальнобойное_оружие: { лёгкие_арбалеты, дротики, короткие_луки, пращи },
+      воинское_рукопашное_оружие: { алебарды, боевые_кирки, боевые_молоты, боевые_топоры, глефы, двуручные_мечи, длинные_копья, длинные_мечи, кнуты, короткие_мечи, молоты, моргенштерны, пики, рапиры, секиры, скимитары, трезубцы, цепы },
+      воинское_дальнобойное_оружие: { ручные_арбалеты, тяжёлые_арбалеты, длинные_луки, духовые_трубки, сети },
+      огнестрельное_оружие: { револьверы, пистолеты, пп, автоматы, пулемёты, винтовки, дробовики, },
+
+      вся_броня: { лёгкие_доспехи, средние_доспехи, тяжёлые_доспехи, щиты },
+      лёгкие_доспехи: { стёганные, кожаные, проклёпанной_кожи },
+      средние_доспехи: { шкурные, кольчужные_рубахи, чешуйчатые, кирасы, полулаты },
+      тяжёлые_доспехи: { колечные, кольчуги, наборные, латы },
+
+      все_инструменты: { воровские_инструменты, азартные_игры, инструменты_навигатора, инструменты_отравителя, инструменты_ремесленников, музыкальные_инструменты, набор_для_грима, набор_для_фальсификации, набор_травника, транспорт },
+      азартные_игры: { шахматы, карты, кости, ставки },
+      инструменты_ремесленников: { инструменты_алхимика, инструменты_гончара, инструменты_жестянщика, инструменты_каллиграфа, инструменты_каменщика, инструменты_картографа, инструменты_кожевника, инструменты_кузнеца, инструменты_пивовара, инструменты_плотника, инструменты_повара, инструменты_резчика, инструменты_сапожника, инструменты_стеклодува, инструменты_ткача, инструменты_художника, инструменты_ювелира },
+      музыкальные_инструменты: { барабаны, виолы, волынки, лиры, гитары, рожки, свирели, флейты, цимбалы, шалмеи },
+      транспорт: { кони, автомобили, мотоциклы, корабли, самолёты, вертолёты, подлодки },
+    };
 
     const attributeIncreases = [4, 8, 12, 16, 19];
 
@@ -1204,73 +1229,84 @@
     }
 
 
-function updateInventory() {
-    console.log('Текущий список: ',Object.entries(inventory));
-  console.log('Описание предметов: ', items);
+    function updateInventory() {
+      console.log('Текущий список: ', Object.entries(inventory));
+      console.log('Описание предметов: ', items);
 
-  const invList = document.getElementById('inventory');
-  const weightDisplay = document.getElementById('weight');
-  const equippedList = document.getElementById('equipped');
-  if (!invList || !weightDisplay || !equippedList) return;
+      const invList = document.getElementById('inventory');
+      const weightDisplay = document.getElementById('weight');
+      const equippedList = document.getElementById('equipped');
+      if (!invList || !weightDisplay || !equippedList) return;
 
-  invList.innerHTML = '';
-  equippedList.innerHTML = '';
+      invList.innerHTML = '';
+      equippedList.innerHTML = '';
 
-  let totalWeight = 0;
+      let totalWeight = 0;
 
-  // Сначала отображаем инвентарь
-  for (const id in inventory) {
-    if (!items[id]) continue;
-    const count = inventory[id];
-    if (count <= 0) continue;
+      // Сначала отображаем инвентарь
+      for (const id in inventory) {
+        if (!items[id]) continue;
+        const count = inventory[id];
+        if (count <= 0) continue;
 
-    const item = items[id];
-    const itemDiv = document.createElement('div');
-    itemDiv.className = 'item';
-    itemDiv.title = item.desc || '';
-    itemDiv.innerHTML = `
+        const item = items[id];
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'item';
+        itemDiv.title = item.desc || '';
+        itemDiv.innerHTML = `
       <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
       ${count > 1 ? ' × ' + count : ''}
     `;
 
-    // ПКМ — открывает контекстное меню
-    itemDiv.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-      showItemContextMenu(id, e.pageX, e.pageY);
-    });
+        // ПКМ — открывает контекстное меню
+        itemDiv.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+          showItemContextMenu(id, e.pageX, e.pageY);
+        });
 
-    invList.appendChild(itemDiv);
+        invList.appendChild(itemDiv);
 
-    totalWeight += (item.weight || 0) * count;
-  }
+        totalWeight += (item.weight || 0) * count;
+      }
 
-  // Затем отображаем экипированные
-  for (const id in equipped) {
-    if (!items[id]) continue;
-    const count = equipped[id];
-    if (count <= 0) continue;
+      // Затем отображаем экипированные
+      for (const id in equipped) {
+        if (!items[id]) continue;
+        const count = equipped[id];
+        if (count <= 0) continue;
 
-    const item = items[id];
-    const eqDiv = document.createElement('div');
-    eqDiv.className = 'item equipped';
-    eqDiv.title = item.desc || '';
-    eqDiv.innerHTML = `
+        const item = items[id];
+        const eqDiv = document.createElement('div');
+        eqDiv.className = 'item equipped';
+        eqDiv.title = item.desc || '';
+        eqDiv.innerHTML = `
       <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
       ${count > 1 ? ' × ' + count : ''}
     `;
 
-    eqDiv.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-      showItemContextMenu(id, e.pageX, e.pageY, true);
-    });
+        eqDiv.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+          showItemContextMenu(id, e.pageX, e.pageY, true);
+        });
 
-    equippedList.appendChild(eqDiv);
+        equippedList.appendChild(eqDiv);
 
-    totalWeight += (item.weight || 0) * count;
-  }
+        totalWeight += (item.weight || 0) * count;
+      }
 
-  weightDisplay.textContent = `${totalWeight.toFixed(1)} кг`;
-}
+      weightDisplay.textContent = `${totalWeight.toFixed(1)} кг`;
+    }
+
+    function equipItem(id) {
+      if (!inventory[id] || inventory[id] <= 0) return;
+
+      inventory[id] -= 1;
+
+      if (!equipped[id]) equipped[id] = 0;
+      equipped[id] += 1;
+
+      updateInventory();
+    }
 
 
     const addItemInput = document.getElementById('addItemInput');
@@ -1396,7 +1432,14 @@ function updateInventory() {
         equipBtn.textContent = 'Экипировать';
         equipBtn.onclick = () => {
           console.log(`Экипируем ${itemId}`);
-          // Здесь будет логика экипировки
+
+          if (!inventory[itemId] || inventory[itemId] <= 0) return;
+          inventory[itemId] -= 1;
+          if (!equipped[itemId]) equipped[itemId] = 0;
+          equipped[itemId] += 1;
+          updateInventory();
+
+
           document.body.removeChild(menu);
         };
         menu.appendChild(equipBtn);
@@ -1872,10 +1915,10 @@ function updateInventory() {
     }
 
     document.addEventListener('click', function (event) {
-  const menu = document.getElementById('item-context-menu');
-  if (menu) menu.classList.add('hidden');
-},
-);
+      const menu = document.getElementById('item-context-menu');
+      if (menu) menu.classList.add('hidden');
+    },
+    );
 
 
     // Обновляем жидкие параметры
