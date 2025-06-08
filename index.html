@@ -171,7 +171,7 @@
 
       <div id="subclass-container" style="display: none;">
         <label>Подкласс:
-          <select id="subclass" onchange="applyBonuses()" style="font-weight: 600;">
+          <select id="subclass" onchange="applyBonuses(); updateInventory();" style="font-weight: 600;">
             <option value="">--выбери подкласс--</option>
           </select>
         </label>
@@ -351,10 +351,17 @@
 
 
     <div style="background: #503a0627;">
-      <h3>Инвентарь:</h3>
-      <div id="inventoryContainer">
+
+      <div style="border: dashed #2c310419; ">
+        <h4>Экипировано:</h4>
+        <div id="equipped" class="inventory-grid"></div>
+      </div>
+
+      <div style="border: dashed #2c310419;">
+        <h3>Инвентарь:</h3>
+        <div id="inventoryContainer">
         <div id="inventory" class="row"></div>
-        <div id="inventory-weight" style="margin-top: 5px; font-size: 0.9rem;"></div>
+        <div id="weight" style="margin-top: 5px; font-size: 0.9rem;"></div>
 
         <div id="addItemPanel" class="row" style="background: #5c48155d; width: 17rem; border: solid 2px #44380935;">
           <input type="text" id="addItemInput" placeholder="--введи id предмета--"
@@ -363,23 +370,24 @@
         </div>
       </div>
     </div>
-    <button onclick="toggleBlock('inventoryContainer',this)">Скрыть инвентарь</button>
+  </div>
+  <button onclick="toggleBlock('inventoryContainer',this)">Скрыть инвентарь</button>
 
 
 
-    <div style="background: #2dba0d2d;">
-      <h3 style="margin-top: 2rem;">Баланс</h3>
-      <div class="row" style="align-items: flex-end;">
-        <label>Подрубли (₽):
-          <input type="number" id="pdr" value="0" readonly
-            style="width: 7rem; text-align: center; font-weight: bold; background: #cfcfcf;">
-        </label>
-        <label style="margin-left: 1rem;">Изменить:
-          <input type="number" id="pdrChange" style="width: 5rem; text-align: center; background: #eaeaea;">
-        </label>
-        <button onclick="changePDR()" style="height: 2.4rem; background: #b8ffba; font-weight: bold;">⇅</button>
-      </div>
+  <div style="background: #2dba0d2d;">
+    <h3 style="margin-top: 2rem;">Баланс</h3>
+    <div class="row" style="align-items: flex-end;">
+      <label>Подрубли (₽):
+        <input type="number" id="pdr" value="0" readonly
+          style="width: 7rem; text-align: center; font-weight: bold; background: #cfcfcf;">
+      </label>
+      <label style="margin-left: 1rem;">Изменить:
+        <input type="number" id="pdrChange" style="width: 5rem; text-align: center; background: #eaeaea;">
+      </label>
+      <button onclick="changePDR()" style="height: 2.4rem; background: #b8ffba; font-weight: bold;">⇅</button>
     </div>
+  </div>
 
 
   </div>
@@ -1002,7 +1010,7 @@
       кастет: {
         desc: 'Хоть и не полноценное оружие, но боли приносит много. +2 к урону безоружными атаками.',
         weight: 0.2,
-        // equippable: yes,
+        equipable: true,
       },
       ксива: {
         desc: 'Документ, удостоверяющий личность и авторитет гос-служащего. Можно предъявить незнакомцу вне боя и испугать его. Чем выше уровень, тем выше шансы.',
@@ -1105,6 +1113,8 @@
       },
     };
 
+    const equipped = {};
+
     const attributeIncreases = [4, 8, 12, 16, 19];
 
 
@@ -1134,6 +1144,10 @@
         const ability = abilitiesData[id];
         if (ability) sources.push(ability);
       });
+
+      for (let id in equipped) {
+        if (items[id]) sources.push(items[id]);
+      }
 
       return sources;
     }
@@ -1190,54 +1204,74 @@
     }
 
 
-    function updateInventory() {
-      const invList = document.getElementById('inventory');
-      invList.innerHTML = '';
-      let totalWeight = 0;
+function updateInventory() {
+    console.log('Текущий список: ',Object.entries(inventory));
+  console.log('Описание предметов: ', items);
 
-      for (let id in inventory) {
-        const item = items[id];
-        if (!item || inventory[id] <= 0) continue;
+  const invList = document.getElementById('inventory');
+  const weightDisplay = document.getElementById('weight');
+  const equippedList = document.getElementById('equipped');
+  if (!invList || !weightDisplay || !equippedList) return;
 
-        const box = document.createElement('div');
-        box.style.border = '1px solid #ccc';
-        box.style.borderRadius = '8px';
-        box.style.padding = '5px 10px';
-        box.style.margin = '5px';
-        box.style.background = '#f0f0f0';
-        box.style.flex = '1 1 auto';
-        box.addEventListener('contextmenu', (e) => {
-          e.preventDefault();
-          showItemContextMenu(id, e.pageX, e.pageY);
-        });
-        const title = document.createElement('strong');
-        title.textContent = `${id.replace(/_/g, ' ').replace(/^./, l => l.toUpperCase())} (${inventory[id]})`;
+  invList.innerHTML = '';
+  equippedList.innerHTML = '';
 
-        const tooltip = document.createElement('div');
-        tooltip.className = 'tooltip';
-        tooltip.style.display = 'none';
-        tooltip.innerText = item.desc;
+  let totalWeight = 0;
 
-        box.addEventListener('mouseenter', () => {
-          tooltip.style.display = 'block';
-          box.appendChild(tooltip);
-        });
+  // Сначала отображаем инвентарь
+  for (const id in inventory) {
+    if (!items[id]) continue;
+    const count = inventory[id];
+    if (count <= 0) continue;
 
-        box.addEventListener('mouseleave', () => {
-          tooltip.style.display = 'none';
-          if (box.contains(tooltip)) box.removeChild(tooltip);
-        });
+    const item = items[id];
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'item';
+    itemDiv.title = item.desc || '';
+    itemDiv.innerHTML = `
+      <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
+      ${count > 1 ? ' × ' + count : ''}
+    `;
 
-        box.appendChild(title);
-        box.appendChild(tooltip);
-        invList.appendChild(box);
+    // ПКМ — открывает контекстное меню
+    itemDiv.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      showItemContextMenu(id, e.pageX, e.pageY);
+    });
 
-        totalWeight += (item.weight || 0) * (inventory[id] || 1);
-      };
+    invList.appendChild(itemDiv);
 
-      const weightInfo = document.getElementById('inventory-weight');
-      weightInfo.textContent = `Вес: ${totalWeight.toFixed(1)} кг`;
-    }
+    totalWeight += (item.weight || 0) * count;
+  }
+
+  // Затем отображаем экипированные
+  for (const id in equipped) {
+    if (!items[id]) continue;
+    const count = equipped[id];
+    if (count <= 0) continue;
+
+    const item = items[id];
+    const eqDiv = document.createElement('div');
+    eqDiv.className = 'item equipped';
+    eqDiv.title = item.desc || '';
+    eqDiv.innerHTML = `
+      <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
+      ${count > 1 ? ' × ' + count : ''}
+    `;
+
+    eqDiv.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      showItemContextMenu(id, e.pageX, e.pageY, true);
+    });
+
+    equippedList.appendChild(eqDiv);
+
+    totalWeight += (item.weight || 0) * count;
+  }
+
+  weightDisplay.textContent = `${totalWeight.toFixed(1)} кг`;
+}
+
 
     const addItemInput = document.getElementById('addItemInput');
     const suggestionsBox = document.createElement('div');
@@ -1836,6 +1870,12 @@
         button.textContent = isHidden ? '📦 Показать' : originalText;
       }
     }
+
+    document.addEventListener('click', function (event) {
+  const menu = document.getElementById('item-context-menu');
+  if (menu) menu.classList.add('hidden');
+},
+);
 
 
     // Обновляем жидкие параметры
