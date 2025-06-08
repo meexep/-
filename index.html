@@ -111,8 +111,34 @@
       position: relative;
       font-size: 0.9rem;
     }
+
     .hidden {
-display: none;
+      display: none;
+    }
+
+    .item-context-menu {
+      position: absolute;
+      background: #fff;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      padding: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .item-context-menu button {
+      background: #eee;
+      border: none;
+      margin: 2px 0;
+      padding: 4px 10px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .item-context-menu button:hover {
+      background: #ccc;
     }
   </style>
 </head>
@@ -326,17 +352,18 @@ display: none;
 
     <div style="background: #503a0627;">
       <h3>Инвентарь:</h3>
-      <div id="inventoryContainer"> <div id="inventory" class="row"></div>
-      <div id="inventory-weight" style="margin-top: 5px; font-size: 0.9rem;"></div>
+      <div id="inventoryContainer">
+        <div id="inventory" class="row"></div>
+        <div id="inventory-weight" style="margin-top: 5px; font-size: 0.9rem;"></div>
 
-      <div id="addItemPanel" class="row" style="background: #5c48155d; width: 17rem; border: solid 2px #44380935;">
-        <input type="text" id="addItemInput" placeholder="--введи id предмета--"
-          style="width: 10rem; background: #503a061e; color: #000000; font-weight: 600;">
-        <button onclick="addItemManually();" style="background: #503a06a4; color: #ddcece;">Закинуть</button>
-      </div></div>
+        <div id="addItemPanel" class="row" style="background: #5c48155d; width: 17rem; border: solid 2px #44380935;">
+          <input type="text" id="addItemInput" placeholder="--введи id предмета--"
+            style="width: 10rem; background: #503a061e; color: #000000; font-weight: 600;">
+          <button onclick="addItemManually();" style="background: #503a06a4; color: #ddcece;">Закинуть</button>
+        </div>
+      </div>
     </div>
-          <button onclick="toggleBlock('inventoryContainer',this)">Скрыть инвентарь</button>
-          <div id="item-context-menu" class="hidden" style="position:absolute; z-index: 1000;"></div>
+    <button onclick="toggleBlock('inventoryContainer',this)">Скрыть инвентарь</button>
 
 
 
@@ -1179,11 +1206,10 @@ display: none;
         box.style.margin = '5px';
         box.style.background = '#f0f0f0';
         box.style.flex = '1 1 auto';
-        box.addEventListener('contextmenu', function(event) {
-          event.preventDefault();
-          openItemMenu(id, event.pageX, event.pageY);
-        })
-
+        box.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+          showItemContextMenu(id, e.pageX, e.pageY);
+        });
         const title = document.createElement('strong');
         title.textContent = `${id.replace(/_/g, ' ').replace(/^./, l => l.toUpperCase())} (${inventory[id]})`;
 
@@ -1213,9 +1239,60 @@ display: none;
       weightInfo.textContent = `Вес: ${totalWeight.toFixed(1)} кг`;
     }
 
+    const addItemInput = document.getElementById('addItemInput');
+    const suggestionsBox = document.createElement('div');
+    suggestionsBox.style.position = 'absolute';
+    suggestionsBox.style.border = '1px solid #ccc';
+    suggestionsBox.style.background = '#fff';
+    suggestionsBox.style.zIndex = 1000;
+    suggestionsBox.style.maxHeight = '150px';
+    suggestionsBox.style.overflowY = 'auto';
+    suggestionsBox.style.display = 'none';
+    document.body.appendChild(suggestionsBox);
+
+    addItemInput.addEventListener('input', () => {
+      const raw = addItemInput.value.trim().toLowerCase().replace(/\s+/g, '_');
+      if (!raw) {
+        suggestionsBox.style.display = 'none';
+        return;
+      }
+
+      const matches = Object.keys(items).filter(id => id.includes(raw));
+      if (matches.length === 0) {
+        suggestionsBox.style.display = 'none';
+        return;
+      }
+
+      suggestionsBox.innerHTML = '';
+      matches.forEach(id => {
+        const div = document.createElement('div');
+        div.textContent = id;
+        div.style.padding = '4px 8px';
+        div.style.cursor = 'pointer';
+        div.addEventListener('mousedown', () => {
+          addItemInput.value = id;
+          suggestionsBox.style.display = 'none';
+          // addItemManually(id); // Автодобавка по выбору
+        });
+        suggestionsBox.appendChild(div);
+      });
+
+      const rect = addItemInput.getBoundingClientRect();
+      suggestionsBox.style.left = rect.left + 'px';
+      suggestionsBox.style.top = rect.bottom + window.scrollY + 'px';
+      suggestionsBox.style.width = rect.width + 'px';
+      suggestionsBox.style.display = 'block';
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!addItemInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+        suggestionsBox.style.display = 'none';
+      }
+    });
+
     function addItemManually() {
       const input = document.getElementById('addItemInput');
-      let raw = input.value.trim().toLowerCase();
+      let raw = input.value.trim().toLowerCase().replace(/\s+/g, '_');
 
       if (!raw) return;
 
@@ -1249,6 +1326,8 @@ display: none;
 
       updateInventory();
       input.value = '';
+
+      suggestionsBox.style.display = 'none'; //убираем подсказки, если они остались
     }
     document.getElementById('addItemInput').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') {
@@ -1256,15 +1335,69 @@ display: none;
       }
     });
 
-    function dropItem(itemId) {
-  if (inventory[itemId]) {
-    inventory[itemId]--;
-    if (inventory[itemId] <= 0) delete inventory[itemId];
-    updateInventory();
-  }
-  document.getElementById('item-context-menu').classList.add('hidden');
-}
+    function showItemContextMenu(itemId, x, y) {
+      const item = items[itemId];
+      if (!item) return;
 
+      const menu = document.createElement('div');
+      menu.className = 'item-context-menu';
+      menu.style.top = `${y}px`;
+      menu.style.left = `${x}px`;
+
+      // Кнопка "Использовать"
+      if (item.useable) {
+        const useBtn = document.createElement('button');
+        useBtn.textContent = 'Использовать';
+        useBtn.onclick = () => {
+          console.log(`Используем ${itemId}`);
+          // Здесь будет логика использования
+          document.body.removeChild(menu);
+        };
+        menu.appendChild(useBtn);
+      }
+
+      // Кнопка "Экипировать"
+      if (item.equipable) {
+        const equipBtn = document.createElement('button');
+        equipBtn.textContent = 'Экипировать';
+        equipBtn.onclick = () => {
+          console.log(`Экипируем ${itemId}`);
+          // Здесь будет логика экипировки
+          document.body.removeChild(menu);
+        };
+        menu.appendChild(equipBtn);
+      }
+
+      // Кнопка "Выбросить"
+      if (inventory[itemId]) {
+        const dropBtn = document.createElement('button');
+        dropBtn.textContent = 'Выбросить';
+        dropBtn.onclick = () => {
+          inventory[itemId]--;
+          if (inventory[itemId] <= 0) delete inventory[itemId];
+          updateInventory();
+          document.body.removeChild(menu);
+        };
+        menu.appendChild(dropBtn);
+
+        // Кнопка "Выбросить всё" если предметов много
+        if (inventory[itemId] > 5) {
+          const dropAllBtn = document.createElement('button');
+          dropAllBtn.textContent = 'Выбросить всё';
+          dropAllBtn.onclick = () => {
+            delete inventory[itemId];
+            updateInventory();
+            document.body.removeChild(menu);
+          };
+          menu.appendChild(dropAllBtn);
+        }
+      }
+
+      // Удалить старые меню
+      document.querySelectorAll('.item-context-menu').forEach(el => el.remove());
+
+      document.body.appendChild(menu);
+    }
 
 
     function updateBackgroundOptions() {
@@ -1686,39 +1819,24 @@ display: none;
     })
 
     function toggleBlock(blockId, button = null) {
-  const block = document.getElementById(blockId);
-  if (!block) return;
+      const block = document.getElementById(blockId);
+      if (!block) return;
 
-  block.classList.toggle('hidden');
+      block.classList.toggle('hidden');
 
-  if (button) {
-    const isHidden = block.classList.contains('hidden');
-    const originalText = button.dataset.originalText || button.textContent;
+      if (button) {
+        const isHidden = block.classList.contains('hidden');
+        const originalText = button.dataset.originalText || button.textContent;
 
-    // Запоминаем начальный текст
-    if (!button.dataset.originalText) {
-      button.dataset.originalText = originalText;
+        // Запоминаем начальный текст
+        if (!button.dataset.originalText) {
+          button.dataset.originalText = originalText;
+        }
+
+        button.textContent = isHidden ? '📦 Показать' : originalText;
+      }
     }
 
-    button.textContent = isHidden ? '📦 Показать' : originalText;
-  }
-}
-
-function openItemMenu(itemId, x, y) {
-  const menu = document.getElementById('item-context-menu');
-  menu.innerHTML = `
-    <div style="background:#fff; border:1px solid #ccc; padding:5px; border-radius:6px; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
-      <button onclick="dropItem('${itemId}')">📤 Выбросить</button>
-    </div>
-  `;
-  menu.style.left = x + 'px';
-  menu.style.top = y + 'px';
-  menu.classList.remove('hidden');
-
-  document.addEventListener('click', function () {
-  document.getElementById('item-context-menu').classList.add('hidden');
-});
-}
 
     // Обновляем жидкие параметры
     function updateAll() {
