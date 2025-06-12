@@ -230,7 +230,9 @@
     </label>
 
 
-    <div class="row">
+    <div class="row" style="display: flex;">
+    <div name="первая колонка" style="flex: 1;">
+      <div class="row">
       <label>Мировоззрение:
         <select id="alignment" style="width: 13rem; text-align: center;">
           <option value="" style="background: #808080;">--моральные наклонности--</option>
@@ -302,13 +304,15 @@
         </label>
       </div>
     </div>
+    </div>
 
-
+    <div name="вторая колонка" style="flex: 2;">
     <div style="margin-top: 1rem; background: #503a0627;">
       <div style="display: flex;"><h3>Атаки:</h3><button onclick="toggleBlock('attackContainer', this)" style="height: min-content; margin-top: 20px;">Скрыть атаки</button></div>
       <div id="attackContainer" , class="attack-grid"></div>
     </div>
-    
+    </div>
+    </div>
 
     <label style="color: #82eb0a;">Скорость:
       <input type="number" id="spd" value="0"
@@ -1498,6 +1502,25 @@
 
       // Добавляем в инвентарь
       if (!inventory[id]) inventory[id] = 0;
+      // Проверка грузоподъёмности
+const strength = parseInt(document.getElementById('str').value || 10);
+const maxCarry = strength * 7;
+
+let currentWeight = 0;
+for (const itemId in inventory) {
+  if (!items[itemId]) continue;
+  currentWeight += (items[itemId].weight || 0) * inventory[itemId];
+}
+for (const itemId in equipped) {
+  if (!items[itemId]) continue;
+  currentWeight += (items[itemId].weight || 0) * equipped[itemId];
+}
+
+const incomingWeight = (items[id]?.weight || 0) * count;
+if (currentWeight + incomingWeight > maxCarry) {
+  alert('Слишком тяжело! Персонаж не может нести больше.');
+  return;
+}
       inventory[id] += count;
 
       updateInventory();
