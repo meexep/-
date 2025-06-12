@@ -56,6 +56,26 @@
       font-size: medium;
     }
 
+    .item {
+      display: inline-block;
+      padding: 4px 8px;
+      margin: 3px;
+      border: 2px solid #3b2f18;
+      border-radius: 6px;
+      background-color: #e4d5b4;
+      font-size: 0.9rem;
+      font-weight: lighter;
+      color: #2a1e0a;
+      white-space: nowrap;
+      box-shadow: 1px 1px 2px #00000030;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .item:hover {
+      background-color: #f3e5c0;
+    }
+
     input[readonly] {
       pointer-events: none;
       cursor: default;
@@ -110,6 +130,23 @@
       background: #fafafa;
       position: relative;
       font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .attack-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .attack {
+      background: #4e4e4e13;
+      border: 1px solid #888888;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: default;
+      max-width: 200px;
     }
 
     .hidden {
@@ -218,50 +255,60 @@
       </div>
     </div>
 
-    <div class="row"
-      style="border: 3px groove #dec85b; background: #dec85b64; width: 22rem; height: 5rem; border-radius: 4%; padding: 2%; padding-top: 0%;">
-      <label>
-        Уровень:
-        <input type="number" id="level" value="0" readonly
-          style="width: 2.5rem; text-align: center; font-size: medium; font-style: oblique; background: #bba741ac;">
-      </label>
 
-      <label>
-        Текущий опыт:
-        <input type="number" id="xp" value="-1" readonly
-          style="width: 5rem; text-align: center; background: #bba741ac;">
-      </label>
+    <div>
+      <div class="row"
+        style="border: 3px groove #dec85b; background: #dec85b64; width: 22rem; height: 5rem; border-radius: 4%; padding: 2%; padding-top: 0%;">
+        <label>
+          Уровень:
+          <input type="number" id="level" value="0" readonly
+            style="width: 2.5rem; text-align: center; font-size: medium; font-style: oblique; background: #bba741ac;">
+        </label>
 
-      <label style="text-align: center;">
-        +Опыт:
-        <input type="number" id="xpToAdd" style="width: 5rem; text-align: center; background: #bba741ac;">
-      </label>
-      <button onclick="addXp(); toggleUpgradeButtons();"
-        style="border: 3px groove #dec85b; background: #bba641;">+</button>
+        <label>
+          Текущий опыт:
+          <input type="number" id="xp" value="-1" readonly
+            style="width: 5rem; text-align: center; background: #bba741ac;">
+        </label>
+
+        <label style="text-align: center;">
+          +Опыт:
+          <input type="number" id="xpToAdd" style="width: 5rem; text-align: center; background: #bba741ac;">
+        </label>
+        <button onclick="addXp(); toggleUpgradeButtons();"
+          style="border: 3px groove #dec85b; background: #bba641;">+</button>
+      </div>
+
+      <div
+        style="text-align: center; border: 3px groove #8a3c9059; background: #8a3c900d; width: 23rem; border-radius: 4%; padding: 1%; padding-top: 0%;">
+        <label
+          style="color: #d01818; background: #d0181833; width: 23rem; display: flex; align-items: baseline;">Здоровье:
+          <input type="number" id="hp" value="0" readonly
+            style="font-size: medium; background:#d01818; font-weight:700; color:#ffffff; width: 3rem; text-align: center;">
+          <label style="color: #d01818;">из</label>
+          <input type="number" id="maxHp" value="0" readonly
+            style="font-size: medium; background:#d018189f; font-weight:700; color:#ffffff; width: 3rem; text-align: center;">
+
+          <input type="number" id="hpToAdd" style="width: 3rem; background: #ff9696; text-align: right;"
+            placeholder="урон" style="width: 5rem; background: #ff9696; font-weight: 500; color: #ffffff;">
+          <button onclick="addHp()"
+            style="background: #ea7e7e; color: #380e0e; border: 2px groove #da8484;">Получить</button>
+        </label>
+
+        <label id="ac-label" style="color: #52598f; background: #52598f48; width: 23rem;">Класс Брони(КБ):
+          <input type="number" id="ac" value="10"
+            style="background: #52598f; font-size: medium; width: 4rem; font-weight:700; color:#ffffff; width: 5rem; text-align: center;"
+            readonly>
+        </label>
+      </div>
     </div>
 
-    <div
-      style="text-align: center; border: 3px groove #8a3c9059; background: #8a3c900d; width: 23rem; border-radius: 4%; padding: 1%; padding-top: 0%;">
-      <label
-        style="color: #d01818; background: #d0181833; width: 23rem; display: flex; align-items: baseline;">Здоровье:
-        <input type="number" id="hp" value="0" readonly
-          style="font-size: medium; background:#d01818; font-weight:700; color:#ffffff; width: 3rem; text-align: center;">
-        <label style="color: #d01818;">из</label>
-        <input type="number" id="maxHp" value="0" readonly
-          style="font-size: medium; background:#d018189f; font-weight:700; color:#ffffff; width: 3rem; text-align: center;">
 
-        <input type="number" id="hpToAdd" style="width: 3rem; background: #ff9696; text-align: right;"
-          placeholder="урон" style="width: 5rem; background: #ff9696; font-weight: 500; color: #ffffff;">
-        <button onclick="addHp()"
-          style="background: #ea7e7e; color: #380e0e; border: 2px groove #da8484;">Получить</button>
-      </label>
-
-      <label style="color: #52598f; background: #52598f48; width: 23rem;">Класс Брони(КБ):
-        <input type="number" id="ac" value="10"
-          style="background: #52598f; font-size: medium; width: 4rem; font-weight:700; color:#ffffff; width: 5rem; text-align: center;"
-          readonly>
-      </label>
+    <div style="margin-top: 1rem; background: #503a0627;">
+      <div style="display: flex;"><h3>Атаки:</h3><button onclick="toggleBlock('attackContainer', this)" style="height: min-content; margin-top: 20px;">Скрыть атаки</button></div>
+      <div id="attackContainer" , class="attack-grid"></div>
     </div>
+    
 
     <label style="color: #82eb0a;">Скорость:
       <input type="number" id="spd" value="0"
@@ -345,11 +392,10 @@
         </label>
       </div>
 
-      <h4 style="color: #5f5d5a;">Владения:</h4>
+      <div style="display: flex;"><h4 style="color: #5f5d5a;">Владения:</h4><button onclick="toggleBlock('proficiencies-list',this)" style="height: min-content; margin-top: 20px;">Скрыть владения</button></div>
       <ul id="proficiencies-list"></ul>
     </div>
-    <button onclick="toggleBlock('proficiencies-list',this)" style="margin-bottom: 30px; margin-top: 0rem">Скрыть
-      владения</button>
+    
 
 
     <div style="background: #503a0627;">
@@ -360,7 +406,7 @@
       </div>
 
       <div style="border: dashed #2c310419;">
-        <h3>Инвентарь:</h3>
+        <div style="display: flex;"><h3>Инвентарь:</h3><button onclick="toggleBlock('inventoryContainer',this)" style="height: min-content; margin-top: 20px;">Скрыть инвентарь</button></div>
         <div id="inventoryContainer">
           <div id="inventory" class="row"></div>
           <div id="weight" style="margin-top: 5px; font-size: 0.9rem;"></div>
@@ -373,7 +419,7 @@
         </div>
       </div>
     </div>
-    <button onclick="toggleBlock('inventoryContainer',this)">Скрыть инвентарь</button>
+    
 
 
 
@@ -405,17 +451,20 @@
     const races = {
       человек: {
         abilities: ['versatility'],
+        attack: { name: 'Безоружная атака', desc: '1 + мод СИЛ дробящего урона. \nВы владеете безоружными атаками.' },
         bonuses: { str: 1, dex: 1, con: 1, int: 1, wis: 1, chr: 1, spd: 10, },
         backgrounds: ['артист', 'бандит', 'бедняк', 'беспризорник', 'бизнесмен', 'блогер', 'богач', 'бунтарь', 'герой', 'горожанин', 'деревенщина', 'дикарь', 'лох', 'маньяк', 'мудрец', 'обворованный', 'опустившийся', 'помощник', 'преподаватель', 'преступник', 'путешественник', 'раб', 'работяга', 'ремесленник', 'священник', 'семьянин', 'силовик', 'солдат', 'студент', 'творец', 'устремлённый', 'фермер', 'физрук', 'художник', 'хулиган', 'шарлатан', 'шахтер',],
       },
       деген: {
         abilities: ['defectiveness', 'dogEater'],
+        attack: { name: 'Безоружная атака', desc: '1 + мод СИЛ дробящего урона. \nВы владеете безоружными атаками.' },
         bonuses: { con: -2, int: -1, wis: 1, spd: 7, },
         skills: ['animalHandling'],
         backgrounds: ['бедняк', 'беспризорник', 'деревенщина', 'дикарь', 'лох', 'маньяк', 'мудрец', 'обворованный', 'опустившийся', 'помощник', 'преподаватель', 'преступник', 'раб', 'работяга', 'ремесленник', 'семьянин', 'творец', 'устремлённый', 'фермер', 'шарлатан',],
       },
       зверолюд: {
         abilities: ['simplification', 'breakLeash'],
+        attack: { name: 'Безоружная атака', desc: '2 + мод СИЛ рубящего урона. \nВы владеете безоружными атаками.' },
         bonuses: { str: 1, con: 2, int: -2, wis: 3, chr: -4, spd: 9 },
         saves: ['wis_save'],
         skills: ['perception', 'survival'],
@@ -424,6 +473,7 @@
       },
       рептилоид: {
         abilities: ['prospects', 'adjustment'],
+        attack: { name: 'Безоружная атака', desc: '1 + мод СИЛ колющего урона. \nВы владеете безоружными атаками.' },
         bonuses: { dex: 3, con: -3, int: 2, wis: 1, spd: 13 },
         skills: ['acrobatics'],
         saves: ['dex_save'],
@@ -431,6 +481,7 @@
       },
       гоблин: {
         abilities: ['nastiness', 'cleverEscape'],
+        attack: { name: 'Безоружная атака', desc: '1 + мод СИЛ дробящего урона. \nВы владеете безоружными атаками.' },
         bonuses: { dex: 2, con: -2, int: -2, chr: 1, spd: 9 },
         saves: ['chr_save'],
         skills: ['stealth'],
@@ -439,6 +490,7 @@
       },
       орк: {
         abilities: ['aggressiveness', 'burst'],
+        attack: { name: 'Безоружная атака', desc: '1 + мод СИЛ дробящего урона. \nВы владеете безоружными атаками.' },
         bonuses: { str: 2, con: 2, int: -2, spd: 11 },
         skills: ['intimidation'],
         saves: ['str_save'],
@@ -447,6 +499,7 @@
       },
       эволюд: {
         abilities: ['arrogance', 'telekinesis'],
+        attack: { name: 'Безоружная атака', desc: '1 + мод СИЛ дробящего урона. \nВы владеете безоружными атаками.' },
         bonuses: { dex: 2, int: 3, wis: -2, chr: 1, spd: 12, pdr: 10000, },
         skills: ['arcana', 'persuasion'],
         saves: ['int_save'],
@@ -650,35 +703,35 @@
     const abilitiesData = {
       versatility: {
         name: 'Универсальность',
-        desc: 'Все харак-ки увеличены на 1. Базовая скорость = 10.',
+        desc: 'Все харак-ки увеличены на 1. \nБазовая скорость = 10.',
       },
       defectiveness: {
         name: 'Дефективность',
-        desc: 'ТЕЛ -2, ИНТ -1, МУД +1. Наркозависимый невежда. Базовая скорость = 7.',
+        desc: 'ТЕЛ -2, ИНТ -1, МУД +1. \nНаркозависимый невежда. \nБазовая скорость = 7.',
       },
       dogEater: {
         name: 'Собакоед',
-        desc: '+Навык Ухода за животными. Проверки характеристик касательно собак — с преимуществом.',
+        desc: '+Навык Ухода за животными. \nПроверки характеристик касательно собак — с преимуществом.',
       },
       simplification: {
         name: 'Упрощённость',
-        desc: '+1 СИЛ, +2 ТЕЛ, -2 ИНТ, +3 МУД, -4 ХАР. +Спасбр. Мудрости. +Навыки Внимательности и Выживания. Не доступны законные и хаотичные мировоз. Базовая скорость = 9.',
+        desc: '+1 СИЛ, +2 ТЕЛ, -2 ИНТ, +3 МУД, -4 ХАР. +Спасбр. Мудрости. +Навыки Внимательности и Выживания. \nНе доступны законные и хаотичные мировоз. \nБазовая скорость = 9.',
       },
       breakLeash: {
         name: 'Порвав поводок',
-        desc: 'Сбрасывает остатки человечности на 1 минуту. После требует уединения в 1 раунд. +2 СИЛ, +2 к скорости, +1 к попаданию врукопашную. Все проверки ИНТ и ХАР авт. проваливаются. Тяжело опознать как гуманоида. Только инстинкты и заранее намеченная цель.',
+        desc: 'Сбрасывает остатки человечности на 1 минуту. После требует уединения в 1 раунд. \n+2 СИЛ, +2 к скорости, +1 к попаданию врукопашную. Все проверки ИНТ и ХАР авт. проваливаются. \n\nТяжело опознать как гуманоида. Только инстинкты и заранее намеченная цель.',
       },
       prospects: {
         name: 'Перспективность',
-        desc: 'ЛОВ +3, ТЕЛ -3, ИНТ +2, МУД +1. +Спасбр. Ловкости, +навык Акробатики. Баз. скорость = 13.',
+        desc: 'ЛОВ +3, ТЕЛ -3, ИНТ +2, МУД +1. +Спасбр. Ловкости, +навык Акробатики. \nБаз. скорость = 13.',
       },
       adjustment: {
         name: 'Подстройка',
-        desc: 'Может с помехой повторить способность, увиденную в успешном исполнении за последние сутки. При удачном повторении — использует её свободно до конца суток, согласно условиям способности. Проведя сутки в окружении незнакомой речи, начинает понимать её на слух.',
+        desc: 'Может с помехой повторить способность, увиденную в успешном исполнении за последние сутки. При удачном повторении — использует её свободно до конца суток, согласно условиям способности. \n\nПроведя сутки в окружении незнакомой речи, начинает понимать её на слух.',
       },
       nastiness: {
         name: 'Пакостность',
-        desc: '+2 ЛОВ, -2 ТЕЛ, -2 ИНТ, +1 ХАР. +Спасбр. Харизмы, +навык Скрытности. Только хаотичное мировоз. Ни дня без пакости. Баз. скорость = 9.',
+        desc: '+2 ЛОВ, -2 ТЕЛ, -2 ИНТ, +1 ХАР. +Спасбр. Харизмы, +навык Скрытности. \nТолько хаотичное мировоззрение. Ни дня без пакости. \nБаз. скорость = 9.',
       },
       cleverEscape: {
         name: 'Ловкий побег',
@@ -686,7 +739,7 @@
       },
       aggressiveness: {
         name: 'Агрессивность',
-        desc: 'СИЛ и ТЕЛ +2, ИНТ -2, + навык Запугивания и спасбр. Силы. Законно-доброе мировоз.недоступно. Базовая скорость = 11.',
+        desc: 'СИЛ и ТЕЛ +2, ИНТ -2, +навык Запугивания и спасбр. Силы. \nЗаконно-доброе мировоз.недоступно. \nБазовая скорость = 11.',
       },
       burst: {
         name: 'Врыв',
@@ -694,19 +747,19 @@
       },
       arrogance: {
         name: 'Надменность',
-        desc: '+2 ЛОВ, +3 ИНТ, -2 МУД, +1 ХАР. +Спасбр. Интеллекта. +Навыки Магии и Убеждения. Проверки ХАР против НЕ Эволюдов с помехой. Сразу имеет 10 000пруб. Баз. скорость = 12.',
+        desc: '+2 ЛОВ, +3 ИНТ, -2 МУД, +1 ХАР. +Спасбр. Интеллекта. +Навыки Магии и Убеждения. \nПроверки ХАР против НЕ Эволюдов с помехой. \nСразу имеет 10 000пруб. Баз. скорость = 12.',
       },
       telekinesis: {
         name: 'Телекинез',
-        desc: 'Силой мысли контролирует предметы в радиусе 5м, будто одной рукой.',
+        desc: 'Силой мысли контролирует предметы в радиусе 5м, будто бы одной рукой.',
       },
       searchForFood: {
         name: 'Поиск еды',
-        desc: 'Раз в сутки может учуять самое ароматное съедобное в радиусе 30м. Без проверок, но если съедобного нет — умение потрачено впустую.',
+        desc: 'Раз в сутки может учуять самое ароматное съедобное в радиусе 30м. \nБез проверок, но если съедобного нет — умение потрачено впустую.',
       },
       secondWind: {
         name: 'Второе дыхание',
-        desc: 'В свой ход вы можете бонусным действием восстановить ХП в размере 1д10 + ваш уровень. Откат: любой отдых.',
+        desc: 'В свой ход вы можете бонусным действием восстановить ХП в размере 1д10 + ваш уровень. \nОткат: любой отдых.',
       },
       tough: {
         name: 'Стойкость',
@@ -714,19 +767,19 @@
       },
       sneakAttack: {
         name: 'Скрытая атака',
-        desc: 'Один раз в ход вы можете причинить дополнительный урон 1д6 одному из существ, по которому вы попали атакой, совершённой с преимуществом к броску атаки. Атака должна использовать дальнобойное оружие или оружие со свойством «фехтовальное». Вам не нужно иметь преимущество при броске атаки, если другой враг цели находится в пределах 5 футов от неё. Этот враг не должен быть недееспособным, и у вас не должно быть помехи для броска атаки.',
+        desc: 'Один раз в ход вы можете причинить дополнительный урон 1д6 одному из существ, по которому вы попали атакой, совершённой с преимуществом к броску атаки. Атака должна использовать дальнобойное оружие или оружие со свойством «фехтовальное». \n\nВам не нужно иметь преимущество при броске атаки, если другой враг цели находится в пределах 5 футов от неё. Этот враг не должен быть недееспособным, и у вас не должно быть помехи для броска атаки.',
       },
       thievesJargon: {
         name: 'Воровской жаргон',
-        desc: 'Вы выучили воровской жаргон, тайную смесь диалекта, жаргона и шифра, который позволяет скрывать сообщения в, казалось бы, обычном разговоре. Только другое существо, знающее воровской жаргон, понимает такие сообщения. Это занимает в четыре раза больше времени, нежели передача тех же слов прямым текстом.',
+        desc: 'Вы выучили воровской жаргон, тайную смесь диалекта, жаргона и шифра, который позволяет скрывать сообщения в, казалось бы, обычном разговоре. \nТолько другое существо, знающее воровской жаргон, понимает такие сообщения. \nЭто занимает в четыре раза больше времени, нежели передача тех же слов прямым текстом.',
       },
       seduction: {
         name: 'Соблазнение',
-        desc: 'Пытаетесь соблазнить гуманоида. Состязание вашей ХАР, против его спасбр. МУД (с преимуществом, если его атакуют). Если вы преуспели, гуманоид получает Очарование от вас, пока не выспится или не получит вред от вас. Он обязательно поймет, что его обманули.',
+        desc: 'Пытаетесь соблазнить гуманоида. Состязание вашей ХАР, против его спасбр. МУД (с преимуществом, если его атакуют). \nЕсли вы преуспели — гуманоид очарован вами, пока не выспится или не получит вред от вас. \nОн обязательно поймет, что вы его обманули.',
       },
       inspirationOfBard: {
         name: 'Вдохновение барда',
-        desc: 'Своими словами с добавлением музыки вы можете вдохновлять других. Для этого вы должны бонусным действием выбрать одно существо, отличное от вас, в пределах 20м, которое может вас слышать. Это существо получает 1д6 вдохновения. В течение следующих 10 минут оно может один раз бросить эту кость и добавить результат к проверке характеристики, броску атаки или спасброску. Вы можете использовать это умение количество раз, равное модификатору вашей Харизмы, но как минимум один раз. Потраченные использования этого умения восстанавливаются после продолжительного отдыха.',
+        desc: 'Своими словами с добавлением музыки вы можете вдохновлять других. \nДля этого вы должны бонусным действием выбрать одно существо, отличное от вас, в пределах 20м, которое может вас слышать. Это существо получает 1д6 вдохновения. \n\nВ течение следующих 10 минут оно может один раз бросить эту кость и добавить результат к проверке характеристики, броску атаки или спасброску. \nВы можете использовать это умение количество раз, равное модификатору вашей Харизмы, но как минимум один раз. Потраченные использования этого умения восстанавливаются после продолжительного отдыха.',
       },
       lifeOfTheParty: {
         name: 'Душа компании',
@@ -734,15 +787,15 @@
       },
       sellNonsense: {
         name: 'Втереть дичь',
-        desc: 'Вербальная атака. Издевательски предлагает купить ерунду слышащей цели. Цель должна преуспеть в спасбр. Мудрости, по сложности заданной атакующим (ХАР), иначе получит урон равный 1 + мод. ХАР атакующего.',
+        desc: 'Вербальная атака. Издевательски предлагает купить ерунду слышащей цели. \nЦель должна преуспеть в спасбр. Мудрости, по сложности заданной атакующим (ХАР), иначе получит урон равный 1 + мод. ХАР атакующего.',
       },
       constructor: {
         name: 'Конструктор',
-        desc: 'Из окружающего хлама пытается собрать небольшое устройство. Проверка ИНТ: 15 - механический прибор за 10 мин; 20 - электроприбор за 1 ч. Безделушка не требует проверки и занимает минуту.',
+        desc: 'Из окружающего хлама пытается собрать небольшое устройство. \nПроверка ИНТ: \n\n15 - механический прибор за 10 мин; \n\n20 - электроприбор за 1 ч. \n\nБезделушка не требует проверки и занимает минуту.',
       },
       promise: {
         name: 'Обещание',
-        desc: 'У вас есть запас общественного доверия равный (уровень * 5) + мод. ХАР, который восстанавливается после короткого отдыха. Вы можете действием похлопать союзника по плечу и заверить, что в будущем всё будет хорошо. Восстановите ему ХП из своего запаса доверия.',
+        desc: 'У вас есть запас общественного доверия равный (уровень * 5) + мод. ХАР, который восстанавливается после короткого отдыха. \n\nВы можете действием похлопать союзника по плечу и заверить, что в будущем всё будет хорошо. \nВосстановите ему ХП из своего запаса доверия.',
       },
       coldResistance: {
         name: 'Сопротивление холоду',
@@ -750,7 +803,7 @@
       },
       documentIntimidation: {
         name: 'Предъявление документа',
-        desc: 'Вне боя. Вы демонстрируете ксиву цели, которая вас не знает. Цель совершает спасбросок МУД против Сл. = 8 + ваш уровень + ваша ХАР(Запуг). При провале, цель получает Испуг от вас до начала боя. ВАШЕ ЛИЦО ДОЛЖНО СООТВЕТСВОВАТЬ ДОК-ТУ!',
+        desc: 'Вне боя. \nВы демонстрируете ксиву цели, которая вас не знает. Цель совершает спасбросок МУД против Сл. = 8 + ваш уровень + ваша ХАР(Запуг). \nПри провале, цель получает Испуг от вас до начала боя. \n\nВАШЕ ЛИЦО ДОЛЖНО СООТВЕТСВОВАТЬ ДОКУМЕНТУ!',
       },
 
     };
@@ -864,7 +917,7 @@
       боевой_посох: {
         itemType: 'боевые_посохи',
         desc: 'Крепкая палка длиной около 130см. 1д6 дробящего урона. Универсальное оружие(1д8).',
-        attacks: ['Удар посохом (1 рука): 1д6 + мод СИЛ дробящий.', 'Удар посохом (2 руки): 1д8 + мод СИЛ дробящий.'],
+        attack: [{name: 'Удар посохом (1 рука)', desc: '1д6 + мод СИЛ дробящий.',}, {name: 'Удар посохом (2 руки)', desc: '1д8 + мод СИЛ дробящий.'}],
         weight: 2,
         equipable: true,
       },
@@ -878,7 +931,7 @@
       булава: {
         itemType: 'булавы',
         desc: 'Палка длиной около 1м, с мощным утолщением на конце. 1д6 дробящего урона.',
-        attacks: ['Удар булавой: 1д6 + мод СИЛ дробящий.'],
+        attack: [{name: 'Удар булавой', desc: '1д6 + мод СИЛ дробящий.'}],
         weight: 2,
         equipable: true,
       },
@@ -891,7 +944,8 @@
       кинжал: {
         itemType: 'кинжалы',
         desc: 'Готовый убивать нож. 1д4 колющего урона. Лёгкое, метательное(7/20), фехтовальное оружие.',
-        attacks: ['Удар кинжалом(лёгк): 1д4 + мод СИЛ/ЛОВ колющий.', 'Метание кинжала(лёгк): 7/20м, 1д4 + мод СИЛ/ЛОВ колющий.'],
+        attack: [
+          {name: 'Удар кинжалом(лёгк)', desc: '1д4 + мод СИЛ/ЛОВ колющий.'}, {name: 'Метание кинжала(лёгк)', desc: ' 7/20м, 1д4 + мод СИЛ/ЛОВ колющий.'}],
         weight: 0.45,
         equipable: true,
       },
@@ -902,7 +956,7 @@
       дубинка: {
         itemType: 'дубинки',
         desc: 'Палка из дерева, пластика или резины длиной около 60см. 1д4 дробящего урона. Лёгкое оружие.',
-        attacks: ['Удар дубинкой(лёгк): 1д4 + мод СИЛ дробящий.'],
+        attack: [{name: 'Удар дубинкой(лёгк)', desc: '1д4 + мод СИЛ дробящий.'}],
         weight: 1,
         equipable: true,
       },
@@ -947,7 +1001,7 @@
       },
       кнут: {
         desc: 'Длинный плетёный ремень на ручке. 1д4 рубящего урона. Фехтовальное оружие с увеличенной досягаемостью.',
-        attacks: ['Удар кнутом(досяг): 1д4 + мод СИЛ/ЛОВ рубящий.'],
+        attack: [{name: 'Удар кнутом(досяг)', desc: '1д4 + мод СИЛ/ЛОВ рубящий.'}],
         itemType: 'кнуты',
         weight: 1.5,
         equipable: true,
@@ -970,7 +1024,7 @@
       дробовик_ремингтон: {
         desc: 'Гладкоствольный огнестрел, стреляющий маленькими шариками. Потратьте действие, чтобы вооружиться им. 4д4 колющего урона. Хаотичное дальнобойное(5/9м) оружие с боеприпасами и перезарядкой. Использует патроны Среднего калибра.',
         itemType: 'дробовики',
-        attacks: ['Выстрел из дробовика: 5/9м, 4д4 колющий. Средний патрон. Перезарядка 1 действие.'],
+        attack: [{name: 'Выстрел из дробовика', desc: '5/9м, 4д4 колющий. Средний патрон. Перезарядка 1 действие.'}],
         weight: 3.2,
         equipable: true,
       },
@@ -998,7 +1052,7 @@
       разводной_ключ: {
         itemType: 'дубинки',
         desc: 'Металический инструмент на все случаи жизни. Достаточно тяжелый и удобный, чтобы использовать не по назначению. 1д4 дробящего урона. Лёгкое оружие.',
-        attacks: ['Удар ключём(лёгк): 1д4 + мод СИЛ дробящий.'],
+        attack: [{name: 'Удар ключём(лёгк)', desc: '1д4 + мод СИЛ дробящий.'}],
         weight: 1,
         equipable: true,
       },
@@ -1032,14 +1086,14 @@
       пистолет_макарова: {
         desc: 'Дешёвый личный ствол. 2д6 колющего урона. Лёгкое дальнобойное(13/30м) хаотичное оружие с боеприпасами и перезарядкой. Использует патроны Малого калибра.',
         itemType: 'пистолеты',
-        attacks: ['Выстрел из пистолета(лёгк): 13/30м, 2д6 колющий. Малый патрон. Перезарядка 1 действие.'],
+        attack: [{name: 'Выстрел из пистолета(лёгк)', desc: '13/30м, 2д6 колющий. Малый патрон. Перезарядка 1 действие.'}],
         weight: 0.73,
         equipable: true,
       },
       дилдо: {
         itemType: 'дубинки',
         desc: 'Фалоиммитатор. Бей им по лбу и никак иначе!',
-        attacks: ['Шлепок пенисом(лёгк): 1д4 + мод СИЛ дробящий.'],
+        attack: [{name: 'Шлепок пенисом(лёгк)', desc: '1д4 + мод СИЛ дробящий.'}],
         weight: 0.8,
         equipable: true,
       },
@@ -1133,7 +1187,7 @@
     const equipped = {};
 
     const proficiencies = {
-      всё_оружие: ['простое_оружие', 'воинское_оружие', 'огнестрельное_оружие'],
+      всё_оружие: ['безоружные_атаки', 'простое_оружие', 'воинское_оружие', 'огнестрельное_оружие'],
       простое_оружие: ['простое_рукопашное_оружие', 'простое_дальнобойное_оружие',],
       простое_рукопашное_оружие: ['боевые_посохи', 'булавы', 'дубинки', 'кинжалы', 'копья', 'лёгкие_молоты', 'метательные_копья', 'палицы', 'ручные_топоры', 'серпы',],
       простое_дальнобойное_оружие: ['лёгкие_арбалеты', 'дротики', 'короткие_луки', 'пращи'],
@@ -1200,7 +1254,7 @@
 
 
     function applyBonuses() {
-      const base = { str: 10, dex: 10, con: 10, int: 10, wis: 10, chr: 10, ac: 10, spd: 0, pdr: 0 };
+      const base = { str: 10, dex: 10, con: 10, int: 10, wis: 10, chr: 10, ac: 10, spd: 0, pdr: 0, };
       const total = { ...base };
 
       activeBonusesSources = collectBonusesSources();
@@ -1278,7 +1332,20 @@
         const item = items[id];
         const itemDiv = document.createElement('div');
         itemDiv.className = 'item';
-        itemDiv.title = item.desc || '';
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.style.display = 'none';
+        tooltip.innerText = item.desc;
+
+        itemDiv.addEventListener('mouseenter', () => {
+          tooltip.style.display = 'block';
+          itemDiv.appendChild(tooltip);
+        });
+
+        itemDiv.addEventListener('mouseleave', () => {
+          tooltip.style.display = 'none';
+          if (itemDiv.contains(tooltip)) itemDiv.removeChild(tooltip);
+        });
         itemDiv.innerHTML = `
       <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
       ${count > 1 ? ' × ' + count : ''}
@@ -1304,7 +1371,20 @@
         const item = items[id];
         const eqDiv = document.createElement('div');
         eqDiv.className = 'item equipped';
-        eqDiv.title = item.desc || '';
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.style.display = 'none';
+        tooltip.innerText = item.desc;
+
+        eqDiv.addEventListener('mouseenter', () => {
+          tooltip.style.display = 'block';
+          eqDiv.appendChild(tooltip);
+        });
+
+        eqDiv.addEventListener('mouseleave', () => {
+          tooltip.style.display = 'none';
+          if (eqDiv.contains(tooltip)) eqDiv.removeChild(tooltip);
+        });
         eqDiv.innerHTML = `
       <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
       ${count > 1 ? ' × ' + count : ''}
@@ -1453,8 +1533,11 @@
         menu.appendChild(useBtn);
       }
 
-      // Кнопка "Экипировать"
-      if (item.equipable) {
+      const inInventory = inventory[itemId] > 0;
+      const isEquipped = equipped[itemId] > 0;
+
+      // Кнопка "Экипировать если  не экипирован"
+      if (item.equipable && inInventory && !isEquipped) {
         const equipBtn = document.createElement('button');
         equipBtn.textContent = 'Экипировать';
         equipBtn.onclick = () => {
@@ -1471,6 +1554,20 @@
           document.body.removeChild(menu);
         };
         menu.appendChild(equipBtn);
+      }
+      // Кнопка "Снять" — если предмет экипирован
+      if (isEquipped) {
+        const unequipBtn = document.createElement('button');
+        unequipBtn.textContent = 'Снять';
+        unequipBtn.onclick = () => {
+          equipped[itemId]--;
+          if (equipped[itemId] <= 0) delete equipped[itemId];
+          inventory[itemId] = (inventory[itemId] || 0) + 1;
+          updateInventory();
+          applyBonuses();
+          document.body.removeChild(menu);
+        };
+        menu.appendChild(unequipBtn);
       }
 
       // Кнопка "Выбросить"
@@ -1789,6 +1886,80 @@
       document.getElementById('profbonus').value = profbonus;
     }
 
+function collectAttacksFromSources() {
+  const raceKey = document.getElementById('race').value;
+  const race = races[raceKey];
+  const attacks = [];
+
+  // Безоружная атака от расы
+  if (race?.attack) {
+    attacks.push({
+      ...race.attack,
+      source: 'race'
+    });
+  }
+
+  // Атаки от экипированных предметов
+  for (const id in equipped) {
+    const item = items[id];
+    if (item?.attack) {
+      const atkList = Array.isArray(item.attack) ? item.attack : [item.attack];
+      atkList.forEach(atk => {
+        attacks.push({
+          ...atk,
+          itemType: item.itemType,
+          source: id
+        });
+      });
+    }
+  }
+
+  return attacks;
+}
+
+function updateAttacks() {
+  const container = document.getElementById('attackContainer');
+  container.innerHTML = '';
+
+  const attacks = collectAttacksFromSources();
+
+  const charClass = document.getElementById('class').value;
+  const profs = getAllProficiencies(classes[charClass]);
+
+  attacks.forEach(atk => {
+    const div = document.createElement('div');
+    div.className = 'attack';
+
+    const isProficient = profs.includes(atk.itemType);
+    const profText = atk.itemType
+      ? (isProficient ? `\nВы владеете: ${atk.itemType.replace(/_/g, ' ')}` : '')
+      : '';
+
+    div.title = atk.desc + profText;
+    div.textContent = atk.name;
+    container.appendChild(div);
+  });
+}
+
+function getAllProficiencies(classData) {
+  if (!classData) return [];
+
+  let flat = [];
+
+  function expand(group) {
+    if (Array.isArray(group)) {
+      group.forEach(g => expand(g));
+    } else if (proficiencies[group]) {
+      expand(proficiencies[group]);
+    } else {
+      flat.push(group);
+    }
+  }
+
+  expand(classData.proficiency || []);
+  return flat;
+}
+
     function getUpgradePoints(level) {
       const thresholds = [4, 8, 12, 16, 19];
       return thresholds.filter(lvl => level >= lvl).length * 2;
@@ -1901,58 +2072,58 @@
     }
 
     // Подсчёт брони
-function updateAC() {
-  const dexMod = parseInt(document.getElementById('dex_mod').dataset.mod || 0);
-  const baseAC = 10;
-  let armorBonus = 0;
-  let dexBonus = dexMod;
-  let foundArmor = false;
+    function updateAC() {
+      const dexMod = parseInt(document.getElementById('dex_mod').dataset.mod || 0);
+      const baseAC = 10;
+      let armorBonus = 0;
+      let dexBonus = dexMod;
+      let foundArmor = false;
 
-  const armorTypes = {
-    // Лёгкие доспехи
-    стёганные_доспехи: { bonus: 1, maxDex: null },
-    кожаные_доспехи: { bonus: 1, maxDex: null },
-    проклёпанной_кожи: { bonus: 2, maxDex: null },
+      const armorTypes = {
+        // Лёгкие доспехи
+        стёганные_доспехи: { bonus: 1, maxDex: null },
+        кожаные_доспехи: { bonus: 1, maxDex: null },
+        проклёпанной_кожи: { bonus: 2, maxDex: null },
 
-    // Средние доспехи
-    шкурные_доспехи: { bonus: 2, maxDex: 2 },
-    кольчужные_рубахи: { bonus: 3, maxDex: 2 },
-    чешуйчатые_доспехи: { bonus: 4, maxDex: 2 },
-    кирасы: { bonus: 4, maxDex: 2 },
-    полулаты: { bonus: 5, maxDex: 2 },
+        // Средние доспехи
+        шкурные_доспехи: { bonus: 2, maxDex: 2 },
+        кольчужные_рубахи: { bonus: 3, maxDex: 2 },
+        чешуйчатые_доспехи: { bonus: 4, maxDex: 2 },
+        кирасы: { bonus: 4, maxDex: 2 },
+        полулаты: { bonus: 5, maxDex: 2 },
 
-    // Тяжёлые доспехи (без Ловкости)
-    колечные_доспехи: { bonus: 6, maxDex: 0 },
-    кольчуги: { bonus: 6, maxDex: 0 },
-    наборные_доспехи: { bonus: 7, maxDex: 0 },
-    латы: { bonus: 8, maxDex: 0 },
-  };
+        // Тяжёлые доспехи (без Ловкости)
+        колечные_доспехи: { bonus: 6, maxDex: 0 },
+        кольчуги: { bonus: 6, maxDex: 0 },
+        наборные_доспехи: { bonus: 7, maxDex: 0 },
+        латы: { bonus: 8, maxDex: 0 },
+      };
 
-  // Ищем экипированный доспех
-  for (const id in equipped) {
-    const item = items[id];
-    if (!item || !item.itemType || !equipped[id]) continue;
+      // Ищем экипированный доспех
+      for (const id in equipped) {
+        const item = items[id];
+        if (!item || !item.itemType || !equipped[id]) continue;
 
-    if (armorTypes[item.itemType]) {
-      const armor = armorTypes[item.itemType];
-      armorBonus = armor.bonus;
-      dexBonus = armor.maxDex !== null ? Math.min(dexMod, armor.maxDex) : dexMod;
-      foundArmor = true;
-      break; // первый найденный доспех применяется
+        if (armorTypes[item.itemType]) {
+          const armor = armorTypes[item.itemType];
+          armorBonus = armor.bonus;
+          dexBonus = armor.maxDex !== null ? Math.min(dexMod, armor.maxDex) : dexMod;
+          foundArmor = true;
+          break; // первый найденный доспех применяется
+        }
+      }
+
+      // Бонусы от других источников (например, щиты или магии)
+      let extraBonus = 0;
+      for (const source of activeBonusesSources) {
+        if (source.bonuses && source.bonuses.ac) {
+          extraBonus += source.bonuses.ac;
+        }
+      }
+
+      const totalAC = (foundArmor ? baseAC + armorBonus + dexBonus : baseAC + dexBonus) + extraBonus;
+      document.getElementById('ac').value = totalAC;
     }
-  }
-
-  // Бонусы от других источников (например, щиты или магии)
-  let extraBonus = 0;
-  for (const source of activeBonusesSources) {
-    if (source.bonuses && source.bonuses.ac) {
-      extraBonus += source.bonuses.ac;
-    }
-  }
-
-  const totalAC = (foundArmor ? baseAC + armorBonus + dexBonus : baseAC + dexBonus) + extraBonus;
-  document.getElementById('ac').value = totalAC;
-}
 
     function changePDR() {
       const delta = parseInt(document.getElementById('pdrChange').value);
@@ -2054,6 +2225,7 @@ function updateAC() {
       updateAbilities();
       updateSaves();
       updateProficiencies();
+      updateAttacks();
       updateAC();
     }
 
