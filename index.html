@@ -184,13 +184,14 @@
   <div class="container">
     <h1 style="text-align: center;">Лист персонажа</h1>
 
-    <input type="text" id="name"
+    <input type="text" id="name" onchange="loadCharacter()"
       style="width: 34rem; font-size: larger; font-weight: 600; background: #ececec; color: #000000; text-align:center; display: block; margin: 0 auto;"
       placeholder="ФИО «Кличка»"> <button onclick="saveCharacter()" style="margin-left: 16rem;">Сохранить</button>
 
 
     <div class="row"><label>🛠 Класс:
-        <select id="class" onchange="applyBonuses(); updateSubclassOptions(); updateInventory(); updateAC(); updateInstrumentOptions(); stopSelection('class', this)"
+        <select id="class"
+          onchange="applyBonuses(); updateSubclassOptions(); updateInventory(); updateAC(); updateInstrumentOptions(); stopSelection('class', this)"
           style="font-weight: 600;">
           <option value="">-- выбери класс --</option>
           <option value="бомж">Бомж</option>
@@ -207,7 +208,9 @@
 
       <div id="subclass-container" style="display: none;">
         <label>⚒ Подкласс:
-          <select id="subclass" onchange="applyBonuses(); updateInventory(); updateAll(); stopSelection('subclass', this)" style="font-weight: 600;">
+          <select id="subclass"
+            onchange="applyBonuses(); updateInventory(); updateAll(); stopSelection('subclass', this)"
+            style="font-weight: 600;">
             <option value="">--выбери подкласс--</option>
           </select>
         </label>
@@ -216,7 +219,8 @@
 
 
     <label style="width: 10rem;">👽 Раса:
-      <select id="race" onchange="applyBonuses(); updateAbilities(); stopSelection('race', this)" style="font-weight: 600;">
+      <select id="race" onchange="applyBonuses(); updateAbilities(); stopSelection('race', this)"
+        style="font-weight: 600;">
         <option value="">-- выбери расу --</option>
         <option value="человек">Человек</option>
         <option value="деген">Дегенерат</option>
@@ -308,7 +312,8 @@
         <div style="margin-top: 1rem; background: #503a0627;">
           <div style="display: flex;">
             <h3>Атаки:</h3><button onclick="toggleBlock('attackContainer', this)"
-              style="height: min-content; margin-top: 20px; margin-left: 10px; background: #503a0627;">Скрыть атаки</button>
+              style="height: min-content; margin-top: 20px; margin-left: 10px; background: #503a0627;">Скрыть
+              атаки</button>
           </div>
           <div id="attackContainer" , class="attack-grid"></div>
         </div>
@@ -334,26 +339,29 @@
 
       <h3 style="font-weight: bolder;">Х А Р А К Т Е Р И С Т И К И</h3>
       <div class="row">
-        <label style="color: #4f4236; font-weight: bolder;">✊ СИЛ: <span style="display: flex; gap: 6px;"><input 
+        <label style="color: #4f4236; font-weight: bolder;">✊ СИЛ: <span style="display: flex; gap: 6px;"><input
               type="text" id="str" value="10" onchange="updateAll()" readonly
-              style="background: #726252; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button style="display: none;"
-              onclick="increaseStat('str');">+</button>
+              style="background: #726252; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button
+              style="display: none; background: #726252; box-shadow: 0 0 25px 7px #726252; border: 2px solid #ffffffd2;"
+              onclick="increaseStat('str');">➕</button>
             <input type="text" id="str_mod" readonly
               style="background: #4f4236; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #726252;">
             <input type="checkbox" id="str_save" onchange="updateAll" class="savetrow"></span></label>
 
         <label style=" color: #5e7d5a; font-weight: bolder;">🏃‍♂️ ЛОВ: <span style="display: flex; gap: 6px;"><input
               type="text" id="dex" value="10" onchange="updateAll()" readonly
-              style="background: #7c9e78; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button style="display: none;"
-              onclick="increaseStat('dex');">+</button>
+              style="background: #7c9e78; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button
+              style="display: none; background: #7c9e78; box-shadow: 0 0 25px 7px #7c9e78; border: 2px solid #ffffffd2;"
+              onclick="increaseStat('dex');">➕</button>
             <input type="text" id="dex_mod" readonly
               style="background: #5e7d5a; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #7c9e78;">
             <input type="checkbox" id="dex_save" onchange="updateAll" class="savetrow"></span></label>
 
-        <label style="color: #813b3b; font-weight: bolder;">💪 ТЕЛ: <span style="display: flex; gap: 6px;"><input
+        <label style="color: #813b3b; font-weight: bolder;">🧱 ТЕЛ: <span style="display: flex; gap: 6px;"><input
               type="text" id="con" value="10" onchange="updateAll()" readonly
-              style="background: #9d5252; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button style="display: none;"
-              onclick="increaseStat('con');">+</button>
+              style="background: #9d5252; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button
+              style="display: none; background: #9d5252; box-shadow: 0 0 25px 7px #9d5252; border: 2px solid #ffffffd2;"
+              onclick="increaseStat('con');">➕</button>
             <input type="text" id="con_mod" readonly
               style="background: #813b3b; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #9d5252;">
             <input type="checkbox" id="con_save" onchange="updateAll" class="savetrow"></span></label>
@@ -362,24 +370,27 @@
       <div class="row">
         <label style="color: #cd9a49; font-weight: bolder;">🧠 ИНТ: <span style="display: flex; gap: 6px;"><input
               type="text" id="int" value="10" onchange="updateAll()" readonly
-              style="background: #d7a95d; color: #5d5d5d; width: 20px; text-align: center; font-size:x-small"><button style="display: none;"
-              onclick="increaseStat('int');">+</button>
+              style="background: #d7a95d; color: #5d5d5d; width: 20px; text-align: center; font-size:x-small"><button
+              style="display: none; background: #d7a95d; box-shadow: 0 0 25px 7px #d7a95d; border: 2px solid #ffffffd2;"
+              onclick="increaseStat('int');">➕</button>
             <input type="text" id="int_mod" readonly
               style="background: #cd9a49; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #d7a95d;">
             <input type="checkbox" id="int_save" onchange="updateAll" class="savetrow"></span></label>
 
-        <label style="color: #4a2470; font-weight: bolder;">📘 МУД: <span style="display: flex; gap: 6px;"><input
+        <label style="color: #4a2470; font-weight: bolder;">🔮 МУД: <span style="display: flex; gap: 6px;"><input
               type="text" id="wis" value="10" onchange="updateAll()" readonly
-              style="background: #5e3587; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button style="display: none;"
-              onclick="increaseStat('wis');">+</button>
+              style="background: #5e3587; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button
+              style="display: none; background: #5e3587; box-shadow: 0 0 25px 7px #5e3587; border: 2px solid #ffffffd2;"
+              onclick="increaseStat('wis');">➕</button>
             <input type="text" id="wis_mod" readonly
               style="background: #4a2470; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #5e3587;">
             <input type="checkbox" id="wis_save" onchange="updateAll" class="savetrow"></span></label>
 
-        <label style="color: #374297; font-weight: bolder;">😏 ХАР: <span style="display: flex; gap: 6px;"><input
+        <label style="color: #374297; font-weight: bolder;">💙 ХАР: <span style="display: flex; gap: 6px;"><input
               type="text" id="chr" value="10" onchange="updateAll()" readonly
-              style="background: #4e5ab0; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button style="display: none;"
-              onclick="increaseStat('chr');">+</button>
+              style="background: #4e5ab0; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button
+              style="display: none; background: #4e5ab0; box-shadow: 0 0 25px 7px #4e5ab0; border: 2px solid #ffffffd2;"
+              onclick="increaseStat('chr');">➕</button>
             <input type="text" id="chr_mod" readonly
               style="background: #374297; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #4e5ab0;">
             <input type="checkbox" id="chr_save" onchange="updateAll" class="savetrow"></span></label>
@@ -399,13 +410,14 @@
 
       <div style="display: flex;">
         <h4 style="color: #5f5d5a;">Владения:</h4><button onclick="toggleBlock('proficiencies-list',this)"
-          style="height: min-content; margin-top: 20px; margin-left: 10px; background: #5f5d5a45;">Скрыть владения</button>
+          style="height: min-content; margin-top: 20px; margin-left: 10px; background: #5f5d5a45;">Скрыть
+          владения</button>
       </div>
       <ul id="proficiencies-list"></ul>
       <div id="instrument-select-container" style="display: none;">
-  <label>Выбери 2 инструмента:</label>
-  <div id="instrument-options"></div>
-</div>
+        <label>Выбери 2 инструмента:</label>
+        <div id="instrument-options"></div>
+      </div>
     </div>
 
 
@@ -420,7 +432,8 @@
       <div style="border: dashed #2c310419;">
         <div style="display: flex;">
           <h3>Инвентарь:</h3><button onclick="toggleBlock('inventoryContainer',this)"
-            style="height: min-content; margin-top: 20px; margin-left: 10px; background: #503a0627;">Скрыть инвентарь</button>
+            style="height: min-content; margin-top: 20px; margin-left: 10px; background: #503a0627;">Скрыть
+            инвентарь</button>
         </div>
         <div id="inventoryContainer">
           <div id="inventory" class="row"></div>
@@ -453,7 +466,8 @@
     </div>
 
     <div class="row">
-    <h3>Заметки:</h3><button onclick="toggleBlock('notes', this)" style="margin-bottom: 15px;">Скрыть заметки</button></div>
+      <h3>Заметки:</h3><button onclick="toggleBlock('notes', this)" style="margin-bottom: 15px;">Скрыть заметки</button>
+    </div>
     <textarea id="notes"></textarea>
 
 
@@ -577,7 +591,7 @@
       },
       проститут: {
         equipped: ['плащ', 'кнут',],
-        inventory: {'стринги':1, 'презерватив':5,},
+        inventory: { 'стринги': 1, 'презерватив': 5, },
         bonuses: { dex: 2, con: -2, int: -1, chr: 3, pdr: 2000 },
         hpDie: 8,
         proficiency: ['лёгкие_доспехи', 'боевые_посохи', ' кнуты', 'копья',],
@@ -605,7 +619,7 @@
       },
       продавец: {
         equipped: ['плащ', 'основной_товар',],
-        inventory: {'дробовик_ремингтон':1, 'патрон_средний':5, 'карты_игральные':1,},
+        inventory: { 'дробовик_ремингтон': 1, 'патрон_средний': 5, 'карты_игральные': 1, },
         bonuses: { str: -1, dex: -1, int: 1, wis: 1, chr: 2, pdr: 5000 },
         hpDie: 8,
         proficiency: ['лёгкие_доспехи', 'средние_доспехи', 'простое_оружие', 'карты',],
@@ -934,25 +948,11 @@
         desc: 'Две дневных порции разного вида огрызков в старом мешке. Пополняйте его на мусорках.',
         weight: 0.2,
       },
-      боевой_посох: {
-        itemType: 'боевые_посохи',
-        desc: 'Крепкая палка длиной около 130см. \n1д6 дробящего урона. \nУниверсальное оружие(1д8).',
-        attack: [{ name: 'Удар посохом (1 рука)', desc: '1д6 + мод СИЛ дробящий.', }, { name: 'Удар посохом (2 руки)', desc: '1д8 + мод СИЛ дробящий.' }],
-        weight: 2,
-        equipable: true,
-      },
       щит: {
         itemType: 'щиты',
         desc: 'Простая широкая доска из дерева или пластика, которую можно прикрепить к руке. \n+2 КБ.',
         bonuses: { ac: 2 },
         weight: 3,
-        equipable: true,
-      },
-      булава: {
-        itemType: 'булавы',
-        desc: 'Палка длиной около 1м, с мощным утолщением на конце. \n1д6 дробящего урона.',
-        attack: [{ name: 'Удар булавой', desc: '1д6 + мод СИЛ дробящий.' }],
-        weight: 2,
         equipable: true,
       },
       куртка: {
@@ -961,24 +961,9 @@
         weight: 0.6,
         equipable: true,
       },
-      кинжал: {
-        itemType: 'кинжалы',
-        desc: 'Готовый убивать нож. \n1д4 колющего урона. \nЛёгкое, метательное(7/20), фехтовальное оружие.',
-        attack: [
-          { name: 'Удар кинжалом(лёгк)', desc: '1д4 + мод СИЛ/ЛОВ колющий.' }, { name: 'Метание кинжала(лёгк)', desc: ' 7/20м, 1д4 + мод СИЛ/ЛОВ колющий.' }],
-        weight: 0.45,
-        equipable: true,
-      },
       скотч: {
         desc: 'Рулон почти бесконечной липкой ленты.',
         weight: 0.15,
-      },
-      дубинка: {
-        itemType: 'дубинки',
-        desc: 'Палка из дерева, пластика или резины длиной около 60см. \n1д4 дробящего урона. \nЛёгкое оружие.',
-        attack: [{ name: 'Удар дубинкой(лёгк)', desc: '1д4 + мод СИЛ дробящий.' }],
-        weight: 1,
-        equipable: true,
       },
       кираса: {
         itemType: 'кирасы',
@@ -1017,13 +1002,6 @@
         itemType: 'кожаные_доспехи',
         desc: 'Плотный тяжёлый плащ из кожи, латекса или т.п. \nКБ = 11 + мод ЛОВ.',
         weight: 2,
-        equipable: true,
-      },
-      кнут: {
-        desc: 'Длинный плетёный ремень на ручке. \n1д4 рубящего урона. \nФехтовальное оружие с увеличенной досягаемостью.',
-        attack: [{ name: 'Удар кнутом(досяг)', desc: '1д4 + мод СИЛ/ЛОВ рубящий.' }],
-        itemType: 'кнуты',
-        weight: 1.5,
         equipable: true,
       },
       презерватив: {
@@ -1166,41 +1144,306 @@
         weight: 0.15,
         useable: true,
       },
-      test: {
+      боевой_посох: {
+        itemType: 'боевые_посохи',
+        desc: 'Крепкая палка длиной около 130см. \n1д6 дробящего урона. \nУниверсальное оружие(1д8).',
+        attack: [{ name: 'Удар посохом (1 рука)', desc: '1д6 + мод СИЛ дробящий.', }, { name: 'Удар посохом (2 руки)', desc: '1д8 + мод СИЛ дробящий.' }],
+        weight: 2,
+        equipable: true,
+      },
+      булава: {
+        itemType: 'булавы',
+        desc: 'Палка длиной около 1м, с мощным утолщением на конце. \n1д6 дробящего урона.',
+        attack: [{ name: 'Удар булавой', desc: '1д6 + мод СИЛ дробящий.' }],
+        weight: 2,
+        equipable: true,
+      },
+      дубинка: {
+        itemType: 'дубинки',
+        desc: 'Палка из дерева, пластика или резины длиной около 60см. \n1д4 дробящего урона. \nЛёгкое оружие.',
+        attack: [{ name: 'Удар дубинкой(лёгк)', desc: '1д4 + мод СИЛ дробящий.' }],
+        weight: 1,
+        equipable: true,
+      },
+      кинжал: {
+        itemType: 'кинжалы',
+        desc: 'Готовый убивать нож. \n1д4 колющего урона. \nЛёгкое, метательное(7/20), фехтовальное оружие.',
+        attack: [
+          { name: 'Удар кинжалом(лёгк)', desc: '1д4 + мод СИЛ/ЛОВ колющий.' }, { name: 'Метание кинжала(лёгк)', desc: ' 7/20м, 1д4 + мод СИЛ/ЛОВ колющий.' }],
+        weight : 0.45,
+        equipable: true,
+      },
+      копьё: {
         desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 150,
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+      },
+      лёгкий_молот: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      метательное_копьё: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      палица: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      ручной_топор: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      серп: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      арбалет_лёгкий : {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      дротик: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      короткий_лук : {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      праща: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+      },
+      алебарда: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      боевая_кирка: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      боевой_молот: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      боевой_топор: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      глефа: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      двуручный_меч: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      длинное_копьё: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      длинный_меч: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      кнут: {
+        desc: 'Длинный плетёный ремень на ручке. \n1д4 рубящего урона. \nФехтовальное оружие с увеличенной досягаемостью.',
+        attack: [{ name: 'Удар кнутом(досяг)', desc: '1д4 + мод СИЛ/ЛОВ рубящий.' }],
+        itemType: 'кнуты',
+        weight: 1.5,
+        equipable: true,
+      },
+      короткиймеч: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+      },
+      молот: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      моргенштерн: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      пика: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      рапира: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      секира: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      скимитар: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        attack: [{ name: '', desc: '' },],
+        itemType: '',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      трезубец: {
+        desc: '1д6 колющий. \nМетательное(7/20м) универсальное(1д8) оружие.',
+        attack: [{ name: 'Удар трезубцем(1рук)', desc: '1д6 + мод СИЛ колющий.' }, { name: 'Удар трезубцем(2рук)', desc: '1д8 + мод СИЛ колющий.' }, { name: 'Метание трезубца', desc: '7/20м. 1д6 + мод СИЛ колющий.' },],
+        itemType: 'трезубцы',
+        weight: 2,
+        equipable: true,
+      },
+      цеп: {
+        desc: '1д8 дробящего урона.',
+        attack: [{ name: 'Удар цепом', desc: '1д8 + мод СИЛ дробящий.' },],
+        itemType: 'цепы',
+        weight: 1,
+        equipable: true,
+      },
+      арбалет_ручной: {
+        desc: '1д6 колющего урона. \nЛёгкое дальнобойное(10/40м) оружие с перезарядкой болтами.',
+        attack: [{ name: 'Выстрел из ручного арбалета(лёгк)', desc: '10/40м. 1д6 + мод ЛОВ колющий. Перезарядка болтом.' },],
+        itemType: 'ручные_артбалеты',
+        weight: 1.5,
+      },
+      арбалет_тяжёлый: {
+        desc: '1д10 колющего урона. \nДальнобойное(33/133м) тяжёлое двуручное оружие с перезарядкой. Требует болты.',
+        attack: [{ name: 'Выстрел из тяж. арбалета(двур)', desc: '33/133м. 1д10 + мод ЛОВ колющий. Перезарядка болтом.' },],
+        itemType: 'тяжёлые_арбалеты',
+        weight: 9,
+        equipable: true,
+      },
+      длинный_лук: {
+        desc: '1д8 колющего урона. \nДальнобойное(50/200м) двуручное тяжёлое оружие с перезарядкой. \nТребует стрелы.',
+        attack: [{ name: 'Выстрел из длин. лука(двур)', desc: '50/200м. 1д8 + мод ЛОВ колющий. Перезарядка стрелой.' },],
+        itemType: 'длинные_луки',
+        weight: 1,
+        equipable: true,
+      },
+      духовая_трубка: {
+        desc: 'Оружие для безшумного усыпления. 1 колющий урон. \nДальнобойное оружие (дис. 8/33) с перезарядкой. \nТребует иглы для стрельбы.',
+        attack: [{ name: 'Плевок иглы', desc: '8/33м. 1 + мод ЛОВ колющий. Перезарядка иглой.' },],
+        itemType: 'духовые_трубки',
+        weight: 0.5,
+        equipable: true,
+      },
+      сеть: {
+        desc: 'Метательное (1/5). \nСущества Большого и меньшего размеров, по которым попала атака сетью, становятся опутанными, пока не высвободятся. \nСеть не оказывает эффекта на бесформенных существ и тех, чей размер Огромный или ещё больше. \nСущество может действием совершить проверку Силы со Сл 10, чтобы высвободиться самому или освободить другое существо, находящееся в пределах его досягаемости. \nПричинение сети 5 единиц рубящего урона (КД 10) тоже освобождает существо, не причиняя ему вреда, оканчивая эффект и уничтожая сеть. \n\nЕсли вы действием, бонусным действием или реакцией совершаете атаку сетью, вы можете совершить только одну атаку, вне зависимости от количества положенных атак.',
+        weight: 1.5,
+        equipable: true,
+        useable: true,
       },
       test: {
         desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 150,
+        weight: 1,
+        equipable: true,
+        useable: true,
       },
       test: {
         desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 150,
+        weight: 1,
+        equipable: true,
+        useable: true,
       },
       test: {
         desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 150,
+        weight: 1,
+        equipable: true,
+        useable: true,
       },
       test: {
         desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 150,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 150,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 150,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 150,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 150,
+        weight: 1,
+        equipable: true,
+        useable: true,
       },
     };
 
@@ -1338,6 +1581,7 @@
       updateAll();
       updateAlignmentOptions();
       updateBackgroundOptions();
+      saveCharacter();
 
       // Обновляем макс. здоровье
       const conMod = parseInt(document.getElementById('con_mod').dataset.mod || 0);
@@ -1349,9 +1593,6 @@
 
 
     function updateInventory() {
-      console.log('Текущий список: ', Object.entries(inventory));
-      console.log('Описание предметов: ', items);
-
       const invList = document.getElementById('inventory');
       const weightDisplay = document.getElementById('weight');
       const equippedList = document.getElementById('equipped');
@@ -1440,6 +1681,7 @@
       }
 
       weightDisplay.textContent = `${totalWeight.toFixed(1)} кг`;
+      saveCharacter();
     }
 
     function equipItem(id) {
@@ -1584,7 +1826,7 @@
         const useBtn = document.createElement('button');
         useBtn.textContent = 'Использовать';
         useBtn.onclick = () => {
-          console.log(`Используем ${itemId}`);
+          console.log(`Использован ${itemId}`);
           // Здесь будет логика использования
           document.body.removeChild(menu);
         };
@@ -1600,7 +1842,7 @@
         const equipBtn = document.createElement('button');
         equipBtn.textContent = 'Экипировать';
         equipBtn.onclick = () => {
-          console.log(`Экипируем ${itemId}`);
+          console.log(`Экипирован ${itemId}`);
 
           if (!inventory[itemId] || inventory[itemId] <= 0) return;
           inventory[itemId] -= 1;
@@ -1619,6 +1861,7 @@
         const unequipBtn = document.createElement('button');
         unequipBtn.textContent = 'Снять';
         unequipBtn.onclick = () => {
+          console.log(`Снят ${itemId}`);
           equipped[itemId]--;
           if (equipped[itemId] <= 0) delete equipped[itemId];
           inventory[itemId] = (inventory[itemId] || 0) + 1;
@@ -1634,6 +1877,7 @@
         const dropBtn = document.createElement('button');
         dropBtn.textContent = 'Выбросить';
         dropBtn.onclick = () => {
+          console.log(`${itemId} выброшен`);
           inventory[itemId]--;
           if (inventory[itemId] <= 0) delete inventory[itemId];
           updateInventory();
@@ -1646,6 +1890,8 @@
           const dropAllBtn = document.createElement('button');
           dropAllBtn.textContent = 'Выбросить всё';
           dropAllBtn.onclick = () => {
+            const count = inventory[itemId];
+            console.log(`Все ${count} ${itemId} были выкинуты`)
             delete inventory[itemId];
             updateInventory();
             document.body.removeChild(menu);
@@ -1770,6 +2016,7 @@
 
           checkbox.addEventListener('change', () => {
             if (checkbox.checked) {
+              console.log(`Выбран навык ${skill.name}`)
               selectedOptionalSkills.push(skillId);
             } else {
               selectedOptionalSkills = selectedOptionalSkills.filter(id => id !== skillId);
@@ -1863,33 +2110,39 @@
 
 
     function updateLevel(xp) {
-      let level = 0;
+      const currentLevel = parseInt(document.getElementById('level').value);
+      let newLevel = 0;
+      let message = '';
 
-      if (xp >= -1) level = 0;
-      if (xp >= 0) level = 1;
-      if (xp >= 300) level = 2;
-      if (xp >= 900) level = 3;
-      if (xp >= 2700) level = 4;
-      if (xp >= 6500) level = 5;
-      if (xp >= 14000) level = 6;
-      if (xp >= 23000) level = 7;
-      if (xp >= 34000) level = 8;
-      if (xp >= 48000) level = 9;
-      if (xp >= 64000) level = 10;
-      if (xp >= 85000) level = 11;
-      if (xp >= 100000) level = 12;
-      if (xp >= 120000) level = 13;
-      if (xp >= 140000) level = 14;
-      if (xp >= 165000) level = 15;
-      if (xp >= 195000) level = 16;
-      if (xp >= 225000) level = 17;
-      if (xp >= 265000) level = 18;
-      if (xp >= 305000) level = 19;
-      if (xp >= 365000) level = 20;
+      if (xp >= 365000) newLevel = 20, message = `УРОВЕНЬ 20. Вы — ЧЕЕЕ-МПИИИ-ОООН!!! `;
+      else if (xp >= 305000) newLevel = 19, message = `УРОВЕНЬ 19. Вы выросли до предела! Повысьте характеристики в последний раз!`;
+      else if (xp >= 265000) newLevel = 18, message = `УРОВЕНЬ 18.`;
+      else if (xp >= 225000) newLevel = 17, message = `УРОВЕНЬ 17. Мастерство достигло максимума!`;
+      else if (xp >= 195000) newLevel = 16, message = `УРОВЕНЬ 16. Характеристики растут! Выберите, куда вложиться.`;
+      else if (xp >= 165000) newLevel = 15, message = `УРОВЕНЬ 15.`;
+      else if (xp >= 140000) newLevel = 14, message = `УРОВЕНЬ 14.`;
+      else if (xp >= 120000) newLevel = 13, message = `УРОВЕНЬ 13. Мастерство повышено до +5!`;
+      else if (xp >= 100000) newLevel = 12, message = `УРОВЕНЬ 12. Характеристики растут! Выберите, куда вложиться.`;
+      else if (xp >= 85000) newLevel = 11, message = `УРОВЕНЬ 11.`;
+      else if (xp >= 64000) newLevel = 10, message = `УРОВЕНЬ 10.`;
+      else if (xp >= 48000) newLevel = 9, message = `УРОВЕНЬ 9. Мастерство повышено до +4!`;
+      else if (xp >= 34000) newLevel = 8, message = `УРОВЕНЬ 8. Характеристики растут! Выберите, куда вложиться.`;
+      else if (xp >= 23000) newLevel = 7, message = `УРОВЕНЬ 7.`;
+      else if (xp >= 14000) newLevel = 6, message = `УРОВЕНЬ 6.`;
+      else if (xp >= 6500) newLevel = 5, message = `УРОВЕНЬ 5. Мастерство повышено до +3!`;
+      else if (xp >= 2700) newLevel = 4, message = `УРОВЕНЬ 4. Характеристики растут! Выберите, куда вложиться.`;
+      else if (xp >= 900) newLevel = 3, message = `УРОВЕНЬ 3.`;
+      else if (xp >= 300) newLevel = 2, message = `УРОВЕНЬ 2.`;
+      else if (xp >= 0) newLevel = 1, message = `УРОВЕНЬ 1. У вас проснулась жажда приключений!`;
 
-      document.getElementById('level').value = level;
-      document.getElementById('upgradeLeft').textContent = getUpgradePoints(level) - usedUpgradePoints;
-      applyBonuses()
+      // Показываем сообщение только при повышении
+      if (newLevel > currentLevel) {
+        console.log(message);
+      }
+
+      document.getElementById('level').value = newLevel;
+      document.getElementById('upgradeLeft').textContent = getUpgradePoints(newLevel) - usedUpgradePoints;
+      applyBonuses();
       toggleUpgradeButtons();
     }
 
@@ -1926,6 +2179,7 @@
       updateProficiency();
 
       document.getElementById('xpToAdd').value = '';
+      console.log(`Получено ${xpToAdd} опыта`);
     }
     document.getElementById('xpToAdd').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') {
@@ -2000,7 +2254,7 @@
       });
     }
 
-let selectedInstruments = [];
+    let selectedInstruments = [];
     function getAllProficiencies(classData) {
       if (!classData) return [];
 
@@ -2015,95 +2269,95 @@ let selectedInstruments = [];
           flat.push(group);
         }
       }
-const instrumentContainer = document.getElementById('instrument-options');
-if (instrumentContainer) {
-  const selected = [...instrumentContainer.querySelectorAll('input[type=checkbox]:checked')]
-    .map(cb => cb.value);
-  flat.push(...selected);
-}
-if (selectedInstruments.length) {
-  flat.push(...selectedInstruments);
-}
+      const instrumentContainer = document.getElementById('instrument-options');
+      if (instrumentContainer) {
+        const selected = [...instrumentContainer.querySelectorAll('input[type=checkbox]:checked')]
+          .map(cb => cb.value);
+        flat.push(...selected);
+      }
+      if (selectedInstruments.length) {
+        flat.push(...selectedInstruments);
+      }
       expand(classData.proficiency || []);
       return flat;
     }
 
 
-function updateInstrumentOptions() {
-  const classKey = document.getElementById('class').value;
-  const cls = classes[classKey];
-  const container = document.getElementById('instrument-select-container');
-  const optionsContainer = document.getElementById('instrument-options');
+    function updateInstrumentOptions() {
+      const classKey = document.getElementById('class').value;
+      const cls = classes[classKey];
+      const container = document.getElementById('instrument-select-container');
+      const optionsContainer = document.getElementById('instrument-options');
 
-  if (!cls || !cls.proficiencyOption) {
-    container.style.display = 'none';
-    return;
-  }
-
-  const maxSelections = cls.proficiencyOptionCount || 2;
-  optionsContainer.innerHTML = '';
-  container.style.display = 'block';
-
-  const selected = new Set();
-
-  cls.proficiencyOption.forEach(instr => {
-    const li = document.createElement('li');
-    li.classList.add('item');
-    li.style.display = 'flex';
-    li.style.justifyContent = 'space-between';
-    li.style.alignItems = 'center';
-
-    const proficienciesNames = {
-  гитары: 'Гитары',
-  барабаны: 'Барабаны',
-  виолы: 'Виолы',
-    волынки: 'Волынки',
-  лиры: 'Лиры',
-  рожки: 'Рожки',
-  свирели: 'Свирели',
-  флейты: 'Флейты',
-  цимбалы: 'Цимбалы',
-  шалмеи: 'Шалмеи',
-
-};
-
-    li.textContent = proficienciesNames[instr] || instr;
-
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.style.marginLeft = '10px';
-
-    checkbox.onchange = () => {
-      if (checkbox.checked) {
-        selected.add(instr);
-      } else {
-        selected.delete(instr);
-      }
-
-      // Блокируем/разблокируем остальные чекбоксы
-      document.querySelectorAll('#instrument-options input[type=checkbox]').forEach(cb => {
-        cb.disabled = selected.size >= maxSelections && !cb.checked;
-      });
-
-      if (selected.size === maxSelections) {
-        // Добавляем выбранные владения
-        const classData = classes[classKey];
-        if (!classData.proficiency) classData.proficiency = [];
-        selected.forEach(item => {
-          if (!classData.proficiency.includes(item)) {
-            classData.proficiency.push(item);
-          }
-        });
-
-        updateProficiencies();
+      if (!cls || !cls.proficiencyOption) {
         container.style.display = 'none';
+        return;
       }
-    };
 
-    li.appendChild(checkbox);
-    optionsContainer.appendChild(li);
-  });
-}
+      const maxSelections = cls.proficiencyOptionCount || 2;
+      optionsContainer.innerHTML = '';
+      container.style.display = 'block';
+
+      const selected = new Set();
+
+      cls.proficiencyOption.forEach(instr => {
+        const li = document.createElement('li');
+        li.classList.add('item');
+        li.style.display = 'flex';
+        li.style.justifyContent = 'space-between';
+        li.style.alignItems = 'center';
+
+        const proficienciesNames = {
+          гитары: 'Гитары',
+          барабаны: 'Барабаны',
+          виолы: 'Виолы',
+          волынки: 'Волынки',
+          лиры: 'Лиры',
+          рожки: 'Рожки',
+          свирели: 'Свирели',
+          флейты: 'Флейты',
+          цимбалы: 'Цимбалы',
+          шалмеи: 'Шалмеи',
+
+        };
+
+        li.textContent = proficienciesNames[instr] || instr;
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.style.marginLeft = '10px';
+
+        checkbox.onchange = () => {
+          if (checkbox.checked) {
+            selected.add(instr);
+          } else {
+            selected.delete(instr);
+          }
+
+          // Блокируем/разблокируем остальные чекбоксы
+          document.querySelectorAll('#instrument-options input[type=checkbox]').forEach(cb => {
+            cb.disabled = selected.size >= maxSelections && !cb.checked;
+          });
+
+          if (selected.size === maxSelections) {
+            // Добавляем выбранные владения
+            const classData = classes[classKey];
+            if (!classData.proficiency) classData.proficiency = [];
+            selected.forEach(item => {
+              if (!classData.proficiency.includes(item)) {
+                classData.proficiency.push(item);
+              }
+            });
+
+            updateProficiencies();
+            container.style.display = 'none';
+          }
+        };
+
+        li.appendChild(checkbox);
+        optionsContainer.appendChild(li);
+      });
+    }
 
 
     function getUpgradePoints(level) {
@@ -2144,15 +2398,20 @@ function updateInstrumentOptions() {
     // Дамажимся
     function addHp() {
       const delta = Number(document.getElementById('hpToAdd').value.trim());
-      if (isNaN(delta)) {
-        alert("Введи число");
-        return;
-      }
-
       const hp = parseInt(document.getElementById('hp').value);
       const maxHp = parseInt(document.getElementById('maxHp').value);
       const newHp = Math.max(0, Math.min(hp + delta, maxHp));
-
+      if (delta > 0) {
+          console.log(`Восстановлено ${delta} здоровья. Теперь у вас ${newHp} ХП.`)
+      }
+      else if (delta < 0) {
+          console.log(`Получено ${delta} урона. Осталось ${newHp} ХП.`)
+      };
+      if (newHp <= 0) {
+        setTimeout(() => {
+          console.log('Вы пали без сознания! Попробуйте очнуться в следующих раундах, иначе умрёте!!!')
+        }, 1000)
+      }
       document.getElementById('hp').value = newHp;
       document.getElementById('hpToAdd').value = '';
     }
@@ -2274,10 +2533,22 @@ function updateInstrumentOptions() {
     function changePDR() {
       const delta = parseInt(document.getElementById('pdrChange').value);
       if (isNaN(delta)) return;
-
       const current = parseInt(document.getElementById('pdr').value);
       const total = current + delta;
 
+      if (delta > 0) {
+        console.log(`Получено ${delta} Подрублей. Теперь на счету ${total} пруб.`)
+      }
+      else if (delta < 0) {
+        console.log(`Потрачено ${delta} Подрублей. На счету осталось ${total} пруб.`)
+      }
+
+      if (total < 0) {
+        console.log('У вас задолжность. Если не успеете выйти в 0 или позвонить в банк и объясниться, коллекторы прибудут в течении суток.')
+      }
+      if (current < 0 && total >= 0) {
+        console.log(`Задолжность погашена.`)
+      }
       document.getElementById('pdr').value = total;
       document.getElementById('pdrChange').value = '';
     }
@@ -2337,19 +2608,98 @@ function updateInstrumentOptions() {
       return Array.from(compressed).concat(Array.from(all));
     }
 
+    function saveCharacter() {
+      const name = document.getElementById('name').value.trim();
+      if (!name) return;
+
+      const data = {
+        name,
+        str: +document.getElementById('str').value,
+        dex: +document.getElementById('dex').value,
+        con: +document.getElementById('con').value,
+        int: +document.getElementById('int').value,
+        wis: +document.getElementById('wis').value,
+        chr: +document.getElementById('chr').value,
+        level: +document.getElementById('level').value,
+        xp: +document.getElementById('xp').value,
+        hp: +document.getElementById('hp').value,
+        maxHp: +document.getElementById('maxHp').value,
+        upgradePoints: upgradePoints,
+        usedUpgradePoints: usedUpgradePoints,
+        race: document.getElementById('race').value,
+        class: document.getElementById('class').value,
+        subclass: document.getElementById('subclass')?.value || '',
+        alignment: document.getElementById('alignment')?.value || '',
+        background: document.getElementById('background')?.value || '',
+        skills: selectedOptionalSkills,
+        proficiency: getAllProficiencies(),
+        inventory,
+        equipped,
+        notes: document.getElementById('notes').value,
+        // Можно добавить всё, что хочешь
+      };
+
+      localStorage.setItem('char_' + name.toLowerCase(), JSON.stringify(data));
+      console.log('"' + name + '" cохранён.');
+    }
+
+    function loadCharacter() {
+      const name = document.getElementById('name').value.trim();
+      if (!name) return;
+
+      const raw = localStorage.getItem('char_' + name.toLowerCase());
+      if (!raw) return;
+
+      const data = JSON.parse(raw);
+
+      // Восстанавливаем значения
+      ['str', 'dex', 'con', 'int', 'wis', 'chr'].forEach(stat => {
+        document.getElementById(stat).value = data[stat];
+      });
+
+
+      document.getElementById('race').value = data.race;
+      updateBackgroundOptions();
+      document.getElementById('class').value = data.class;
+      updateSubclassOptions();
+      if (document.getElementById('subclass')) document.getElementById('subclass').value = data.subclass || '';
+      if (document.getElementById('alignment')) document.getElementById('alignment').value = data.alignment || '';
+      if (document.getElementById('background')) document.getElementById('background').value = data.background || '';
+      document.getElementById('level').value = data.level;
+      document.getElementById('xp').value = data.xp;
+      document.getElementById('hp').value = data.hp;
+      document.getElementById('maxHp').value = data.maxHp;
+      selectedOptionalSkills = data.skills || [];
+      updateSkills();
+      customProficiencies = data.proficiency || [];
+      updateProficiencies();
+      document.getElementById('notes').value = data.notes || '';
+      upgradePoints = data.upgradePoints || 0;
+      usedUpgradePoints = data.usedUpgradePoints || 0;
+      addXp(); toggleUpgradeButtons();
+
+      applyBonuses();
+
+      // Восстанавливаем инвентарь
+      inventory = data.inventory || {};
+      Object.assign(equipped, data.equipped || {});
+
+      updateAll();
+    }
+
     function stopSelection(type, selectElement) {
-  if (selectElement.dataset.locked === 'true') return;
+      if (selectElement.dataset.locked === 'true') return;
 
-  // Запоминаем выбор
-  const value = selectElement.value;
-  if (value) {
-    selectElement.dataset.locked = 'true';
-    selectElement.disabled = true;
+      // Запоминаем выбор
+      const value = selectElement.value;
+      if (value) {
+        selectElement.dataset.locked = 'true';
+        selectElement.disabled = true;
 
-    // Добавим метку или стили, если хочешь
-    selectElement.style.background = '#e3e3e3';
-  }
-}
+        // Добавим метку или стили, если хочешь
+        selectElement.style.background = '#e3e3e3';
+      }
+    }
 
     function toggleBlock(blockId, button = null) {
       const block = document.getElementById(blockId);
@@ -2382,6 +2732,7 @@ function updateInstrumentOptions() {
       updateModifiers();
       updateSkills();
       updateAbilities();
+      updateInventory();
       updateSaves();
       updateProficiencies();
       updateAttacks();
