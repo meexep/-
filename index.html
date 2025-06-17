@@ -177,6 +177,13 @@
     .item-context-menu button:hover {
       background: #ccc;
     }
+
+    .item-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
   </style>
 </head>
 
@@ -942,6 +949,7 @@
         desc: 'Надёжная куртка для холодной погоды. КБ = 11 + мод ЛОВ. \nСкрытность с помехой.',
         abilities: ['coldResistance'],
         weight: 0.8,
+        icon: 'images/тёплая_куртка.png',
         equipable: true,
       },
       мешок_объедков: {
@@ -1170,7 +1178,7 @@
         desc: 'Готовый убивать нож. \n1д4 колющего урона. \nЛёгкое, метательное(7/20), фехтовальное оружие.',
         attack: [
           { name: 'Удар кинжалом(лёгк)', desc: '1д4 + мод СИЛ/ЛОВ колющий.' }, { name: 'Метание кинжала(лёгк)', desc: ' 7/20м, 1д4 + мод СИЛ/ЛОВ колющий.' }],
-        weight : 0.45,
+        weight: 0.45,
         equipable: true,
       },
       копьё: {
@@ -1219,7 +1227,7 @@
         equipable: true,
         useable: true,
       },
-      арбалет_лёгкий : {
+      арбалет_лёгкий: {
         desc: 'Рулон почти бесконечной липкой ленты.',
         attack: [{ name: '', desc: '' },],
         itemType: '',
@@ -1235,7 +1243,7 @@
         equipable: true,
         useable: true,
       },
-      короткий_лук : {
+      короткий_лук: {
         desc: 'Рулон почти бесконечной липкой ленты.',
         attack: [{ name: '', desc: '' },],
         itemType: '',
@@ -1616,6 +1624,12 @@
         tooltip.className = 'tooltip';
         tooltip.style.display = 'none';
         tooltip.innerText = item.desc;
+        if (item.icon) {
+        const img = document.createElement('img');
+        img.src = item.icon;
+        img.className = 'item-icon';
+        itemDiv.prepend(img);
+        }
 
         itemDiv.addEventListener('mouseenter', () => {
           tooltip.style.display = 'block';
@@ -1655,6 +1669,12 @@
         tooltip.className = 'tooltip';
         tooltip.style.display = 'none';
         tooltip.innerText = item.desc;
+        if (item.icon) {
+        const img = document.createElement('img');
+        img.src = item.icon;
+        img.className = 'item-icon';
+        eqDiv.prepend(img);
+        }
 
         eqDiv.addEventListener('mouseenter', () => {
           tooltip.style.display = 'block';
@@ -2402,10 +2422,10 @@
       const maxHp = parseInt(document.getElementById('maxHp').value);
       const newHp = Math.max(0, Math.min(hp + delta, maxHp));
       if (delta > 0) {
-          console.log(`Восстановлено ${delta} здоровья. Теперь у вас ${newHp} ХП.`)
+        console.log(`Восстановлено ${delta} здоровья. Теперь у вас ${newHp} ХП.`)
       }
       else if (delta < 0) {
-          console.log(`Получено ${delta} урона. Осталось ${newHp} ХП.`)
+        console.log(`Получено ${delta} урона. Осталось ${newHp} ХП.`)
       };
       if (newHp <= 0) {
         setTimeout(() => {
