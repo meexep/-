@@ -258,7 +258,7 @@
 
       <div id="background-container" style="display: none;">
         <label>🤡 Предыстория:
-          <select id="background" onchange="applyBonuses()">
+          <select id="background">
             <option value="">--кем был?--</option>
           </select>
         </label>
@@ -1483,7 +1483,6 @@
 
     const attributeIncreases = [4, 8, 12, 16, 19];
 
-
     function collectBonusesSources() {
       const raceKey = document.getElementById('race').value;
       const classKey = document.getElementById('class').value;
@@ -1525,6 +1524,7 @@
 
 
     function applyBonuses() {
+      console.log('З Л Ы Д Е Н Ь уничтожил посевы!!!');
       const base = { str: 10, dex: 10, con: 10, int: 10, wis: 10, chr: 10, ac: 10, spd: 0, pdr: 0, };
       const total = { ...base };
 
@@ -1544,9 +1544,9 @@
       }
 
       const sources = activeBonusesSources;
-      // Обработка предметов (инвентарь и экипировка) с учётом уникальности
+      // Обработка предметов (инвентарь и экипировка) с учётом уникальности 
       sources.forEach(source => {
-        // INVENTORY
+        // INVENTORY 
         if (source.inventory) {
           if (Array.isArray(source.inventory)) {
             source.inventory.forEach(id => {
@@ -1565,7 +1565,7 @@
             }
           }
         }
-        // EQUIPPED
+        // EQUIPPED 
         if (source.equipped) {
           if (Array.isArray(source.equipped)) {
             source.equipped.forEach(id => {
@@ -1591,7 +1591,7 @@
       updateBackgroundOptions();
       saveCharacter();
 
-      // Обновляем макс. здоровье
+      // Обновляем макс. здоровье 
       const conMod = parseInt(document.getElementById('con_mod').dataset.mod || 0);
       const classData = classes[document.getElementById('class').value];
       const level = parseInt(document.getElementById('level').value);
@@ -2410,6 +2410,7 @@
           document.getElementById('upgradeLeft').textContent = getUpgradePoints(level) - usedUpgradePoints;
           updateAll(); // пересчёт модификаторов, хп и т.д.
           toggleUpgradeButtons();
+
         } else {
           alert("Максимум 20!");
         }
@@ -2425,11 +2426,16 @@
       const maxHp = parseInt(document.getElementById('maxHp').value);
       const newHp = Math.max(0, Math.min(hp + delta, maxHp));
       if (delta > 0) {
-        console.log(`Восстановлено ${delta} здоровья. Теперь у вас ${newHp} ХП.`)
-      }
+        if (newHp >= maxHp) {
+          console.log(`Восстановлено ${delta} здоровья. Вы готовы свернуть горы.`)
+        } else {
+          console.log(`Восстановлено ${delta} здоровья. Теперь у вас ${newHp} ХП.`)
+        }}
+        
       else if (delta < 0) {
-        console.log(`Получено ${delta} урона. Осталось ${newHp} ХП.`)
-      };
+          console.log(`Получено ${delta} урона. Осталось ${newHp} ХП.`)
+        };
+
       if (newHp <= 0) {
         setTimeout(() => {
           console.log('Вы пали без сознания! Попробуйте очнуться в следующих раундах, иначе умрёте!!!')
