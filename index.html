@@ -2707,6 +2707,12 @@
       updateAll();
     }
 
+    function playSound(name) {
+  const audio = new Audio(`sounds/${name}.mp3`);
+  audio.volume = 0.4; // если не хочешь раздражать
+  audio.play();
+}
+
     function stopSelection(type, selectElement) {
       if (selectElement.dataset.locked === 'true') return;
 
