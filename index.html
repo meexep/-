@@ -1620,16 +1620,21 @@
         const item = items[id];
         const itemDiv = document.createElement('div');
         itemDiv.className = 'item';
+        itemDiv.innerHTML = `
+      <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
+      ${count > 1 ? ' × ' + count : ''}
+    `;
+        if (item.icon) {
+          const img = document.createElement('img');
+          img.src = item.icon;
+          img.className = 'item-icon';
+          itemDiv.prepend(img);
+        }
+
         const tooltip = document.createElement('div');
         tooltip.className = 'tooltip';
         tooltip.style.display = 'none';
         tooltip.innerText = item.desc;
-        if (item.icon) {
-        const img = document.createElement('img');
-        img.src = item.icon;
-        img.className = 'item-icon';
-        itemDiv.prepend(img);
-        }
 
         itemDiv.addEventListener('mouseenter', () => {
           tooltip.style.display = 'block';
@@ -1640,10 +1645,6 @@
           tooltip.style.display = 'none';
           if (itemDiv.contains(tooltip)) itemDiv.removeChild(tooltip);
         });
-        itemDiv.innerHTML = `
-      <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
-      ${count > 1 ? ' × ' + count : ''}
-    `;
 
         // ПКМ — открывает контекстное меню
         itemDiv.addEventListener('contextmenu', (e) => {
@@ -1664,17 +1665,23 @@
 
         const item = items[id];
         const eqDiv = document.createElement('div');
-        eqDiv.className = 'item equipped';
+        eqDiv.className = 'item';
+        eqDiv.innerHTML = `
+      <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
+      ${count > 1 ? ' × ' + count : ''}
+    `;
+
+        if (item.icon) {
+          const img = document.createElement('img');
+          img.src = item.icon;
+          img.className = 'item-icon';
+          eqDiv.prepend(img);
+        }
+
         const tooltip = document.createElement('div');
         tooltip.className = 'tooltip';
         tooltip.style.display = 'none';
         tooltip.innerText = item.desc;
-        if (item.icon) {
-        const img = document.createElement('img');
-        img.src = item.icon;
-        img.className = 'item-icon';
-        eqDiv.prepend(img);
-        }
 
         eqDiv.addEventListener('mouseenter', () => {
           tooltip.style.display = 'block';
@@ -1685,10 +1692,6 @@
           tooltip.style.display = 'none';
           if (eqDiv.contains(tooltip)) eqDiv.removeChild(tooltip);
         });
-        eqDiv.innerHTML = `
-      <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
-      ${count > 1 ? ' × ' + count : ''}
-    `;
 
         eqDiv.addEventListener('contextmenu', (e) => {
           e.preventDefault();
@@ -2708,10 +2711,10 @@
     }
 
     function playSound(name) {
-  const audio = new Audio(`sounds/${name}.mp3`);
-  audio.volume = 0.4; // если не хочешь раздражать
-  audio.play();
-}
+      const audio = new Audio(`sounds/${name}.mp3`);
+      audio.volume = 0.4; // если не хочешь раздражать
+      audio.play();
+    }
 
     function stopSelection(type, selectElement) {
       if (selectElement.dataset.locked === 'true') return;
@@ -2764,7 +2767,6 @@
       updateAttacks();
       updateAC();
     }
-
   </script>
 </body>
 
