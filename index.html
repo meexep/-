@@ -193,12 +193,14 @@
 
     <input type="text" id="name" onchange="loadCharacter()"
       style="width: 34rem; font-size: larger; font-weight: 600; background: #ececec; color: #000000; text-align:center; display: block; margin: 0 auto;"
-      placeholder="ФИО «Кличка»"> <button onclick="saveCharacter()" style="margin-left: 16rem;">Сохранить</button>
+      placeholder="ФИО «Кличка»"> <button
+      onclick="saveCharacter(); console.log(`${name} теперь сохраняется. Введи идентично это имя после обновления страницы, и персонаж загрузится.`)"
+      style="margin-left: 16rem;">Сохранить</button>
 
 
     <div class="row"><label>🛠 Класс:
         <select id="class"
-          onchange="applyBaseBonuses(); applyEquipBonuses(); applyMaxHp(); updateSubclassOptions(); updateInventory(); updateAC(); updateInstrumentOptions(); stopSelection('class', this)"
+          onchange="applyBaseBonuses(); applyEquipBonuses(); applyMaxHp(); updateSubclassOptions(); updateInventory(); updateAC(); updateInstrumentOptions(); stopSelection('class', this);"
           style="font-weight: 600;">
           <option value="">-- выбери класс --</option>
           <option value="бомж">Бомж</option>
@@ -226,8 +228,7 @@
 
 
     <label style="width: 10rem;">👽 Раса:
-      <select id="race"
-        onchange="applyBaseBonuses(); applyMaxHp(); updateAbilities(); stopSelection('race', this)"
+      <select id="race" onchange="applyBaseBonuses(); applyMaxHp(); updateAbilities(); stopSelection('race', this)"
         style="font-weight: 600;">
         <option value="">-- выбери расу --</option>
         <option value="человек">Человек</option>
@@ -562,7 +563,7 @@
         backgrounds: ['опустившийся', 'обворованный'],
       },
       наёмник: {
-        equipped: ['булава', 'куртка', 'кинжал',],
+        equipped: ['бита', 'куртка', 'кинжал',],
         inventory: ['скотч',],
         bonuses: { str: 2, dex: 2, int: -2, wis: -1, chr: 1, pdr: 300 },
         hpDie: 10,
@@ -650,7 +651,8 @@
         backgrounds: ['студент', 'работяга'],
       },
       депутат: {
-        equipped: ['пиджак', 'кастет', 'ксива', 'пистолет_макарова',],
+        equipped: ['пиджак', 'ксива',],
+        inventory: ['кастет', 'пистолет_макарова',],
         bonuses: { con: 1, int: -2, chr: 1, pdr: 8000 },
         hpDie: 10,
         proficiency: ['лёгкие_доспехи', 'средние_доспехи', 'пистолеты',],
@@ -1159,10 +1161,10 @@
         weight: 2,
         equipable: true,
       },
-      булава: {
-        itemType: 'булавы',
+      бита: {
+        itemType: 'биты',
         desc: 'Палка длиной около 1м, с мощным утолщением на конце. \n1д6 дробящего урона.',
-        attack: [{ name: 'Удар булавой', desc: '1д6 + мод СИЛ дробящий.' }],
+        attack: [{ name: 'Удар битой', desc: '1д6 + мод СИЛ дробящий.' }],
         weight: 2,
         equipable: true,
       },
@@ -1204,7 +1206,7 @@
         useable: true,
       },
       палица: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
+        desc: 'Бита, утяжелённая металическими вставками.',
         attack: [{ name: '', desc: '' },],
         itemType: '',
         weight: 1,
@@ -1328,7 +1330,7 @@
         weight: 1.5,
         equipable: true,
       },
-      короткиймеч: {
+      короткий_меч: {
         desc: 'Рулон почти бесконечной липкой ленты.',
         attack: [{ name: '', desc: '' },],
         itemType: '',
@@ -1429,6 +1431,189 @@
         equipable: true,
         useable: true,
       },
+      стрела: {
+        desc: 'Почти бесполезна без лука. \nПосле боя можете собрать треть выпущенных стрел, и снова ими пользоваться.',
+        weight: 0.05,
+        useable: true,
+      },
+      болт: {
+        desc: 'Почти бесполезен без арбалета. \nПосле боя можете собрать половину выпущенных болтов, и снова ими пользоваться.',
+        weight: 0.1,
+        useable: true,
+      },
+      игла: {
+        desc: 'Шить собрался?.',
+        weight: 0.001,
+      },
+      игла_ядовитая: {
+        desc: 'Спасбр. ТЕЛ 15. \nОтравленная цель будет терять 1 ХП в конце своих ходов, пока не исцелится на любое количество или не опустится до 1 ХП..',
+        weight: 0.001,
+        useable: true,
+      },
+      игла_усыпляющая: {
+        desc: 'Спасбр. ТЕЛ 15. \nЦель постепенно начнёт клонить в сон и через минуту она отключится. \nЕсли эффект не успеет сработать из-за начавшегося боя, утомлённая цель проходит с помехой спасброски ЛОВ, ИНТ, МУД, и ХАР до конца боя.',
+        weight: 0.001,
+        useable: true,
+      },
+      камень: {
+        desc: 'Ценная вещь!',
+        weight: 0.2,
+      },
+      палка: {
+        desc: 'Какой потенциал!',
+        weight: 0.1,
+      },
+      кроссы: {
+        desc: 'Умеющий бежать пизды не получит. \n+2 скорости.',
+        bonuses: { spd: 2 },
+        weight: 0.5,
+        equipable: true,
+      },
+      подкрадули: {
+        desc: 'Для бесшумной походки. \n+1 скорости. \n+Навык Скрытности.',
+        bonuses: { spd: 1 },
+        skills: [ 'stealth' ],
+        weight: 0.4,
+        equipable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
+      test: {
+        desc: 'Рулон почти бесконечной липкой ленты.',
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
       test: {
         desc: 'Рулон почти бесконечной липкой ленты.',
         weight: 1,
@@ -1460,7 +1645,7 @@
     const proficiencies = {
       всё_оружие: ['безоружные_атаки', 'простое_оружие', 'воинское_оружие', 'огнестрельное_оружие'],
       простое_оружие: ['простое_рукопашное_оружие', 'простое_дальнобойное_оружие',],
-      простое_рукопашное_оружие: ['боевые_посохи', 'булавы', 'дубинки', 'кинжалы', 'копья', 'лёгкие_молоты', 'метательные_копья', 'палицы', 'ручные_топоры', 'серпы',],
+      простое_рукопашное_оружие: ['боевые_посохи', 'биты', 'дубинки', 'кинжалы', 'копья', 'лёгкие_молоты', 'метательные_копья', 'палицы', 'ручные_топоры', 'серпы',],
       простое_дальнобойное_оружие: ['лёгкие_арбалеты', 'дротики', 'короткие_луки', 'пращи'],
 
       воинское_оружие: ['воинское_рукопашное_оружие', 'воинское_дальнобойное_оружие',],
@@ -1511,15 +1696,10 @@
       });
 
       for (let id in equipped) {
-        if (items[id]) sources.push(items[id]);
+        if (equipped[id]) sources.push(equipped[id]);
       }
 
       return sources;
-    }
-
-    function collectAbilitiesFromSources() {
-      return activeBonusesSources
-        .flatMap(source => source.abilities || []);
     }
 
 
@@ -1542,18 +1722,21 @@
         const input = document.getElementById(stat);
         if (input) input.value = total[stat];
       }
-            activeBonusesSources = collectBonusesSources();
+      activeBonusesSources = collectBonusesSources();
       updateAll();
       updateAlignmentOptions();
       updateBackgroundOptions();
       saveCharacter();
-
     }
 
-function applyEquipBonuses() {
-      const sources = activeBonusesSources;
+    function applyEquipBonuses() {
+      const sources = collectBonusesSources();
       // Обработка предметов (инвентарь и экипировка) с учётом уникальности 
       sources.forEach(source => {
+        if (source.bonuses) {
+    console.log('🏷️ Бонус от источника:', source.name || source.id );
+    console.log('➕ Бонусы:', source.bonuses);
+  }
         // INVENTORY 
         if (source.inventory) {
           if (Array.isArray(source.inventory)) {
@@ -1593,12 +1776,11 @@ function applyEquipBonuses() {
           }
         }
       });
-            activeBonusesSources = collectBonusesSources();
       updateAll();
       saveCharacter();
     }
 
-      function applyMaxHp() {
+    function applyMaxHp() {
       // Обновляем макс. здоровье 
       const conMod = parseInt(document.getElementById('con_mod').dataset.mod || 0);
       const classData = classes[document.getElementById('class').value];
@@ -1606,7 +1788,6 @@ function applyEquipBonuses() {
       const maxHp = ((classData?.hpDie || 0) + conMod) * level;
       document.getElementById('maxHp').value = maxHp;
 
-      activeBonusesSources = collectBonusesSources();
       updateAll();
       saveCharacter();
 
@@ -1678,6 +1859,8 @@ function applyEquipBonuses() {
         const item = items[id];
         const eqDiv = document.createElement('div');
         eqDiv.className = 'item';
+        eqDiv.style.boxShadow = '0 0 10px 2px #fafafafa';
+        eqDiv.style.border = 'solid 2px #fafafafa';
         eqDiv.innerHTML = `
       <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
       ${count > 1 ? ' × ' + count : ''}
@@ -2149,7 +2332,7 @@ function applyEquipBonuses() {
       let newLevel = 0;
       let message = '';
 
-      if (xp >= 365000) newLevel = 20, message = `УРОВЕНЬ 20. Вы — ЧЕЕЕ-МПИИИ-ОООН!!! `;
+      if (xp >= 365000) newLevel = 20, message = `УРОВЕНЬ 20. Вы — ЧЕЕЕМ-ПИИИ-ОООН!!! `;
       else if (xp >= 305000) newLevel = 19, message = `УРОВЕНЬ 19. Вы выросли до предела! Повысьте характеристики в последний раз!`;
       else if (xp >= 265000) newLevel = 18, message = `УРОВЕНЬ 18.`;
       else if (xp >= 225000) newLevel = 17, message = `УРОВЕНЬ 17. Мастерство достигло максимума!`;
@@ -2662,6 +2845,7 @@ function applyEquipBonuses() {
         int: +document.getElementById('int').value,
         wis: +document.getElementById('wis').value,
         chr: +document.getElementById('chr').value,
+        pdr: +document.getElementById('pdr').value,
         level: +document.getElementById('level').value,
         xp: +document.getElementById('xp').value,
         hp: +document.getElementById('hp').value,
@@ -2682,7 +2866,6 @@ function applyEquipBonuses() {
       };
 
       localStorage.setItem('char_' + name.toLowerCase(), JSON.stringify(data));
-      console.log('"' + name + '" cохранён.');
     }
 
     function loadCharacter() {
@@ -2709,6 +2892,7 @@ function applyEquipBonuses() {
       if (document.getElementById('background')) document.getElementById('background').value = data.background || '';
       document.getElementById('level').value = data.level;
       document.getElementById('xp').value = data.xp;
+      document.getElementById('pdr').value = data.pdr;
       document.getElementById('hp').value = data.hp;
       document.getElementById('maxHp').value = data.maxHp;
       selectedOptionalSkills = data.skills || [];
@@ -2787,6 +2971,28 @@ function applyEquipBonuses() {
       updateAttacks();
       updateAC();
     }
+    // Наблюдатель, ломающий отображение
+    //     const trackInputs = ['str', 'dex', 'con', 'int', 'wis', 'chr', 'spd', 'pdr', 'ac'];
+
+    // trackInputs.forEach(stat => {
+    //   const input = document.getElementById(stat);
+    //   if (!input) return;
+
+    //   let currentValue = input.value;
+
+    //   // Перехватываем изменение свойства .value
+    //   Object.defineProperty(input, 'value', {
+    //     get() {
+    //       return currentValue;
+    //     },
+    //     set(newVal) {
+    //       if (newVal !== currentValue) {
+    //         console.warn(`🧠 Значение ${stat.toUpperCase()} изменено: ${currentValue} → ${newVal}`);
+    //         currentValue = newVal;
+    //       }
+    //     }
+    //   });
+    // });
   </script>
 </body>
 
