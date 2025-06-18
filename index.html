@@ -198,7 +198,7 @@
 
     <div class="row"><label>🛠 Класс:
         <select id="class"
-          onchange="applyBonuses(); updateSubclassOptions(); updateInventory(); updateAC(); updateInstrumentOptions(); stopSelection('class', this)"
+          onchange="applyBaseBonuses(); applyEquipBonuses(); applyMaxHp(); updateSubclassOptions(); updateInventory(); updateAC(); updateInstrumentOptions(); stopSelection('class', this)"
           style="font-weight: 600;">
           <option value="">-- выбери класс --</option>
           <option value="бомж">Бомж</option>
@@ -216,7 +216,7 @@
       <div id="subclass-container" style="display: none;">
         <label>⚒ Подкласс:
           <select id="subclass"
-            onchange="applyBonuses(); updateInventory(); updateAll(); stopSelection('subclass', this)"
+            onchange="applyBaseBonuses(); applyEquipBonuses(); applyMaxHp(); updateInventory(); updateAll(); stopSelection('subclass', this)"
             style="font-weight: 600;">
             <option value="">--выбери подкласс--</option>
           </select>
@@ -226,7 +226,8 @@
 
 
     <label style="width: 10rem;">👽 Раса:
-      <select id="race" onchange="applyBonuses(); updateAbilities(); stopSelection('race', this)"
+      <select id="race"
+        onchange="applyBaseBonuses(); applyMaxHp(); updateAbilities(); stopSelection('race', this)"
         style="font-weight: 600;">
         <option value="">-- выбери расу --</option>
         <option value="человек">Человек</option>
@@ -1522,8 +1523,8 @@
     }
 
 
-    function applyBonuses() {
-      console.log('З Л Ы Д Е Н Ь уничтожил посевы!!!');
+    function applyBaseBonuses() {
+      console.log('З Л Ы Д Е Н Ь роется в полях!');
       const base = { str: 10, dex: 10, con: 10, int: 10, wis: 10, chr: 10, ac: 10, spd: 0, pdr: 0, };
       const total = { ...base };
 
@@ -1541,7 +1542,15 @@
         const input = document.getElementById(stat);
         if (input) input.value = total[stat];
       }
+            activeBonusesSources = collectBonusesSources();
+      updateAll();
+      updateAlignmentOptions();
+      updateBackgroundOptions();
+      saveCharacter();
 
+    }
+
+function applyEquipBonuses() {
       const sources = activeBonusesSources;
       // Обработка предметов (инвентарь и экипировка) с учётом уникальности 
       sources.forEach(source => {
@@ -1584,18 +1593,23 @@
           }
         }
       });
-      activeBonusesSources = collectBonusesSources();
+            activeBonusesSources = collectBonusesSources();
       updateAll();
-      updateAlignmentOptions();
-      updateBackgroundOptions();
       saveCharacter();
+    }
 
+      function applyMaxHp() {
       // Обновляем макс. здоровье 
       const conMod = parseInt(document.getElementById('con_mod').dataset.mod || 0);
       const classData = classes[document.getElementById('class').value];
       const level = parseInt(document.getElementById('level').value);
       const maxHp = ((classData?.hpDie || 0) + conMod) * level;
       document.getElementById('maxHp').value = maxHp;
+
+      activeBonusesSources = collectBonusesSources();
+      updateAll();
+      saveCharacter();
+
     }
 
 
@@ -1623,11 +1637,11 @@
       <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
       ${count > 1 ? ' × ' + count : ''}
     `;
-          const img = document.createElement('img');
-          img.src = `images/${id}.png`;
-          img.className = 'item-icon';
-          itemDiv.prepend(img);
-        
+        const img = document.createElement('img');
+        img.src = `images/${id}.png`;
+        img.className = 'item-icon';
+        itemDiv.prepend(img);
+
 
         const tooltip = document.createElement('div');
         tooltip.className = 'tooltip';
@@ -1669,10 +1683,10 @@
       ${count > 1 ? ' × ' + count : ''}
     `;
 
-          const img = document.createElement('img');
-          img.src = `images/${id}.png`;
-          img.className = 'item-icon';
-          eqDiv.prepend(img);
+        const img = document.createElement('img');
+        img.src = `images/${id}.png`;
+        img.className = 'item-icon';
+        eqDiv.prepend(img);
 
         const tooltip = document.createElement('div');
         tooltip.className = 'tooltip';
@@ -1868,7 +1882,8 @@
           if (!equipped[itemId]) equipped[itemId] = 0;
           equipped[itemId] += 1;
           updateInventory();
-          applyBonuses();
+          applyEquipBonuses();
+          applyMaxHp();
 
 
           document.body.removeChild(menu);
@@ -1885,7 +1900,8 @@
           if (equipped[itemId] <= 0) delete equipped[itemId];
           inventory[itemId] = (inventory[itemId] || 0) + 1;
           updateInventory();
-          applyBonuses();
+          applyEquipBonuses();
+          applyMaxHp();
           document.body.removeChild(menu);
         };
         menu.appendChild(unequipBtn);
@@ -2161,7 +2177,7 @@
 
       document.getElementById('level').value = newLevel;
       document.getElementById('upgradeLeft').textContent = getUpgradePoints(newLevel) - usedUpgradePoints;
-      applyBonuses();
+      applyMaxHp();
       toggleUpgradeButtons();
     }
 
@@ -2426,11 +2442,12 @@
           console.log(`Восстановлено ${delta} здоровья. Вы готовы свернуть горы.`)
         } else {
           console.log(`Восстановлено ${delta} здоровья. Теперь у вас ${newHp} ХП.`)
-        }}
+        }
+      }
 
       else if (delta < 0) {
-          console.log(`Получено ${delta} урона. Осталось ${newHp} ХП.`)
-        };
+        console.log(`Получено ${delta} урона. Осталось ${newHp} ХП.`)
+      };
 
       if (newHp <= 0) {
         setTimeout(() => {
@@ -2703,7 +2720,8 @@
       usedUpgradePoints = data.usedUpgradePoints || 0;
       addXp(); toggleUpgradeButtons();
 
-      applyBonuses();
+      applyEquipBonuses();
+      applyMaxHp();
 
       // Восстанавливаем инвентарь
       inventory = data.inventory || {};
