@@ -1168,7 +1168,7 @@
       },
       дубинка: {
         itemType: 'дубинки',
-        desc: 'Палка из дерева, пластика или резины длиной около 60см. \n1д4 дробящего урона. \nЛёгкое оружие.',
+        desc: 'Палка из дерева, пластика или резины длиной до 60см. \n1д4 дробящего урона. \nЛёгкое оружие.',
         attack: [{ name: 'Удар дубинкой(лёгк)', desc: '1д4 + мод СИЛ дробящий.' }],
         weight: 1,
         equipable: true,
@@ -1624,12 +1624,11 @@
       <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
       ${count > 1 ? ' × ' + count : ''}
     `;
-        if (item.icon) {
           const img = document.createElement('img');
-          img.src = item.icon;
+          img.src = `images/${id}.png`;
           img.className = 'item-icon';
           itemDiv.prepend(img);
-        }
+        
 
         const tooltip = document.createElement('div');
         tooltip.className = 'tooltip';
@@ -1671,12 +1670,10 @@
       ${count > 1 ? ' × ' + count : ''}
     `;
 
-        if (item.icon) {
           const img = document.createElement('img');
-          img.src = item.icon;
+          img.src = `images/${id}.png`;
           img.className = 'item-icon';
           eqDiv.prepend(img);
-        }
 
         const tooltip = document.createElement('div');
         tooltip.className = 'tooltip';
@@ -2431,7 +2428,7 @@
         } else {
           console.log(`Восстановлено ${delta} здоровья. Теперь у вас ${newHp} ХП.`)
         }}
-        
+
       else if (delta < 0) {
           console.log(`Получено ${delta} урона. Осталось ${newHp} ХП.`)
         };
