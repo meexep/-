@@ -489,6 +489,9 @@
     let inventory = {};
     const autoGrantedItems = new Set();
     let equippedAbilities = [];
+    let equippedSkills = [];
+    let equippedSaves = [];
+    let equippedProfs = [];
 
     const races = {
       человек: {
@@ -850,6 +853,10 @@
         desc: 'Вне боя. \nВы демонстрируете ксиву цели, которая вас не знает. Цель совершает спасбросок МУД против Сл. = 8 + ваш уровень + ваша ХАР(Запуг). \nПри провале, цель получает Испуг от вас до начала боя. \n\nВАШЕ ЛИЦО ДОЛЖНО СООТВЕТСВОВАТЬ ДОКУМЕНТУ!',
       },
 
+      test: {
+        name: 'test',
+        desc: 'testtesttest\ntesttesttest',
+      },
     };
 
     const skills = {
@@ -1459,164 +1466,16 @@
         weight: 0.4,
         equipable: true,
       },
+
       test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
-        weight: 1,
-        equipable: true,
-        useable: true,
-      },
-      test: {
-        desc: 'Рулон почти бесконечной липкой ленты.',
+        desc: 'бесконечно',
+        itemType: 'глефы',
+        attack: [{ name: 'test(двур., досяг)', desc: 'testtesttesttest\ntesttesttesttest' },],
+        abilities: ['test'],
+        bonuses: { spd: 19, ac: 97, int: -56, maxHp: 70 },
+        skills: ['arcana'],
+        saves: ['wis_save'],
+        proficiency: ['молоты',],
         weight: 1,
         equipable: true,
         useable: true,
@@ -1753,6 +1612,11 @@
       console.log('🧤 Применение бонусов экипировки...');
 
       const stats = ['str', 'dex', 'con', 'int', 'wis', 'chr', 'ac', 'spd', 'pdr'];
+      const equipBonuses = {};
+      const equipAbilities = new Set();
+      const equipSkills = new Set();
+      const equipSaves = new Set();
+      const equipProfs = new Set();
 
       // 1. Снимаем старые бонусы экипировки
       for (let stat of stats) {
@@ -1766,7 +1630,6 @@
       }
 
       // 2. Заново считаем бонусы
-      const newEquipBonuses = {};
       equippedAbilities = [];
 
       for (let id in equipped) {
@@ -1776,35 +1639,60 @@
           // Бонусы
           if (item.bonuses) {
             for (let stat in item.bonuses) {
-              newEquipBonuses[stat] = (newEquipBonuses[stat] || 0) + item.bonuses[stat];
+              equipBonuses[stat] = (equipBonuses[stat] || 0) + item.bonuses[stat];
             }
           }
-
           // Умения
           if (item.abilities) {
             item.abilities.forEach(abilityId => {
-              if (!equippedAbilities.includes(abilityId)) {
-                equippedAbilities.push(abilityId);
-              }
+              if (abilitiesData[abilityId]) equipAbilities.add(abilityId);
             });
+          }
+
+          // Навыки
+          if (item.skills) {
+            item.skills.forEach(skillId => equipSkills.add(skillId));
+          }
+
+          // Спасброски
+          if (item.saves) {
+            item.saves.forEach(saveId => equipSaves.add(saveId));
+          }
+
+          // Владения
+          if (item.proficiency) {
+            item.proficiency.forEach(profId => equipProfs.add(profId));
           }
         }
       }
 
       // 3. Применяем новые бонусы
-      for (let stat in newEquipBonuses) {
+      for (let stat in equipBonuses) {
         const input = document.getElementById(stat);
         if (input) {
           const current = parseInt(input.value) || 0;
-          input.value = current + newEquipBonuses[stat];
+          input.value = current + equipBonuses[stat];
         }
       }
 
-      // 4. Обновляем abilities
+      // Умения
+      equippedAbilities = Array.from(equipAbilities); // глобально, для updateAbilities
       updateAbilities();
 
+      // Навыки
+      equippedSkills = Array.from(equipSkills); // глобально, для updateSkills
+      updateSkills();
+
+      // Спасброски
+      equippedSaves = Array.from(equipSaves); // глобально, для updateSaves
+      updateSaves();
+
+      // Владения
+      equippedProfs = Array.from(equipProfs); // глобально, для updateProficiencies
+      updateProficiencies();
+
       // 5. Сохраняем новые бонусы как активные
-      equipBonusTotals = newEquipBonuses;
+      equipBonusTotals = equipBonuses;
 
       updateAll();
       saveCharacter();
@@ -2236,6 +2124,10 @@
           optionsCount += source.skillsOptionCount || 0;
         }
       });
+      // Добавляем экипированные навыки
+      if (typeof equippedSkills !== 'undefined') {
+        allSkills.push(...equippedSkills);
+      }
       options = options.filter(opt => !allSkills.includes(opt));
 
       // Фикс: Добавить уже выбранные опциональные
@@ -2709,6 +2601,12 @@
 
       // Получить активные источники бонусов (расы, классы, подклассы и т.п.)
       const sources = getBaseBonusSources();
+      if (typeof equippedSaves !== 'undefined') {
+        equippedSaves.forEach(saveId => {
+          const cb = document.getElementById(saveId);
+          if (cb) cb.checked = true;
+        });
+      }
 
       // Активировать нужные спасброски
       sources.forEach(source => {
@@ -2822,18 +2720,20 @@
     })
 
 
-    let knownProficiencies = [];
     function updateProficiencies() {
       const sources = getBaseBonusSources(); // как в updateAll()
       let rawProfs = [];
 
       sources.forEach(source => {
         if (source.proficiency) rawProfs.push(...source.proficiency);
+        if (typeof equippedProfs !== 'undefined') {
+          rawProfs.push(...equippedProfs);
+        }
       });
 
-      knownProficiencies = expandProficiencies(rawProfs, proficiencies);
+      equippedProfs = expandProficiencies(rawProfs, proficiencies);
 
-      const visible = compressProficiencies(knownProficiencies, proficiencies);
+      const visible = compressProficiencies(equippedProfs, proficiencies);
       const display = document.getElementById('proficiencies-list');
       if (!display) return;
 
