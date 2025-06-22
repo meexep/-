@@ -488,7 +488,7 @@
     let activeBonusesSources = [];
     let inventory = {};
     const autoGrantedItems = new Set();
-
+    let equippedAbilities = [];
 
     const races = {
       человек: {
@@ -1184,21 +1184,21 @@
       },
       копьё: {
         desc: '1д6 колющего урона. \nМетательное (7/20м), универсальное (1д8) оружие.',
-        attack: [{name: 'Тык копьём(1рука)', desc: '1д6 + мод СИЛ колющий.'}, {name: 'Тык копьём(2руки)', desc: '1д8 + мод СИЛ колющий.'}, {name: 'Бросок копья(7/20)', desc: '1д6 + мод СИЛ колющий.'}, ],
+        attack: [{ name: 'Тык копьём(1рука)', desc: '1д6 + мод СИЛ колющий.' }, { name: 'Тык копьём(2руки)', desc: '1д8 + мод СИЛ колющий.' }, { name: 'Бросок копья(7/20)', desc: '1д6 + мод СИЛ колющий.' },],
         itemType: 'копья',
         weight: 1.5,
         equipable: true,
       },
       лёгкий_молот: {
         desc: '1д6 дробящего урона. \nЛёгкое метательное (7/20м) оружие.',
-        attack: [{ name: 'Удар молотком(легк)', desc: '1д6 + мод СИЛ дробящий.'},{ name: 'Бросок молотка(легк)', desc: '(7/20м) 1д6 + мод СИЛ дробящий.'}],
+        attack: [{ name: 'Удар молотком(легк)', desc: '1д6 + мод СИЛ дробящий.' }, { name: 'Бросок молотка(легк)', desc: '(7/20м) 1д6 + мод СИЛ дробящий.' }],
         itemType: 'лёгкие_молоты',
         weight: 1,
         equipable: true,
       },
       метательное_копьё: {
         desc: '1д6 колющего урона. \nМетательное (10/40м) оружие.',
-        attack: [{name: 'Бросок копья(10/40м)', desc: '1д6 + мод СИЛ колющий.'},],
+        attack: [{ name: 'Бросок копья(10/40м)', desc: '1д6 + мод СИЛ колющий.' },],
         itemType: 'метательные_копья',
         weight: 1,
         equipable: true,
@@ -1206,14 +1206,14 @@
       },
       палица: {
         desc: 'Бита, утяжелённая металическими вставками. \n1д8 дробящего урона. \nДвуручное оружие.',
-        attack: [{name: 'Удар палицей(двур)', desc: '1д8 + мод СИЛ дробящий.'},],
+        attack: [{ name: 'Удар палицей(двур)', desc: '1д8 + мод СИЛ дробящий.' },],
         itemType: 'палицы',
         weight: 5,
         equipable: true,
       },
       ручной_топор: {
         desc: '1д6 рубящего урона. \nЛёгкое метательное (7/20м) оружие.',
-        attack: [{ name: 'Удар топориком(легк)', desc: '1д6 + мод СИЛ рубящий.'},{ name: 'Бросок топорика(легк)', desc: '(7/20м) 1д6 + мод СИЛ рубящий.'}],
+        attack: [{ name: 'Удар топориком(легк)', desc: '1д6 + мод СИЛ рубящий.' }, { name: 'Бросок топорика(легк)', desc: '(7/20м) 1д6 + мод СИЛ рубящий.' }],
         itemType: 'ручные_топоры',
         weight: 1,
         equipable: true,
@@ -1455,7 +1455,7 @@
       подкрадули: {
         desc: 'Для бесшумной походки. \n+1 скорости. \n+Навык Скрытности.',
         bonuses: { spd: 1 },
-        skills: [ 'stealth' ],
+        skills: ['stealth'],
         weight: 0.4,
         equipable: true,
       },
@@ -1651,22 +1651,18 @@
 
     const attributeIncreases = [4, 8, 12, 16, 19];
 
-    function collectBonusesSources() {
-      const raceKey = document.getElementById('race').value;
-      const classKey = document.getElementById('class').value;
-      const subclassKey = document.getElementById('subclass')?.value;
-
+    function getBaseBonusSources() {
       const sources = [];
 
-      const race = races[raceKey];
-      const cls = classes[classKey];
-      const sub = subclasses[classKey]?.[subclassKey];
+      const race = races[document.getElementById('race').value];
+      const cls = classes[document.getElementById('class').value];
+      const sub = subclasses[document.getElementById('class')?.value]?.[document.getElementById('subclass')?.value];
 
       if (race) sources.push(race);
       if (cls) sources.push(cls);
       if (sub) sources.push(sub);
 
-      // Сюда собираем умения от всех источников
+      // Добавляем способности этих источников
       const allAbilities = [
         ...(race?.abilities || []),
         ...(cls?.abilities || []),
@@ -1678,68 +1674,48 @@
         if (ability) sources.push(ability);
       });
 
-      for (let id in equipped) {
-        if (equipped[id]) sources.push(equipped[id]);
-      }
-
       return sources;
     }
 
-
     function applyBaseBonuses() {
-      console.log('З Л Ы Д Е Н Ь роется в полях!');
-      const base = { str: 10, dex: 10, con: 10, int: 10, wis: 10, chr: 10, ac: 10, spd: 0, pdr: 0, };
+      console.log('🎯 Применяются базовые бонусы...');
+
+      const base = { str: 10, dex: 10, con: 10, int: 10, wis: 10, chr: 10, spd: 0, pdr: 0 };
       const total = { ...base };
 
-      activeBonusesSources = collectBonusesSources();
+      activeBonusesSources = getBaseBonusSources();
 
       activeBonusesSources.forEach(source => {
+        // Характеристики
         if (source.bonuses) {
           for (let stat in source.bonuses) {
             total[stat] += source.bonuses[stat];
           }
         }
-      });
 
-      for (let stat in total) {
-        const input = document.getElementById(stat);
-        if (input) input.value = total[stat];
-      }
-      activeBonusesSources = collectBonusesSources();
-      updateAll();
-      updateAlignmentOptions();
-      updateBackgroundOptions();
-      saveCharacter();
-    }
-
-    function applyEquipBonuses() {
-      const sources = collectBonusesSources();
-      // Обработка предметов (инвентарь и экипировка) с учётом уникальности 
-      sources.forEach(source => {
-        if (source.bonuses) {
-    console.log('🏷️ Бонус от источника:', source.name || source.id );
-    console.log('➕ Бонусы:', source.bonuses);
-  }
-        // INVENTORY 
+        // Предметы
         if (source.inventory) {
-          if (Array.isArray(source.inventory)) {
-            source.inventory.forEach(id => {
-              if (!autoGrantedItems.has(id)) {
-                inventory[id] = (inventory[id] || 0) + 1;
-                autoGrantedItems.add(id);
-              }
-            });
-          } else {
-            for (let id in source.inventory) {
-              const count = source.inventory[id];
-              if (!autoGrantedItems.has(id)) {
-                inventory[id] = (inventory[id] || 0) + count;
-                autoGrantedItems.add(id);
+          if (source.inventory) {
+            if (Array.isArray(source.inventory)) {
+              source.inventory.forEach(id => {
+                if (!autoGrantedItems.has(id)) {
+                  inventory[id] = (inventory[id] || 0) + 1;
+                  autoGrantedItems.add(id);
+                }
+              });
+            } else {
+              for (let id in source.inventory) {
+                const count = source.inventory[id];
+                if (!autoGrantedItems.has(id)) {
+                  inventory[id] = (inventory[id] || 0) + count;
+                  autoGrantedItems.add(id);
+                }
               }
             }
           }
         }
-        // EQUIPPED 
+
+
         if (source.equipped) {
           if (Array.isArray(source.equipped)) {
             source.equipped.forEach(id => {
@@ -1759,21 +1735,76 @@
           }
         }
       });
+
+      for (let stat in total) {
+        const input = document.getElementById(stat);
+        if (input) input.value = total[stat];
+      }
+
       updateAll();
+      updateAlignmentOptions();
+      updateBackgroundOptions();
       saveCharacter();
     }
 
+function applyEquipBonuses() {
+  console.log('🧤 Применение бонусов экипировки...');
+  const stats = ['str', 'dex', 'con', 'int', 'wis', 'chr', 'spd',];
+  const equipBonuses = {};
+  equippedAbilities = [];
+
+  for (let id in equipped) {
+    if (equipped[id] > 0 && items[id]) {
+      const item = items[id];
+
+      // Бонусы
+      if (item.bonuses) {
+        for (let stat in item.bonuses) {
+          equipBonuses[stat] = (equipBonuses[stat] || 0) + item.bonuses[stat];
+        }
+      }
+
+      // Умения
+      if (item.abilities) {
+        item.abilities.forEach(abilityId => {
+          if (!equippedAbilities.includes(abilityId)) {
+            equippedAbilities.push(abilityId);
+            console.log('🧠 Умение от экипировки добавлено:', abilityId);
+          }
+        });
+      }
+    }
+  }
+
+  // Применяем бонусы к статам
+  stats.forEach(stat => {
+    const input = document.getElementById(stat);
+    if (input) {
+      const current = parseInt(input.value) || 0;
+      const bonus = equipBonuses[stat] || 0;
+      input.value = current + bonus;
+    }
+  });
+
+  updateAbilities();
+  updateAC();
+  saveCharacter();
+}
     function applyMaxHp() {
-      // Обновляем макс. здоровье 
       const conMod = parseInt(document.getElementById('con_mod').dataset.mod || 0);
       const classData = classes[document.getElementById('class').value];
       const level = parseInt(document.getElementById('level').value);
-      const maxHp = ((classData?.hpDie || 0) + conMod) * level;
+
+      let bonusHp = 0;
+      for (let id in equipped) {
+        const item = items[id];
+        if (equipped[id] > 0 && item?.bonuses?.maxHp) {
+          bonusHp += item.bonuses.maxHp;
+        }
+      }
+
+      const maxHp = ((classData?.hpDie || 0) + conMod) * level + bonusHp;
       document.getElementById('maxHp').value = maxHp;
-
-      updateAll();
-      saveCharacter();
-
     }
 
 
@@ -2274,40 +2305,43 @@
     }
 
 
-    function updateAbilities() {
-      const allIds = activeBonusesSources
-        .flatMap(source => source.abilities || []);
+function updateAbilities() {
+  const allIds = [
+    ...(activeBonusesSources.flatMap(source => source.abilities || [])),
+    ...equippedAbilities
+  ];
 
-      const list = document.getElementById('abilities-list');
-      list.innerHTML = '';
+  const uniqueIds = [...new Set(allIds)];
 
-      allIds.forEach(id => {
-        const data = abilitiesData[id];
-        if (!data) return;
+  const list = document.getElementById('abilities-list');
+  list.innerHTML = '';
 
-        const div = document.createElement('div');
-        div.className = 'ability';
-        div.textContent = data.name;
+  uniqueIds.forEach(id => {
+    const data = abilitiesData[id];
+    if (!data) return;
 
-        const tooltip = document.createElement('div');
-        tooltip.className = 'tooltip';
-        tooltip.style.display = 'none';
-        tooltip.innerText = data.desc;
+    const div = document.createElement('div');
+    div.className = 'ability';
+    div.textContent = data.name;
 
-        div.addEventListener('mouseenter', () => {
-          tooltip.style.display = 'block';
-          div.appendChild(tooltip);
-        });
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+    tooltip.style.display = 'none';
+    tooltip.innerText = data.desc;
 
-        div.addEventListener('mouseleave', () => {
-          tooltip.style.display = 'none';
-          if (div.contains(tooltip)) div.removeChild(tooltip);
-        });
+    div.addEventListener('mouseenter', () => {
+      tooltip.style.display = 'block';
+      div.appendChild(tooltip);
+    });
 
+    div.addEventListener('mouseleave', () => {
+      tooltip.style.display = 'none';
+      if (div.contains(tooltip)) div.removeChild(tooltip);
+    });
 
-        list.appendChild(div);
-      });
-    }
+    list.appendChild(div);
+  });
+}
 
 
     function updateLevel(xp) {
@@ -2654,7 +2688,7 @@
       });
 
       // Получить активные источники бонусов (расы, классы, подклассы и т.п.)
-      const sources = collectBonusesSources();
+      const sources = getBaseBonusSources();
 
       // Активировать нужные спасброски
       sources.forEach(source => {
@@ -2728,9 +2762,10 @@
 
       // Бонусы от других источников (например, щиты или магии)
       let extraBonus = 0;
-      for (const source of activeBonusesSources) {
-        if (source.bonuses && source.bonuses.ac) {
-          extraBonus += source.bonuses.ac;
+      for (const id in equipped) {
+        const item = items[id];
+        if (equipped[id] > 0 && item?.bonuses?.ac) {
+          extraBonus += item.bonuses.ac;
         }
       }
 
@@ -2769,7 +2804,7 @@
 
     let knownProficiencies = [];
     function updateProficiencies() {
-      const sources = collectBonusesSources(); // как в updateAll()
+      const sources = getBaseBonusSources(); // как в updateAll()
       let rawProfs = [];
 
       sources.forEach(source => {
