@@ -1747,49 +1747,69 @@
       saveCharacter();
     }
 
-function applyEquipBonuses() {
-  console.log('🧤 Применение бонусов экипировки...');
-  const stats = ['str', 'dex', 'con', 'int', 'wis', 'chr', 'spd',];
-  const equipBonuses = {};
-  equippedAbilities = [];
+    let equipBonusTotals = {};
 
-  for (let id in equipped) {
-    if (equipped[id] > 0 && items[id]) {
-      const item = items[id];
+    function applyEquipBonuses() {
+      console.log('🧤 Применение бонусов экипировки...');
 
-      // Бонусы
-      if (item.bonuses) {
-        for (let stat in item.bonuses) {
-          equipBonuses[stat] = (equipBonuses[stat] || 0) + item.bonuses[stat];
+      const stats = ['str', 'dex', 'con', 'int', 'wis', 'chr', 'ac', 'spd', 'pdr'];
+
+      // 1. Снимаем старые бонусы экипировки
+      for (let stat of stats) {
+        if (equipBonusTotals[stat]) {
+          const input = document.getElementById(stat);
+          if (input) {
+            const current = parseInt(input.value) || 0;
+            input.value = current - equipBonusTotals[stat];
+          }
         }
       }
 
-      // Умения
-      if (item.abilities) {
-        item.abilities.forEach(abilityId => {
-          if (!equippedAbilities.includes(abilityId)) {
-            equippedAbilities.push(abilityId);
-            console.log('🧠 Умение от экипировки добавлено:', abilityId);
+      // 2. Заново считаем бонусы
+      const newEquipBonuses = {};
+      equippedAbilities = [];
+
+      for (let id in equipped) {
+        if (equipped[id] > 0 && items[id]) {
+          const item = items[id];
+
+          // Бонусы
+          if (item.bonuses) {
+            for (let stat in item.bonuses) {
+              newEquipBonuses[stat] = (newEquipBonuses[stat] || 0) + item.bonuses[stat];
+            }
           }
-        });
+
+          // Умения
+          if (item.abilities) {
+            item.abilities.forEach(abilityId => {
+              if (!equippedAbilities.includes(abilityId)) {
+                equippedAbilities.push(abilityId);
+              }
+            });
+          }
+        }
       }
-    }
-  }
 
-  // Применяем бонусы к статам
-  stats.forEach(stat => {
-    const input = document.getElementById(stat);
-    if (input) {
-      const current = parseInt(input.value) || 0;
-      const bonus = equipBonuses[stat] || 0;
-      input.value = current + bonus;
-    }
-  });
+      // 3. Применяем новые бонусы
+      for (let stat in newEquipBonuses) {
+        const input = document.getElementById(stat);
+        if (input) {
+          const current = parseInt(input.value) || 0;
+          input.value = current + newEquipBonuses[stat];
+        }
+      }
 
-  updateAbilities();
-  updateAC();
-  saveCharacter();
-}
+      // 4. Обновляем abilities
+      updateAbilities();
+
+      // 5. Сохраняем новые бонусы как активные
+      equipBonusTotals = newEquipBonuses;
+
+      updateAll();
+      saveCharacter();
+    }
+
     function applyMaxHp() {
       const conMod = parseInt(document.getElementById('con_mod').dataset.mod || 0);
       const classData = classes[document.getElementById('class').value];
@@ -2305,43 +2325,43 @@ function applyEquipBonuses() {
     }
 
 
-function updateAbilities() {
-  const allIds = [
-    ...(activeBonusesSources.flatMap(source => source.abilities || [])),
-    ...equippedAbilities
-  ];
+    function updateAbilities() {
+      const allIds = [
+        ...(activeBonusesSources.flatMap(source => source.abilities || [])),
+        ...equippedAbilities
+      ];
 
-  const uniqueIds = [...new Set(allIds)];
+      const uniqueIds = [...new Set(allIds)];
 
-  const list = document.getElementById('abilities-list');
-  list.innerHTML = '';
+      const list = document.getElementById('abilities-list');
+      list.innerHTML = '';
 
-  uniqueIds.forEach(id => {
-    const data = abilitiesData[id];
-    if (!data) return;
+      uniqueIds.forEach(id => {
+        const data = abilitiesData[id];
+        if (!data) return;
 
-    const div = document.createElement('div');
-    div.className = 'ability';
-    div.textContent = data.name;
+        const div = document.createElement('div');
+        div.className = 'ability';
+        div.textContent = data.name;
 
-    const tooltip = document.createElement('div');
-    tooltip.className = 'tooltip';
-    tooltip.style.display = 'none';
-    tooltip.innerText = data.desc;
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.style.display = 'none';
+        tooltip.innerText = data.desc;
 
-    div.addEventListener('mouseenter', () => {
-      tooltip.style.display = 'block';
-      div.appendChild(tooltip);
-    });
+        div.addEventListener('mouseenter', () => {
+          tooltip.style.display = 'block';
+          div.appendChild(tooltip);
+        });
 
-    div.addEventListener('mouseleave', () => {
-      tooltip.style.display = 'none';
-      if (div.contains(tooltip)) div.removeChild(tooltip);
-    });
+        div.addEventListener('mouseleave', () => {
+          tooltip.style.display = 'none';
+          if (div.contains(tooltip)) div.removeChild(tooltip);
+        });
 
-    list.appendChild(div);
-  });
-}
+        list.appendChild(div);
+      });
+    }
 
 
     function updateLevel(xp) {
