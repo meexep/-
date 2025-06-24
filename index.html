@@ -76,6 +76,95 @@
       background-color: #f3e5c0;
     }
 
+
+    .item.poisoned {
+      animation: glowpoisoned 1.5s infinite alternate;
+    }
+    @keyframes glowpoisoned {
+    0% {
+        text-shadow: 0 0 1px #005403aa;
+    }
+    50% {
+        text-shadow: 0 0 3px #3eff3eaa;
+    }
+    100% {
+        text-shadow: 0 0 5px #00ff00aa;
+    }
+}
+    .item.flaming {
+      color: #924e00;
+      animation: glowflaming 1.5s infinite alternate;
+    }
+    @keyframes glowflaming {
+    0% {
+        text-shadow: 0 0 4px #ff3300aa;
+    }
+    50% {
+        text-shadow: 0 0 6px #ff6835aa;
+    }
+    100% {
+        text-shadow: 0 0 8px #ff8935e5;
+    }
+}
+    .item.frosted {
+      color: #0e00a6;
+      animation: glowfrosted 1.5s infinite alternate;
+    }
+    @keyframes glowfrosted {
+    0% {
+        text-shadow: 0 0 2px #97efffa1;
+    }
+    50% {
+        text-shadow: 0 0 4px #4ec4ffdd;
+    }
+    100% {
+        text-shadow: 0 0 6px #3176ffdd;
+    }
+}
+    .item.sleeping {
+      animation: glowsleeping 1.5s infinite alternate;
+    }
+    @keyframes glowsleeping {
+    0% {
+        text-shadow: 0 0 1px #6e2090cb;
+    }
+    50% {
+        text-shadow: 0 0 3px #6f2090b2;
+    }
+    100% {
+        text-shadow: 0 0 5px #36044bb2;
+    }
+}
+    .item.electricity {
+      animation: glowelectricity 0.5s infinite alternate;
+    }
+    @keyframes glowelectricity {
+    0% {
+        text-shadow: 0 0 3px #fdff6acb;
+        color: #444608;
+    }
+    33% {
+        text-shadow: 0 0 3px #fdff6acb;
+        color: #6f7212;
+    }
+    34% {
+        text-shadow: 0 0 3px #ffffffb2;
+        color: #272727;
+    }
+    66% {
+        text-shadow: 0 0 3px #ffffffb2;
+        color: #4d4d4d;
+    }
+    67% {
+        text-shadow: 0 0 3px #6fe5ffb2;
+        color: #06404d;
+    }
+    100% {
+        text-shadow: 0 0 3px #6fe5ffb2;
+        color: #115969;
+    }
+}
+
     input[readonly] {
       pointer-events: none;
       cursor: default;
@@ -451,7 +540,7 @@
           <div id="addItemPanel" class="row" style="background: #5c48155d; width: 17rem; border: solid 2px #44380935;">
             <input type="text" id="addItemInput" placeholder="--введи id предмета--"
               style="width: 10rem; background: #503a061e; color: #000000; font-weight: 600;">
-            <button onclick="addItemManually();" style="background: #503a06a4; color: #ddcece;">Закинуть</button>
+            <button onclick="addItemManually();" style="background: #63431aa4; color: #ddcece;">Закинуть</button>
           </div>
         </div>
       </div>
@@ -1430,7 +1519,7 @@
         useable: true,
       },
       игла: {
-        desc: 'Шить собрался?.',
+        desc: 'Шить собрался?',
         weight: 0.001,
       },
       камень: {
@@ -1726,6 +1815,7 @@
 
 
     function updateInventory() {
+
       const invList = document.getElementById('inventory');
       const weightDisplay = document.getElementById('weight');
       const equippedList = document.getElementById('equipped');
@@ -1749,8 +1839,9 @@
       <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
       ${count > 1 ? ' × ' + count : ''}
     `;
+        const baseId = getBaseItemId(id);
         const img = document.createElement('img');
-        img.src = `images/${id}.png`;
+        img.src = `images/${baseId}.png`;
         img.className = 'item-icon';
         itemDiv.prepend(img);
 
@@ -1775,7 +1866,14 @@
           e.preventDefault();
           showItemContextMenu(id, e.pageX, e.pageY);
         });
-
+        // Если предмет модифицирован — применяем классы
+        if (id.includes('_')) {
+          if (id.includes('яда')) {itemDiv.classList.add('poisoned'); img.style.filter = 'drop-shadow(0 0 3px #3eff3eaa)'};
+          if (id.includes('огня')) {itemDiv.classList.add('flaming'); img.style.filter = 'drop-shadow(0 0 3px #ff6835aa)'}
+          if (id.includes('льда')) {itemDiv.classList.add('frosted'); img.style.filter = 'drop-shadow(0 0 3px #4ec4ffdd)'}
+          if (id.includes('сна')) {itemDiv.classList.add('sleeping'); img.style.filter = 'drop-shadow(0 0 3px #6f2090b2)'}
+          if (id.includes('электричества')) {itemDiv.classList.add('electricity'); img.style.filter = 'drop-shadow(0 0 3px #fdff6acb)'}
+        }
         invList.appendChild(itemDiv);
 
         totalWeight += (item.weight || 0) * count;
@@ -1790,15 +1888,16 @@
         const item = items[id];
         const eqDiv = document.createElement('div');
         eqDiv.className = 'item';
-        eqDiv.style.boxShadow = '0 0 10px 2px #fafafafa';
+        eqDiv.style.boxShadow = '0 0 10px 2px #ffffffa4';
         eqDiv.style.border = 'solid 2px #fafafafa';
         eqDiv.innerHTML = `
       <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
       ${count > 1 ? ' × ' + count : ''}
     `;
 
+        const baseId = getBaseItemId(id);
         const img = document.createElement('img');
-        img.src = `images/${id}.png`;
+        img.src = `images/${baseId}.png`;
         img.className = 'item-icon';
         eqDiv.prepend(img);
 
@@ -1821,7 +1920,14 @@
           e.preventDefault();
           showItemContextMenu(id, e.pageX, e.pageY, true);
         });
-
+        // Если предмет модифицирован — применяем классы
+        if (id.includes('_')) {
+          if (id.includes('яда')) {eqDiv.classList.add('poisoned'); img.style.filter = 'drop-shadow(0 0 3px #3eff3eaa)'};
+          if (id.includes('огня')) {eqDiv.classList.add('flaming'); img.style.filter = 'drop-shadow(0 0 3px #ff6835aa)'}
+          if (id.includes('льда')) {eqDiv.classList.add('frosted'); img.style.filter = 'drop-shadow(0 0 3px #4ec4ffdd)'}
+          if (id.includes('сна')) {eqDiv.classList.add('sleeping'); img.style.filter = 'drop-shadow(0 0 3px #6f2090b2)'}
+          if (id.includes('электричества')) {eqDiv.classList.add('electricity'); img.style.filter = 'drop-shadow(0 0 3px #fdff6acb)'}
+        }
         equippedList.appendChild(eqDiv);
 
         totalWeight += (item.weight || 0) * count;
@@ -1830,17 +1936,14 @@
       weightDisplay.textContent = `${totalWeight.toFixed(1)} кг`;
       saveCharacter();
     }
-
-    function equipItem(id) {
-      if (!inventory[id] || inventory[id] <= 0) return;
-
-      inventory[id] -= 1;
-
-      if (!equipped[id]) equipped[id] = 0;
-      equipped[id] += 1;
-
-      updateInventory();
+    function getBaseItemId(id) {
+  for (let mod in items) {
+    if (items[mod]?.mod && id.endsWith(mod)) {
+      return id.slice(0, -mod.length);
     }
+  }
+  return id;
+}
 
 
     const addItemInput = document.getElementById('addItemInput');
@@ -1897,19 +2000,16 @@
     function addItemManually() {
       const input = document.getElementById('addItemInput');
       let raw = input.value.trim().toLowerCase().replace(/\s+/g, '_');
-
       if (!raw) return;
 
       let id = raw;
       let count = 1;
 
-      // Если формат кастет*2
+      // Обрабатываем * или цифру в конце
       if (raw.includes('*')) {
         const parts = raw.split('*');
         id = parts[0].trim();
         count = parseInt(parts[1].trim()) || 1;
-
-        // Если формат кастет2 (цифра в конце без *), парсим вручную
       } else {
         const match = raw.match(/^([^\d]+)(\d+)$/);
         if (match) {
@@ -1918,19 +2018,48 @@
         }
       }
 
-      // Проверка наличия предмета
-      if (!items[id]) {
+      // Попытка найти модификатор
+      let baseId = id;
+      let modId = null;
+
+      for (let mod in items) {
+        if (items[mod]?.mod && id.endsWith(mod)) {
+          baseId = id.slice(0, -mod.length);
+          modId = mod;
+          break;
+        }
+      }
+
+      // Если базового предмета нет — ошибка
+      if (!items[baseId]) {
         alert('Нет такого предмета');
         return;
       }
 
-      // Добавляем в инвентарь
-      if (!inventory[id]) inventory[id] = 0;
+      let finalId = id;
+
+      // Если найден модификатор — создаём комбинированный предмет
+      if (modId) {
+        finalId = baseId + modId;
+
+        if (!items[finalId]) {
+          // Создаём клон на лету
+          const baseItem = items[baseId];
+          const modItem = items[modId];
+
+          items[finalId] = {
+            ...baseItem,
+            desc: `${baseItem.desc}\n\n${modItem.desc}`,
+            modded: true,
+          };
+        }
+      }
+
       // Проверка грузоподъёмности
       const strength = parseInt(document.getElementById('str').value || 10);
       const maxCarry = strength * 7;
-
       let currentWeight = 0;
+
       for (const itemId in inventory) {
         if (!items[itemId]) continue;
         currentWeight += (items[itemId].weight || 0) * inventory[itemId];
@@ -1940,17 +2069,19 @@
         currentWeight += (items[itemId].weight || 0) * equipped[itemId];
       }
 
-      const incomingWeight = (items[id]?.weight || 0) * count;
+      const incomingWeight = (items[finalId]?.weight || 0) * count;
       if (currentWeight + incomingWeight > maxCarry) {
         alert('Слишком тяжело! Персонаж не может нести больше.');
         return;
       }
-      inventory[id] += count;
+
+      // Добавляем в инвентарь
+      if (!inventory[finalId]) inventory[finalId] = 0;
+      inventory[finalId] += count;
 
       updateInventory();
       input.value = '';
-
-      suggestionsBox.style.display = 'none'; //убираем подсказки, если они остались
+      suggestionsBox.style.display = 'none';
     }
     document.getElementById('addItemInput').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') {
