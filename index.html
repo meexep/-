@@ -80,90 +80,112 @@
     .item.poisoned {
       animation: glowpoisoned 1.5s infinite alternate;
     }
+
     @keyframes glowpoisoned {
-    0% {
+      0% {
         text-shadow: 0 0 1px #005403aa;
-    }
-    50% {
+      }
+
+      50% {
         text-shadow: 0 0 3px #3eff3eaa;
-    }
-    100% {
+      }
+
+      100% {
         text-shadow: 0 0 5px #00ff00aa;
+      }
     }
-}
+
     .item.flaming {
       color: #924e00;
       animation: glowflaming 1.5s infinite alternate;
     }
+
     @keyframes glowflaming {
-    0% {
+      0% {
         text-shadow: 0 0 4px #ff3300aa;
-    }
-    50% {
+      }
+
+      50% {
         text-shadow: 0 0 6px #ff6835aa;
-    }
-    100% {
+      }
+
+      100% {
         text-shadow: 0 0 8px #ff8935e5;
+      }
     }
-}
+
     .item.frosted {
       color: #0e00a6;
       animation: glowfrosted 1.5s infinite alternate;
     }
+
     @keyframes glowfrosted {
-    0% {
+      0% {
         text-shadow: 0 0 2px #97efffa1;
-    }
-    50% {
+      }
+
+      50% {
         text-shadow: 0 0 4px #4ec4ffdd;
-    }
-    100% {
+      }
+
+      100% {
         text-shadow: 0 0 6px #3176ffdd;
+      }
     }
-}
+
     .item.sleeping {
       animation: glowsleeping 1.5s infinite alternate;
     }
+
     @keyframes glowsleeping {
-    0% {
+      0% {
         text-shadow: 0 0 1px #6e2090cb;
-    }
-    50% {
+      }
+
+      50% {
         text-shadow: 0 0 3px #6f2090b2;
-    }
-    100% {
+      }
+
+      100% {
         text-shadow: 0 0 5px #36044bb2;
+      }
     }
-}
+
     .item.electricity {
       animation: glowelectricity 0.5s infinite alternate;
     }
+
     @keyframes glowelectricity {
-    0% {
+      0% {
         text-shadow: 0 0 3px #fdff6acb;
         color: #444608;
-    }
-    33% {
+      }
+
+      33% {
         text-shadow: 0 0 3px #fdff6acb;
         color: #6f7212;
-    }
-    34% {
+      }
+
+      34% {
         text-shadow: 0 0 3px #ffffffb2;
         color: #272727;
-    }
-    66% {
+      }
+
+      66% {
         text-shadow: 0 0 3px #ffffffb2;
         color: #4d4d4d;
-    }
-    67% {
+      }
+
+      67% {
         text-shadow: 0 0 3px #6fe5ffb2;
         color: #06404d;
-    }
-    100% {
+      }
+
+      100% {
         text-shadow: 0 0 3px #6fe5ffb2;
         color: #115969;
+      }
     }
-}
 
     input[readonly] {
       pointer-events: none;
@@ -201,6 +223,14 @@
       white-space: normal;
       z-index: 999;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .upgradeButton{
+      background: #ffffff;
+    }
+    .upgradeButton:hover{
+      background: #cdcdcd;
+      font-size: smaller;
     }
 
     #abilities-list {
@@ -289,7 +319,7 @@
 
     <div class="row"><label>🛠 Класс:
         <select id="class"
-          onchange="applyBaseBonuses(); applyEquipBonuses(); applyMaxHp(); updateSubclassOptions(); updateInventory(); updateAC(); updateInstrumentOptions(); stopSelection('class', this);"
+          onchange="applyBaseBonuses(); applyEquipBonuses(); applyMaxHp(); updateSubclassOptions(); updateInventory(); updateAC(); updateProfOption(); stopSelection('class', this);"
           style="font-weight: 600;">
           <option value="">-- выбери класс --</option>
           <option value="бомж">Бомж</option>
@@ -440,7 +470,7 @@
         <label style="color: #4f4236; font-weight: bolder;">✊ СИЛ: <span style="display: flex; gap: 6px;"><input
               type="text" id="str" value="10" onchange="updateAll()" readonly
               style="background: #726252; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button
-              style="display: none; background: #726252; box-shadow: 0 0 25px 7px #726252; border: 2px solid #ffffffd2;"
+              class="upgradeButton" style="display: none; box-shadow: 0 0 25px 7px #726252; border: 2px solid #726252;"
               onclick="increaseStat('str');">➕</button>
             <input type="text" id="str_mod" readonly
               style="background: #4f4236; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #726252;">
@@ -449,7 +479,7 @@
         <label style=" color: #5e7d5a; font-weight: bolder;">🏃‍♂️ ЛОВ: <span style="display: flex; gap: 6px;"><input
               type="text" id="dex" value="10" onchange="updateAll()" readonly
               style="background: #7c9e78; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button
-              style="display: none; background: #7c9e78; box-shadow: 0 0 25px 7px #7c9e78; border: 2px solid #ffffffd2;"
+              class="upgradeButton" style="display: none; box-shadow: 0 0 25px 7px #7c9e78; border: 2px solid #7c9e78;"
               onclick="increaseStat('dex');">➕</button>
             <input type="text" id="dex_mod" readonly
               style="background: #5e7d5a; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #7c9e78;">
@@ -458,7 +488,7 @@
         <label style="color: #813b3b; font-weight: bolder;">🧱 ТЕЛ: <span style="display: flex; gap: 6px;"><input
               type="text" id="con" value="10" onchange="updateAll()" readonly
               style="background: #9d5252; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button
-              style="display: none; background: #9d5252; box-shadow: 0 0 25px 7px #9d5252; border: 2px solid #ffffffd2;"
+              class="upgradeButton" style="display: none; box-shadow: 0 0 25px 7px #9d5252; border: 2px solid #9d5252;"
               onclick="increaseStat('con');">➕</button>
             <input type="text" id="con_mod" readonly
               style="background: #813b3b; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #9d5252;">
@@ -469,7 +499,7 @@
         <label style="color: #cd9a49; font-weight: bolder;">🧠 ИНТ: <span style="display: flex; gap: 6px;"><input
               type="text" id="int" value="10" onchange="updateAll()" readonly
               style="background: #d7a95d; color: #5d5d5d; width: 20px; text-align: center; font-size:x-small"><button
-              style="display: none; background: #d7a95d; box-shadow: 0 0 25px 7px #d7a95d; border: 2px solid #ffffffd2;"
+              class="upgradeButton" style="display: none; box-shadow: 0 0 25px 7px #d7a95d; border: 2px solid #d7a95d;"
               onclick="increaseStat('int');">➕</button>
             <input type="text" id="int_mod" readonly
               style="background: #cd9a49; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #d7a95d;">
@@ -478,7 +508,7 @@
         <label style="color: #4a2470; font-weight: bolder;">🔮 МУД: <span style="display: flex; gap: 6px;"><input
               type="text" id="wis" value="10" onchange="updateAll()" readonly
               style="background: #5e3587; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button
-              style="display: none; background: #5e3587; box-shadow: 0 0 25px 7px #5e3587; border: 2px solid #ffffffd2;"
+              class="upgradeButton" style="display: none; box-shadow: 0 0 25px 7px #5e3587; border: 2px solid #5e3587;"
               onclick="increaseStat('wis');">➕</button>
             <input type="text" id="wis_mod" readonly
               style="background: #4a2470; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #5e3587;">
@@ -487,7 +517,7 @@
         <label style="color: #374297; font-weight: bolder;">💙 ХАР: <span style="display: flex; gap: 6px;"><input
               type="text" id="chr" value="10" onchange="updateAll()" readonly
               style="background: #4e5ab0; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button
-              style="display: none; background: #4e5ab0; box-shadow: 0 0 25px 7px #4e5ab0; border: 2px solid #ffffffd2;"
+              class="upgradeButton" style="display: none; box-shadow: 0 0 25px 7px #4e5ab0; border: 2px solid #4e5ab0;"
               onclick="increaseStat('chr');">➕</button>
             <input type="text" id="chr_mod" readonly
               style="background: #374297; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #4e5ab0;">
@@ -512,9 +542,9 @@
           владения</button>
       </div>
       <ul id="proficiencies-list"></ul>
-      <div id="instrument-select-container" style="display: none;">
+      <div id="prof-select-container" style="display: none;">
         <label>Выбери 2 инструмента:</label>
-        <div id="instrument-options"></div>
+        <div id="prof-options"></div>
       </div>
     </div>
 
@@ -576,11 +606,12 @@
 
     let activeBonusesSources = [];
     let inventory = {};
-    const autoGrantedItems = new Set();
     let equippedAbilities = [];
     let equippedSkills = [];
     let equippedSaves = [];
     let equippedProfs = [];
+    let selectedOptionalProfs = [];
+    const autoGrantedItems = new Set();
 
     const races = {
       человек: {
@@ -1090,7 +1121,7 @@
         equipable: true,
       },
       удавка: {
-        desc: 'Гибкое оружие для удушающих приёмов.',
+        desc: 'Гибкое оружие для удушающих приёмов. \n\nЕсли существо не может дышать, оно может жить в течение количества раундов, равного мод. ТЕЛ (минимум 1 раунд). В начале своего следующего хода его хиты опускаются до 0, и оно начинает умирать. ',
         weight: 0.1,
       },
       воровские_инструменты: {
@@ -1224,17 +1255,17 @@
         weight: 0.01,
       },
       закуска: {
-        desc: 'Чипсики наверное.',
+        desc: 'Чипсики наверное. \nСъешь хотя бы 3 за день, чтобы не голодать.',
         weight: 0.15,
         useable: true,
       },
       перекус: {
-        desc: 'Возможно это тарелка супа?.',
+        desc: 'Возможно это тарелка супа? \nСъешь хотя бы 2 за день, чтобы не голодать.',
         weight: 0.3,
         useable: true,
       },
       комбо: {
-        desc: 'Это стопудово ОГРОМНЫЙ бургер!',
+        desc: 'Это стопудово ОГРОМНЫЙ бургер! \nСъешь хотя бы 1 за день, чтобы не голодать.',
         weight: 0.6,
         useable: true,
       },
@@ -1511,12 +1542,15 @@
       стрела: {
         desc: 'Почти бесполезна без лука. \nПосле боя можете собрать треть выпущенных стрел, и снова ими пользоваться.',
         weight: 0.05,
-        useable: true,
       },
       болт: {
         desc: 'Почти бесполезен без арбалета. \nПосле боя можете собрать половину выпущенных болтов, и снова ими пользоваться.',
         weight: 0.1,
-        useable: true,
+      },
+      колчан: {
+        desc: 'Вместимость — 20. \nНеобходим для полноценной стрельбы стрелами или болтами.',
+        weight: 0.5,
+        equipable: true,
       },
       игла: {
         desc: 'Шить собрался?',
@@ -1543,6 +1577,238 @@
         weight: 0.4,
         equipable: true,
       },
+      печатка_медведя: {
+        desc: 'Символ МОЩНОСТИ.',
+        bonuses: { str: 1 },
+        weight: 0.01,
+        equipable: true,
+      },
+      печатка_волка: {
+        desc: 'Символ ПРОВОРНОСТИ.',
+        bonuses: { dex: 1 },
+        weight: 0.01,
+        equipable: true,
+      },
+      печатка_камня: {
+        desc: 'Символ НЕУЯЗВИМОСТИ.',
+        bonuses: { con: 1 },
+        weight: 0.01,
+        equipable: true,
+      },
+      'печатка-часы': {
+        desc: 'Символ ОБРАЗОВАННОСТИ.',
+        bonuses: { int: 1 },
+        weight: 0.01,
+        equipable: true,
+      },
+      печатка_предка: {
+        desc: 'Символ ВЕЧНОСТИ.',
+        bonuses: { wis: 1 },
+        weight: 0.01,
+        equipable: true,
+      },
+      печатка_христа: {
+        desc: 'Символ УВЕРЕНОСТИ.',
+        bonuses: { chr: 1 },
+        weight: 0.01,
+        equipable: true,
+      },
+      'кольцо_"спаси_и_сохрани"': {
+        desc: '«Господи, спаси и сохрани мя. Аминь»\n\n+1 КБ.',
+        bonuses: { ac: 1 },
+        weight: 0.01,
+        equipable: true,
+      },
+      'кольцо-кровофильтр': {
+        desc: 'Кольцо впивается в палец с помощью микро игл. Пористая внутренность кольца прогоняет жидкость через себя, останавливая лишние компоненты. Кровь очищается и возвращается пациенту. \n\n+10 ХП.',
+        bonuses: { maxHp: 10 },
+        weight: 0.01,
+        equipable: true,
+      },
+      'кольцо-спидометр': {
+        desc: 'Умный девайс для профессиональных гонщиков. \n\n+1 Скорости.',
+        bonuses: { spd: 1 },
+        weight: 0.01,
+        equipable: true,
+      },
+
+      эфир: {
+        desc: 'Флакончик с густой летучей жижей. Ценится токсикоманами. \n50мл.',
+        weight: 0.05,
+        useable: true,
+      },
+      пузырь: {
+        desc: 'Аптечный флакончик с загадочной жидкостью. \n100мл.',
+        weight: 0.1,
+        useable: true,
+      },
+      фляга: {
+        desc: '0.5 литра объёма в удобной для путешествий форме.',
+        weight: 0.7,
+        useable: true,
+      },
+      литровка: {
+        desc: '',
+        weight: 1,
+        useable: true,
+      },
+      полторашка: {
+        desc: '',
+        weight: 1,
+        useable: true,
+      },
+      двухлитровка: {
+        desc: '',
+        weight: 1,
+        useable: true,
+      },
+      пятилитровка: {
+        desc: '',
+        weight: 1,
+        useable: true,
+      },
+      ведро: {
+        desc: 'Вмещает 11л.',
+        weight: 1,
+        useable: true,
+      },
+      кулерка: {
+        desc: 'Вмещает 20л.',
+        weight: 2,
+        useable: true,
+      },
+      бочка: {
+        desc: 'Сундук, который можно катить. 150 литров объёма.',
+        weight: 35,
+        useable: true,
+      },
+
+      кошель: {
+        desc: 'Вмещает 3кг мелочи.',
+        weight: 0.5,
+        useable: true,
+      },
+      мешок: {
+        desc: 'Вмещает 15кг.',
+        weight: 0.25,
+        useable: true,
+      },
+      рюкзак: {
+        desc: 'Максимальная совместимость груза и путешествия. Вмещает 15кг.',
+        weight: 2.5,
+        useable: true,
+      },
+      корзина: {
+        desc: 'Вмещает 20кг.',
+        weight: 1,
+        useable: true,
+      },
+      сундук: {
+        desc: 'Вмещает 150кг.',
+        weight: 12,
+        useable: true,
+      },
+
+      коктейль_молотова: {
+        desc: '«Я сам себе бармен!». \nВы можете действием метнуть бутыль на расстояние до 7 метров, разбив её от удара. Совершите дальнобойную атаку по существу или предмету, считая коктейль импровизированным оружием. \nПри попадании цель получает урон огнём 1к4 в начале каждого своего хода. Существо может окончить этот урон, потратив действие на тушение пламени, и совершив проверку ЛОВ со Сл 10.',
+        weight: 0.5,
+        useable: true,
+      },
+      блок_и_лебёдка: {
+        desc: ' Набор блоков и тросов с крюками для подвешивания предметов. \nБлок и лебёдка позволяют вам поднять в четыре раза больше, чем обычно.',
+        weight: 2.5,
+      },
+      лист_бумаги: {
+        desc: 'Гибкая. Во всех смыслах.',
+        weight: 0.001,
+        useable: true,
+      },
+      верёвка: {
+        desc: '15м. У верёвки 2 хита, и её можно порвать проверкой СИЛ со Сл 17.',
+        weight: 5,
+      },
+      канат: {
+        desc: '15м. У каната 6 хитов, и его можно порвать проверкой СИЛ со Сл 20.',
+        weight: 7,
+      },
+      трос: {
+        desc: '15м. У троса 10 хитов, и его можно порвать проверкой СИЛ со Сл 25.',
+        weight: 10,
+      },
+      весы: {
+        desc: 'Они показывают массу предмета!',
+        weight: 1.5,
+      },
+      духи: {
+        desc: 'Помогут вонять меньше.',
+        weight: 0.08,
+      },
+      замок: {
+        desc: 'Вместе с замком идёт и ключ. Без ключа существо, владеющее воровскими инструментами, может вскрыть замок успешной проверкой ЛОВ со Сл 15. \nМастер может решить, что есть более качественные замки, стоящие больше.',
+        itemType: 'воровские_инструменты',
+        weight: 0.5,
+      },
+      калтропы: {
+        desc: 'Вы можете действием рассыпать сумку калтропов по площади в 2 × 2 метра. \nВсе существа, входящие в эту область, должны преуспеть в спасброске ЛОВ со Сл 15, иначе они останавливаются и получают колющий урон 1. \nПока это существо не восстановит как минимум 1 хит, его скорость ходьбы уменьшена на 3м. \nСущество, перемещающееся по этой области с уменьшенной вдвое скоростью, не обязано совершать спасбросок.',
+        weight: 1,
+      },
+      колокольчик: {
+        desc: 'Ну типа чтобы приманить кого-нибудь.',
+        weight: 0.01,
+      },
+      комплект_для_лазанья: {
+        desc: 'В набор для лазания входят шлямбуры, накладные подошвы, перчатки и страховочная привязь. \nВы можете действием использовать набор для лазания, чтобы закрепиться на высоте; если вы делаете это, вы не можете упасть более чем на 8м от того места, где закрепились, но и не можете подняться выше 8м от этого места, не открепившись.',
+        skills: ['acrobatics'],
+        equipable: true,
+        weight: 6,
+      },
+      комплект_для_рыбалки: {
+        desc: 'В этот набор входит удилище, шёлковая леска, пробковый поплавок, стальные крючки, свинцовые грузила, приманки из ниток и мелкоячеистая сеть.',
+        weight: 2,
+        equipable: true,
+      },
+      комплект_целителя: {
+        desc: 'Это кожаный кошель с бинтами, мазями и шинами. \nНабор годится для 10 использований. \nВы можете действием потратить одно использование набора для стабилизации существа, у которого 0 хитов, не совершая проверку МУД (Медицина).',
+        skills: ['medicine'],
+        weight: 0.15,
+        equipable: true,
+      },
+      контейнер_для_карт_и_свитков: {
+        desc: 'В этом цилиндрическом кожаном тубусе может храниться до десяти скрученных листов бумаги А3.',
+        weight: 0.5,
+      },
+      'крюк-кошка': {
+        desc: 'инструмент, который используется для того, чтобы цепляться за выступы. \nМожет быть закреплён на веревке. ',
+        weight: 2,
+      },
+      лампа: {
+        desc: 'Лампа испускает яркий свет в пределах 5м и тусклый свет в пределах ещё 10м. \nЗажжённая лампа горит 6 часов от одной фляги (0,5л) масла.',
+        weight: 0.5,
+        equipable: true,
+      },
+      лестница: {
+        desc: '3-ёхметровая стремянка.',
+        weight: 12,
+      },
+      ломик: {
+        desc: 'Использование ломика позволяет совершать проверки СИЛ с преимуществом, если рычаг должен помочь.',
+        skills: ['athletics'],
+        weight: 2.5,
+        equipable: true,
+      },
+      test: {
+        desc: 'бесконечно',
+        itemType: 'глефы',
+        attack: [{ name: 'test(двур., досяг)', desc: 'testtesttesttest\ntesttesttesttest' },],
+        abilities: ['test'],
+        bonuses: { spd: 19, ac: 97, int: -56, maxHp: 70 },
+        skills: ['arcana'],
+        saves: ['wis_save'],
+        proficiency: ['молоты',],
+        weight: 1,
+        equipable: true,
+        useable: true,
+      },
 
       _яда: {
         desc: 'Спасбр. ТЕЛ 15. \nОтравленная цель будет получать 1 урона ядом в конце своих ходов, пока не исцелится на любое количество или не опустится до 1 ХП. \n\nОтравленная цель совершает с помехой проверки характеристик и броски атаки.',
@@ -1565,19 +1831,51 @@
         mod: true,
       },
 
-      test: {
-        desc: 'бесконечно',
-        itemType: 'глефы',
-        attack: [{ name: 'test(двур., досяг)', desc: 'testtesttesttest\ntesttesttesttest' },],
-        abilities: ['test'],
-        bonuses: { spd: 19, ac: 97, int: -56, maxHp: 70 },
-        skills: ['arcana'],
-        saves: ['wis_save'],
-        proficiency: ['молоты',],
-        weight: 1,
-        equipable: true,
-        useable: true,
+      _воды: {
+        desc: '',
+        mod: true,
       },
+      _пива: {
+        desc: '',
+        mod: true,
+      },
+      _нефти: {
+        desc: '',
+        mod: true,
+      },
+      _спирта: {
+        desc: '',
+        mod: true,
+      },
+      _водки: {
+        desc: '',
+        mod: true,
+      },
+      _вина: {
+        desc: '',
+        mod: true,
+      },
+      _святой_воды: {
+        desc: '',
+        mod: true,
+      },
+      _говна: {
+        desc: '',
+        mod: true,
+      },
+      _мочи: {
+        desc: '',
+        mod: true,
+      },
+      _кислоты: {
+        desc: 'Вы можете действием выплеснуть содержимое этого сосуда на существо, находящееся в пределах метра от вас, или метнуть сосуд на расстояние до 7м, чтобы он разбился от удара. В любом случае совершите дальнобойную атаку против существа или предмета, считая кислоту импровизированным оружием. \nПри попадании цель получает урон кислотой 2д6.',
+        mod: true,
+      },
+      _крови: {
+        desc: 'Поглотив чужую кровь, твои крит. попадания на 1 ход начинают включать выпадения 19-20.',
+        mod: true,
+      },
+
     };
 
     const equipped = {};
@@ -1843,13 +2141,23 @@
         const img = document.createElement('img');
         img.src = `images/${baseId}.png`;
         img.className = 'item-icon';
+        img.onerror = () => {
+          img.src = 'images/test.png'
+        };
         itemDiv.prepend(img);
-
 
         const tooltip = document.createElement('div');
         tooltip.className = 'tooltip';
         tooltip.style.display = 'none';
         tooltip.innerText = item.desc;
+        const profs = equippedProfs;
+        const isProficient = profs.includes(item.itemType);
+        if (isProficient) {
+          tooltip.innerHTML += `<br><br><span style="color: #3eff3eaa;">Вы владеете: ${item.itemType.replace(/_/g, ' ')}</span>`
+        }
+        if (inventory["весы"] > 0) {
+          tooltip.innerHTML += `<br><br><em> ${item.weight} кг.</em>`
+        }
 
         itemDiv.addEventListener('mouseenter', () => {
           tooltip.style.display = 'block';
@@ -1868,11 +2176,11 @@
         });
         // Если предмет модифицирован — применяем классы
         if (id.includes('_')) {
-          if (id.includes('яда')) {itemDiv.classList.add('poisoned'); img.style.filter = 'drop-shadow(0 0 3px #3eff3eaa)'};
-          if (id.includes('огня')) {itemDiv.classList.add('flaming'); img.style.filter = 'drop-shadow(0 0 3px #ff6835aa)'}
-          if (id.includes('льда')) {itemDiv.classList.add('frosted'); img.style.filter = 'drop-shadow(0 0 3px #4ec4ffdd)'}
-          if (id.includes('сна')) {itemDiv.classList.add('sleeping'); img.style.filter = 'drop-shadow(0 0 3px #6f2090b2)'}
-          if (id.includes('электричества')) {itemDiv.classList.add('electricity'); img.style.filter = 'drop-shadow(0 0 3px #fdff6acb)'}
+          if (id.includes('яда')) { itemDiv.classList.add('poisoned'); img.style.filter = 'drop-shadow(0 0 3px #3eff3eaa)' };
+          if (id.includes('огня')) { itemDiv.classList.add('flaming'); img.style.filter = 'drop-shadow(0 0 3px #ff6835aa)' }
+          if (id.includes('льда')) { itemDiv.classList.add('frosted'); img.style.filter = 'drop-shadow(0 0 3px #4ec4ffdd)' }
+          if (id.includes('сна')) { itemDiv.classList.add('sleeping'); img.style.filter = 'drop-shadow(0 0 3px #6f2090b2)' }
+          if (id.includes('электричества')) { itemDiv.classList.add('electricity'); img.style.filter = 'drop-shadow(0 0 3px #fdff6acb)' }
         }
         invList.appendChild(itemDiv);
 
@@ -1905,6 +2213,14 @@
         tooltip.className = 'tooltip';
         tooltip.style.display = 'none';
         tooltip.innerText = item.desc;
+        const profs = equippedProfs;
+        const isProficient = profs.includes(item.itemType);
+        if (isProficient) {
+          tooltip.innerHTML += `<br><br><span style="color: #3eff3eaa;">Вы владеете: ${item.itemType.replace(/_/g, ' ')}</span>`
+        }
+        if (inventory["весы"] > 0) {
+          tooltip.innerHTML += `<br><br><em> ${item.weight} кг.</em>`
+        }
 
         eqDiv.addEventListener('mouseenter', () => {
           tooltip.style.display = 'block';
@@ -1922,11 +2238,11 @@
         });
         // Если предмет модифицирован — применяем классы
         if (id.includes('_')) {
-          if (id.includes('яда')) {eqDiv.classList.add('poisoned'); img.style.filter = 'drop-shadow(0 0 3px #3eff3eaa)'};
-          if (id.includes('огня')) {eqDiv.classList.add('flaming'); img.style.filter = 'drop-shadow(0 0 3px #ff6835aa)'}
-          if (id.includes('льда')) {eqDiv.classList.add('frosted'); img.style.filter = 'drop-shadow(0 0 3px #4ec4ffdd)'}
-          if (id.includes('сна')) {eqDiv.classList.add('sleeping'); img.style.filter = 'drop-shadow(0 0 3px #6f2090b2)'}
-          if (id.includes('электричества')) {eqDiv.classList.add('electricity'); img.style.filter = 'drop-shadow(0 0 3px #fdff6acb)'}
+          if (id.includes('яда')) { eqDiv.classList.add('poisoned'); img.style.filter = 'drop-shadow(0 0 3px #3eff3eaa)' };
+          if (id.includes('огня')) { eqDiv.classList.add('flaming'); img.style.filter = 'drop-shadow(0 0 3px #ff6835aa)' }
+          if (id.includes('льда')) { eqDiv.classList.add('frosted'); img.style.filter = 'drop-shadow(0 0 3px #4ec4ffdd)' }
+          if (id.includes('сна')) { eqDiv.classList.add('sleeping'); img.style.filter = 'drop-shadow(0 0 3px #6f2090b2)' }
+          if (id.includes('электричества')) { eqDiv.classList.add('electricity'); img.style.filter = 'drop-shadow(0 0 3px #fdff6acb)' }
         }
         equippedList.appendChild(eqDiv);
 
@@ -1937,13 +2253,13 @@
       saveCharacter();
     }
     function getBaseItemId(id) {
-  for (let mod in items) {
-    if (items[mod]?.mod && id.endsWith(mod)) {
-      return id.slice(0, -mod.length);
+      for (let mod in items) {
+        if (items[mod]?.mod && id.endsWith(mod)) {
+          return id.slice(0, -mod.length);
+        }
+      }
+      return id;
     }
-  }
-  return id;
-}
 
 
     const addItemInput = document.getElementById('addItemInput');
@@ -2105,7 +2421,13 @@
         useBtn.textContent = 'Использовать';
         useBtn.onclick = () => {
           console.log(`Использован ${itemId}`);
-          // Здесь будет логика использования
+          if (item.modded) {
+            const baseId = getBaseItemId(itemId); // фляга
+            inventory[itemId]--;
+            if (!inventory[baseId]) inventory[baseId] = 0;
+            inventory[baseId]++;
+            updateInventory();
+          }
           document.body.removeChild(menu);
         };
         menu.appendChild(useBtn);
@@ -2247,98 +2569,90 @@
       }
     }
 
-    let selectedOptionalSkills = [];
+let selectedOptionalSkills = [];
 
-    function updateSkills() {
-      const skillsList = document.getElementById('skills-list');
-      skillsList.innerHTML = '';
+function updateSkills() {
+  const skillsList = document.getElementById('skills-list');
+  skillsList.innerHTML = '';
 
-      let allSkills = [];
-      let options = [];
-      let optionsCount = 0;
+  let allSkills = new Set();
+  let options = new Set();
+  let optionsCount = 0;
 
-      activeBonusesSources.forEach(source => {
-        if (source.skills) allSkills.push(...source.skills);
-        if (source.skillsOption) {
-          options.push(...source.skillsOption);
-          optionsCount += source.skillsOptionCount || 0;
+  activeBonusesSources.forEach(source => {
+    (source.skills || []).forEach(s => allSkills.add(s));
+    (source.skillsOption || []).forEach(s => options.add(s));
+    if (source.skillsOptionCount) optionsCount += source.skillsOptionCount || 0;
+  });
+
+  // Добавляем экипированные навыки
+  if (Array.isArray(equippedSkills)) {
+    equippedSkills.forEach(s => allSkills.add(s));
+  }
+
+  // Добавить уже выбранные
+  selectedOptionalSkills.forEach(s => allSkills.add(s));
+
+  // Убираем из options те, которые уже есть в allSkills
+  selectedOptionalSkills.forEach(s => options.delete(s));
+  allSkills.forEach(s => options.delete(s));
+
+  const uniqueSkills = [...new Set([...allSkills, ...options])];
+  const chosenCount = selectedOptionalSkills.length;
+
+  uniqueSkills.forEach(skillId => {
+    const skill = skills[skillId];
+    if (!skill) return;
+
+    const label = document.createElement('label');
+    label.textContent = `${skill.name} (${skill.stat.toUpperCase()})`;
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.id = 'skill_' + skillId;
+
+    if (allSkills.has(skillId)) {
+      checkbox.checked = true;
+      checkbox.disabled = true;
+    } else if (options.has(skillId)) {
+      checkbox.checked = selectedOptionalSkills.includes(skillId);
+      checkbox.disabled = chosenCount >= optionsCount && !checkbox.checked;
+
+      checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+          console.log(`Выбран навык ${skill.name}`);
+          selectedOptionalSkills.push(skillId);
+        } else {
+          selectedOptionalSkills = selectedOptionalSkills.filter(id => id !== skillId);          
         }
+        updateSkills();
       });
-      // Добавляем экипированные навыки
-      if (typeof equippedSkills !== 'undefined') {
-        allSkills.push(...equippedSkills);
-      }
-      options = options.filter(opt => !allSkills.includes(opt));
-
-      // Фикс: Добавить уже выбранные опциональные
-      allSkills.push(...selectedOptionalSkills);
-
-      const totalOptionsAllowed = optionsCount;
-
-      const chosenCount = selectedOptionalSkills.length;
-
-      // Уникальные
-      const uniqueSkills = [...new Set([...allSkills, ...options])];
-
-      uniqueSkills.forEach(skillId => {
-        const skill = skills[skillId];
-        if (!skill) return;
-
-        const label = document.createElement('label');
-        label.textContent = `${skill.name} (${skill.stat.toUpperCase()})`;
-
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.id = 'skill_' + skillId;
-
-        if (allSkills.includes(skillId)) {
-          checkbox.checked = true;
-          checkbox.disabled = true;
-        } else if (options.includes(skillId)) {
-          checkbox.checked = selectedOptionalSkills.includes(skillId);
-          checkbox.disabled = chosenCount >= totalOptionsAllowed && !checkbox.checked;
-
-          checkbox.addEventListener('change', () => {
-            if (checkbox.checked) {
-              console.log(`Выбран навык ${skill.name}`)
-              selectedOptionalSkills.push(skillId);
-            } else {
-              selectedOptionalSkills = selectedOptionalSkills.filter(id => id !== skillId);
-            }
-            updateSkills();
-          });
-        }
-
-        label.appendChild(checkbox);
-        skillsList.appendChild(label);
-      });
-
-      // Подсчёт выбранных опциональных навыков
-      let selectedOptions = 0;
-      Object.keys(skills).forEach(id => {
-        const checkbox = document.getElementById('skill_' + id);
-        if (checkbox && checkbox.checked && options.includes(id)) {
-          selectedOptions++;
-        }
-      });
-
-      // Если все очки выбора использованы — заблокировать выбранные и удалить остальные
-      if (selectedOptions >= optionsCount) {
-        Object.keys(skills).forEach(id => {
-          const checkbox = document.getElementById('skill_' + id);
-          const label = checkbox?.parentElement;
-          if (!checkbox) return;
-
-          if (options.includes(id)) {
-            if (checkbox.checked) {
-              checkbox.disabled = true; // оставляем, но делаем некликабельным
-            } else {
-              label.remove(); // убираем невзятые
-            }
-          }
-        });
-      }
     }
+
+    label.appendChild(checkbox);
+    skillsList.appendChild(label);
+  });
+
+  // Финальный пересчёт
+  equippedSkills = Array.from(new Set([
+    ...Array.from(allSkills),
+    ...selectedOptionalSkills,
+  ])).filter(id => skills[id]); // только валидные
+// Если все очки выбора использованы — заблокировать выбранные и удалить остальные
+if (chosenCount >= optionsCount) {
+  options.forEach(id => {
+    const checkbox = document.getElementById('skill_' + id);
+    const label = checkbox?.parentElement;
+    if (!checkbox) return;
+
+    if (checkbox.checked) {
+      checkbox.disabled = true; // оставляем, но делаем некликабельным
+    } else {
+      label.remove(); // убираем невзятые
+    }
+  });
+}
+}
 
     function collectSkillsFromSources() {
       const fixed = new Set();
@@ -2393,6 +2707,7 @@
 
         list.appendChild(div);
       });
+            equippedAbilities = allIds.filter(id => abilitiesData[id]);
     }
 
 
@@ -2524,7 +2839,7 @@
       const attacks = collectAttacksFromSources();
 
       const charClass = document.getElementById('class').value;
-      const profs = getAllProficiencies(classes[charClass]);
+      const profs = equippedProfs;
 
       attacks.forEach(atk => {
         const div = document.createElement('div');
@@ -2541,40 +2856,11 @@
       });
     }
 
-    let selectedInstruments = [];
-    function getAllProficiencies(classData) {
-      if (!classData) return [];
-
-      let flat = [];
-
-      function expand(group) {
-        if (Array.isArray(group)) {
-          group.forEach(g => expand(g));
-        } else if (proficiencies[group]) {
-          expand(proficiencies[group]);
-        } else {
-          flat.push(group);
-        }
-      }
-      const instrumentContainer = document.getElementById('instrument-options');
-      if (instrumentContainer) {
-        const selected = [...instrumentContainer.querySelectorAll('input[type=checkbox]:checked')]
-          .map(cb => cb.value);
-        flat.push(...selected);
-      }
-      if (selectedInstruments.length) {
-        flat.push(...selectedInstruments);
-      }
-      expand(classData.proficiency || []);
-      return flat;
-    }
-
-
-    function updateInstrumentOptions() {
+    function updateProfOption() {
       const classKey = document.getElementById('class').value;
       const cls = classes[classKey];
-      const container = document.getElementById('instrument-select-container');
-      const optionsContainer = document.getElementById('instrument-options');
+      const container = document.getElementById('prof-select-container');
+      const optionsContainer = document.getElementById('prof-options');
 
       if (!cls || !cls.proficiencyOption) {
         container.style.display = 'none';
@@ -2587,28 +2873,14 @@
 
       const selected = new Set();
 
-      cls.proficiencyOption.forEach(instr => {
+      cls.proficiencyOption.forEach(prof => {
         const li = document.createElement('li');
         li.classList.add('item');
         li.style.display = 'flex';
         li.style.justifyContent = 'space-between';
         li.style.alignItems = 'center';
 
-        const proficienciesNames = {
-          гитары: 'Гитары',
-          барабаны: 'Барабаны',
-          виолы: 'Виолы',
-          волынки: 'Волынки',
-          лиры: 'Лиры',
-          рожки: 'Рожки',
-          свирели: 'Свирели',
-          флейты: 'Флейты',
-          цимбалы: 'Цимбалы',
-          шалмеи: 'Шалмеи',
-
-        };
-
-        li.textContent = proficienciesNames[instr] || instr;
+        li.textContent = prof;
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
@@ -2616,9 +2888,9 @@
 
         checkbox.onchange = () => {
           if (checkbox.checked) {
-            selected.add(instr);
+            selected.add(prof);
           } else {
-            selected.delete(instr);
+            selected.delete(prof);
           }
 
           // Блокируем/разблокируем остальные чекбоксы
@@ -2628,12 +2900,12 @@
 
           if (selected.size === maxSelections) {
             // Добавляем выбранные владения
-            const classData = classes[classKey];
-            if (!classData.proficiency) classData.proficiency = [];
+            if (!selectedOptionalProfs) selectedOptionalProfs = [];
             selected.forEach(item => {
-              if (!classData.proficiency.includes(item)) {
-                classData.proficiency.push(item);
+              if (!selectedOptionalProfs.includes(item)) {
+                selectedOptionalProfs.push(item);
               }
+              equippedProfs = [...equippedProfs, ...selectedOptionalProfs];
             });
 
             updateProficiencies();
@@ -2862,8 +3134,11 @@
 
     function updateProficiencies() {
       const sources = getBaseBonusSources(); // как в updateAll()
-      let rawProfs = [];
-
+      let rawProfs = [
+        ...(getBaseBonusSources().flatMap(s => s.proficiency || [])),
+        ...equippedProfs,
+        ...selectedOptionalProfs,
+      ];
       sources.forEach(source => {
         if (source.proficiency) rawProfs.push(...source.proficiency);
         if (typeof equippedProfs !== 'undefined') {
@@ -2935,8 +3210,12 @@
         subclass: document.getElementById('subclass')?.value || '',
         alignment: document.getElementById('alignment')?.value || '',
         background: document.getElementById('background')?.value || '',
-        skills: selectedOptionalSkills,
-        proficiency: getAllProficiencies(),
+        abilities: equippedAbilities,
+        skills: equippedSkills,
+        selectedSkills: selectedOptionalSkills,
+        proficiency: equippedProfs,
+        selectedProfs: selectedOptionalProfs,
+        saves: equippedSaves,
         inventory,
         equipped,
         notes: document.getElementById('notes').value,
@@ -2973,21 +3252,26 @@
       document.getElementById('pdr').value = data.pdr;
       document.getElementById('hp').value = data.hp;
       document.getElementById('maxHp').value = data.maxHp;
-      selectedOptionalSkills = data.skills || [];
-      updateSkills();
-      customProficiencies = data.proficiency || [];
-      updateProficiencies();
+      equippedAbilities = data.abilities || [];
+
+      equippedSkills = data.skills || [];
+      selectedOptionalSkills = data.selectedSkills || [];
+      equippedSkills = [...equippedSkills, ...selectedOptionalSkills];
+      
+      equippedProfs = data.proficiency || [];
+      selectedOptionalProfs = data.selectedProfs || [];
+      equippedProfs = [...equippedProfs, ...selectedOptionalProfs];
+      equippedSaves = data.saves || [];
       document.getElementById('notes').value = data.notes || '';
       upgradePoints = data.upgradePoints || 0;
       usedUpgradePoints = data.usedUpgradePoints || 0;
       addXp(); toggleUpgradeButtons();
-
-      applyEquipBonuses();
-      applyMaxHp();
-
       // Восстанавливаем инвентарь
       inventory = data.inventory || {};
       Object.assign(equipped, data.equipped || {});
+
+      applyEquipBonuses();
+      applyMaxHp();
 
       updateAll();
     }
