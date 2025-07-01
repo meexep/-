@@ -50,6 +50,36 @@
       font-size: 0, 9rem;
     }
 
+    #hunger-bar-container {
+      position: absolute;
+      left: -3rem;
+      top: -4rem;
+      width: 16px;
+      height: 150px;
+      border: 1px solid #333;
+      background-color: #1a1a1a;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    #hunger-bar-icon {
+      position: absolute;
+      left: -3rem;
+      top: -4rem;
+      font-size: 1.2rem;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    #hunger-bar-fill {
+      width: 100%;
+      height: 100%;
+      background-color: #00cc66;
+      transform: scaleY(1);
+      transform-origin: bottom;
+      transition: transform 0.3s ease;
+    }
+
     #profbonus {
       width: 4rem;
       text-align: center;
@@ -564,7 +594,11 @@
             style="height: min-content; margin-top: 20px; margin-left: 10px; background: #503a0627;">Скрыть
             инвентарь</button>
         </div>
-        <div id="inventoryContainer">
+        <div id="inventoryContainer" style="position: relative;">
+          <div id="hunger-bar-container">
+            <div id="hunger-bar-fill"></div>
+          </div>
+          <div id="hunger-bar-icon">🍴</div>
           <div id="inventory" class="row"></div>
           <div id="weight" style="margin-top: 5px; font-size: 0.9rem;"></div>
 
@@ -613,6 +647,10 @@
     let equippedProfs = [];
     let selectedOptionalProfs = [];
     const autoGrantedItems = new Set();
+    const conMod = () => parseInt(document.getElementById('con_mod')?.value || 0);
+    const maxHungerBuffer = () => (3 + conMod()) * 0.6;
+    let hungerBuffer = 1;
+    let exhaustionLevel = 0;
 
     const races = {
       человек: {
@@ -1194,7 +1232,8 @@
       },
       мешок_объедков: {
         desc: 'Две дневных порции разного вида огрызков в старом мешке. Пополняйте его на мусорках.',
-        weight: 0.2,
+        weight: 1.2,
+        edible: true,
       },
       щит: {
         itemType: 'щиты',
@@ -1972,19 +2011,19 @@
         weight: 0.01,
       },
       закуска: {
-        desc: 'Чипсики наверное. \nХорошо, что оно вообще не портится!  \nСъешь хотя бы 3 за день, чтобы не голодать.',
+        desc: 'Чипсики наверное. \nХорошо, что оно вообще не портится!  \nСъешь хотя бы 4 за день, чтобы не голодать.',
         weight: 0.15,
-        useable: true,
+        edible: true,
       },
       перекус: {
         desc: 'Возможно это тарелка супа? \nХорошо, что оно вообще не портится! \nСъешь хотя бы 2 за день, чтобы не голодать.',
         weight: 0.3,
-        useable: true,
+        edible: true,
       },
       комбо: {
         desc: 'Это стопудово ОГРОМНЫЙ бургер! \nХорошо, что оно вообще не портится! \nСъешь хотя бы 1 за день, чтобы не голодать.',
         weight: 0.6,
-        useable: true,
+        edible: true,
       },
       бинты: {
         desc: 'Перевяжись действием и востанови 3 ХП. ',
@@ -2321,8 +2360,6 @@
     let equipBonusTotals = {};
 
     function applyEquipBonuses() {
-      console.log('🧤 Применение бонусов экипировки...');
-
       const stats = ['str', 'dex', 'con', 'int', 'wis', 'chr', 'ac', 'spd', 'pdr'];
       const equipBonuses = {};
       const equipAbilities = new Set();
@@ -2732,16 +2769,39 @@
       menu.style.left = `${x}px`;
 
       // Кнопка "Использовать"
-      if (item.useable) {
+      if (item.useable || item.edible) {
         const useBtn = document.createElement('button');
         useBtn.textContent = 'Использовать';
         useBtn.onclick = () => {
+          if (item.edible) {
+            const pukeChance = 0.02;
+            if (Math.random() < pukeChance) {
+              hungerBuffer = Math.max(0, hungerBuffer - 0.3);
+              alert("🤮 Ты съел что-то тухлое и проблевался!");
+              console.log("Минус сытость: -0.3 кг");
+            }
+            else if (item.weight >= 0.6) {hungerBuffer = maxHungerBuffer(); console.log("Наелся до отвала и забыл о голоде!")}
+            else {
+              hungerBuffer = Math.min(hungerBuffer + item.weight, maxHungerBuffer());
+              console.log(`🍽️ Съедено ${item.weight} кг. Всего: ${hungerBuffer.toFixed(2)} кг`);
+            }
+
+            inventory[itemId]--;
+            if (inventory[itemId] <= 0) delete inventory[itemId];
+
+            updateInventory();
+            updateHungerUI?.();
+
+            document.body.removeChild(menu);
+            return;
+          }
+
           if (item.modded) {
             const baseId = getBaseItemId(itemId); // фляга
             inventory[itemId]--;
             if (!inventory[baseId]) inventory[baseId] = 0;
             inventory[baseId]++;
-          console.log(`Использован ${itemId}`);
+            console.log(`Использован ${itemId}`);
             updateInventory();
           }
           document.body.removeChild(menu);
@@ -3478,6 +3538,40 @@
       }
     })
 
+    function nextDay() {
+      hungerBuffer -= 0.6;
+
+      if (hungerBuffer < 0) {
+        exhaustionLevel++;
+        hungerBuffer = 0;
+        if (exhaustionLevel >= 6) alert('💀💀💀  Т Ы   У М Е Р   В   М У Ч Е Н И Я Х   Г О Л О Д А  💀💀💀');
+        else {
+          alert(`😖 Вы уснули голодным. Истощение повышено до ${exhaustionLevel}`);
+          console.log(`😖 Вы уснули голодным. Истощение повышено до ${exhaustionLevel}`);
+        }
+      }
+      else {
+        console.log(`🕛 День прошёл... Пора кушать.`);
+      }
+
+      updateHungerUI?.(); // на будущее, если будет UI
+    }
+
+    function updateHungerUI() {
+      const fill = document.getElementById("hunger-bar-fill");
+      if (!fill) return;
+
+      const max = maxHungerBuffer();
+      const value = Math.max(0, Math.min(hungerBuffer, max));
+      const percent = value / max;
+
+      fill.style.transform = `scaleY(${percent})`;
+
+      // Цветовая градация
+      if (percent > 0.6) fill.style.backgroundColor = "#00cc66";
+      else if (percent > 0.3) fill.style.backgroundColor = "#ffcc00";
+      else fill.style.backgroundColor = "#cc3333";
+    }
 
     function updateProficiencies() {
       const sources = getBaseBonusSources(); // как в updateAll()
@@ -3682,7 +3776,9 @@
       updateSaves();
       updateProficiencies();
       updateAttacks();
+      applyMaxHp();
       updateAC();
+      updateHungerUI();
     }
     // Наблюдатель, ломающий отображение
     //     const trackInputs = ['str', 'dex', 'con', 'int', 'wis', 'chr', 'spd', 'pdr', 'ac'];
