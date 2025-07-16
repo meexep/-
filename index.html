@@ -46,6 +46,48 @@
       border: 1px solid #00000016;
     }
 
+    .highlight {
+      animation: highlight-animation 0.5s ease;
+    }
+
+    @keyframes highlight-animation {
+      0% {
+        background-color: rgb(255, 255, 117);
+        /* Цвет подсветки */
+      }
+
+      100% {
+        background-color: transparent;
+        /* Исходный цвет */
+      }
+    }
+
+    .suggestion-active {
+      background-color: #d0d0d0;
+    }
+
+    .heart-icon {
+    width: 30px; /* Установите нужный размер */
+    height: 30px; /* Установите нужный размер */
+    margin-left: 1rem;
+    margin-right: 1rem;
+    animation: heartbeat 1s infinite; /* Применяем анимацию */
+}
+
+@keyframes heartbeat {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1); /* Увеличиваем размер для эффекта сердцебиения */
+    }
+}
+
+.heartbeat {
+    animation: heartbeat 0.5s infinite; /* Применяем анимацию */
+}
+
+
     .stats {
       border: solid 3px #797979;
       border-radius: 3%;
@@ -613,20 +655,20 @@
           <div
             style="text-align: center; box-shadow: 0 0 10px #28010133; border: 3px groove #8a3c9059; background: #8a3c900d; width: 23rem; border-radius: 4%; padding: 1%; padding-top: 0%;">
             <label
-              style="color: #d01818; background: #d0181833; width: 23rem; display: flex; align-items: baseline;">Здоровье:
+              style="color: #d01818; background: #d0181833; width: 23rem; display: flex; align-items: center;"><img id="heart-icon" class="heart-icon" src="images/heart.png">
               <input type="number" id="hp" value="0" readonly
                 style="font-size: medium; background:#d01818; font-weight:700; color:#ffffff; width: 3rem; text-align: center;">
-              <label style="color: #d01818;">из</label>
+              <label style="color: #d01818; margin-bottom: 6px;">из</label>
               <input type="number" id="maxHp" value="0" readonly
                 style="font-size: medium; background:#d018189f; font-weight:700; color:#ffffff; width: 3rem; text-align: center;">
 
-              <input type="number" id="hpToAdd" style="width: 3rem; background: #ff9696; text-align: right;"
+              <input type="number" id="hpToAdd" style="width: 3rem; margin-left: 8px; background: #ff9696; text-align: right;"
                 placeholder="урон" style="width: 5rem; background: #ff9696; font-weight: 500; color: #ffffff;">
               <button onclick="addHp()"
-                style="background: #ea7e7e; color: #380e0e; border: 2px groove #da8484;">Получить</button>
+                style="background: #ea7e7e; color: #380e0e; border: 2px groove #da8484; margin-top: 6px; margin-left: 2px;">Получить</button>
             </label>
 
-            <label id="ac-label" style="color: #52598f; background: #52598f48; width: 23rem;">Класс Брони(КБ):
+            <label id="ac-label" style="position: relative; color: #52598f; align-items: center; background: #52598f48; width: 23rem;"><img style="position: absolute; width: 35px; height: 35px; top: 4px; left: 0.9rem;" src="images/armor.png">Класс Брони(КБ):
               <input type="number" id="ac" value="10"
                 style="background: #52598f; font-size: medium; width: 4rem; font-weight:700; color:#ffffff; width: 5rem; text-align: center;"
                 readonly>
@@ -647,12 +689,19 @@
       </div>
     </div>
 
-    <label style="color: #82eb0a;">Скорость:
-      <input type="number" id="spd" value="0"
-        style="width: 4rem; text-align: center; font-weight:700; font-size: medium; color: #4b5911; background: #82eb0a;"
-        readonly>
-    </label>
+    <div class="row">
+      <label style="color: #82eb0a;">Скорость:
+        <input type="number" id="spd" value="0"
+          style="width: 4rem; text-align: center; font-weight:700; font-size: medium; color: #4b5911; background: #82eb0a;"
+          readonly>
+      </label>
 
+      <label style="color: #ad2e1b; margin-left: 5rem;">Кости Здоровья:
+        <input type="text" id="hpDice" value="" onclick="spendDie()"
+          style="width: 4rem; margin-left: 1rem; text-align: center; font-weight:700; font-size: medium; color: #ad2e1b; background: #c9a7a1;"
+          readonly>
+      </label>
+    </div>
 
     <div style="background: #0000000c;">
       <h3>Умения и способности</h3>
@@ -670,7 +719,7 @@
               type="text" id="str" value="10" onchange="updateAll()" readonly
               style="background: #726252; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button
               class="upgradeButton" style="display: none; box-shadow: 0 0 25px 7px #726252; border: 2px solid #726252;"
-              onclick="increaseStat('str');">➕</button>
+              onclick="increaseStat('str'); highlightElement(str, 1000);">➕</button>
             <input type="text" id="str_mod" readonly
               style="background: #4f4236; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #726252;">
             <input type="checkbox" id="str_save" onchange="updateAll" class="savetrow"></span></label>
@@ -679,7 +728,7 @@
               type="text" id="dex" value="10" onchange="updateAll()" readonly
               style="background: #7c9e78; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button
               class="upgradeButton" style="display: none; box-shadow: 0 0 25px 7px #7c9e78; border: 2px solid #7c9e78;"
-              onclick="increaseStat('dex');">➕</button>
+              onclick="increaseStat('dex'); highlightElement(dex, 1000);">➕</button>
             <input type="text" id="dex_mod" readonly
               style="background: #5e7d5a; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #7c9e78;">
             <input type="checkbox" id="dex_save" onchange="updateAll" class="savetrow"></span></label>
@@ -688,7 +737,7 @@
               type="text" id="con" value="10" onchange="updateAll()" readonly
               style="background: #9d5252; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button
               class="upgradeButton" style="display: none; box-shadow: 0 0 25px 7px #9d5252; border: 2px solid #9d5252;"
-              onclick="increaseStat('con');">➕</button>
+              onclick="increaseStat('con'); highlightElement(con, 1000);">➕</button>
             <input type="text" id="con_mod" readonly
               style="background: #813b3b; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #9d5252;">
             <input type="checkbox" id="con_save" onchange="updateAll" class="savetrow"></span></label>
@@ -699,7 +748,7 @@
               type="text" id="int" value="10" onchange="updateAll()" readonly
               style="background: #d7a95d; color: #5d5d5d; width: 20px; text-align: center; font-size:x-small"><button
               class="upgradeButton" style="display: none; box-shadow: 0 0 25px 7px #d7a95d; border: 2px solid #d7a95d;"
-              onclick="increaseStat('int');">➕</button>
+              onclick="increaseStat('int'); highlightElement(int, 1000);">➕</button>
             <input type="text" id="int_mod" readonly
               style="background: #cd9a49; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #d7a95d;">
             <input type="checkbox" id="int_save" onchange="updateAll" class="savetrow"></span></label>
@@ -708,7 +757,7 @@
               type="text" id="wis" value="10" onchange="updateAll()" readonly
               style="background: #5e3587; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button
               class="upgradeButton" style="display: none; box-shadow: 0 0 25px 7px #5e3587; border: 2px solid #5e3587;"
-              onclick="increaseStat('wis');">➕</button>
+              onclick="increaseStat('wis'); highlightElement(wis, 1000);">➕</button>
             <input type="text" id="wis_mod" readonly
               style="background: #4a2470; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #5e3587;">
             <input type="checkbox" id="wis_save" onchange="updateAll" class="savetrow"></span></label>
@@ -717,7 +766,7 @@
               type="text" id="chr" value="10" onchange="updateAll()" readonly
               style="background: #4e5ab0; color: #f5f5f5; width: 20px; text-align: center; font-size:x-small"><button
               class="upgradeButton" style="display: none; box-shadow: 0 0 25px 7px #4e5ab0; border: 2px solid #4e5ab0;"
-              onclick="increaseStat('chr');">➕</button>
+              onclick="increaseStat('chr'); highlightElement(chr, 1000);">➕</button>
             <input type="text" id="chr_mod" readonly
               style="background: #374297; text-align: center; color: #f5f5f5; font-weight: 900; width: 3rem; font-size:medium; border: solid #4e5ab0;">
             <input type="checkbox" id="chr_save" onchange="updateAll" class="savetrow"></span></label>
@@ -770,9 +819,9 @@
           <div id="inventory" class="row"></div>
           <div id="weight" style="margin-top: 5px; font-size: 0.9rem;"></div>
 
-          <div id="addItemPanel" class="row" style="background: #5c48155d; width: 17rem; border: solid 2px #44380935;">
+          <div id="addItemPanel" class="row" style="background: #5c48155d; width: 20rem; border: solid 2px #44380935;">
             <input type="text" id="addItemInput" placeholder="--введи id предмета--"
-              style="width: 10rem; background: #503a061e; color: #000000; font-weight: 600;">
+              style="width: 13rem; background: #503a061e; color: #000000; font-weight: 600;">
             <button onclick="addItemManually();" style="background: #63431aa4; color: #ddcece;">Закинуть</button>
           </div>
         </div>
@@ -817,6 +866,8 @@
     <div class="doom-bar-icon" style="top: 37.5rem; text-shadow: 0 0 10px #ffffffb0;">🙂</div>
 
     <div id="avatar" class="avatar" onmouseenter="showAvatarInfo()"></div>
+
+    <button style="position: absolute; left: 1rem; top: 1rem" onclick="nextDay(); addBuff('спит');">Спать</button>
   </div>
 
   <div id="exhaustion-indicator"></div>
@@ -852,6 +903,7 @@
     let deathFailThreshold = 3;
     let activeBuffs = [];
     let abilityCharges = {};
+    let hitDiceAvailable = null;
 
     const races = {
       человек: {
@@ -2432,7 +2484,7 @@
         buff: 'неуязвим',
       },
       чёрная_таблетка: {
-        desc: 'Чёрная таблетка восстанавливает тебя на максимум, но ты теряешь себя на 1д4 дней. \n\nПридёшь в себя ты скорее всего, дерясь за чью-то ногу с бродячей собакой.',
+        desc: 'Чёрная таблетка восстанавливает организм на максимум, но ты теряешь себя на 1д4 дней. \n\nПридёшь в сознание ты, скорее всего, дерясь за чью-то ногу с бродячей собакой.',
         weight: 0.001,
         useable: true,
       },
@@ -2699,6 +2751,7 @@
       const ava = document.getElementById('avatar');
       ava.innerHTML = `<img src="images/${race.value}.png" style="width: 120px; height: 160px;">`;
 
+      hitDiceAvailable = 1;
       restoreAbilityCharges();
       updateAll();
       updateAlignmentOptions();
@@ -2989,6 +3042,8 @@
     suggestionsBox.style.display = 'none';
     document.body.appendChild(suggestionsBox);
 
+    let currentSuggestionIndex = -1;
+    let currentSuggestions = [];
     addItemInput.addEventListener('input', () => {
       const raw = addItemInput.value.trim().toLowerCase().replace(/\s+/g, '_');
       if (!raw) {
@@ -3005,14 +3060,45 @@
       suggestionsBox.innerHTML = '';
       matches.forEach(id => {
         const div = document.createElement('div');
-        div.textContent = id;
+        div.style.display = 'flex';
+        div.style.justifyContent = 'space-between';
+        div.style.alignItems = 'center';
         div.style.padding = '4px 8px';
         div.style.cursor = 'pointer';
+        div.style.gap = '8px';
+
+        // Левая часть — только имя
+        const left = document.createElement('div');
+        left.style.display = 'flex';
+        left.style.alignItems = 'center';
+
+        const name = document.createElement('span');
+        name.textContent = id;
+        left.appendChild(name);
+
+        // Правая часть — иконка Tab
+        const tabHint = document.createElement('img');
+        tabHint.src = 'images/tab.png';
+        tabHint.alt = 'Tab';
+        tabHint.style.width = '15px';
+        tabHint.style.height = '10px';
+        tabHint.style.opacity = 0.5;
+
+        div.appendChild(left);
+        div.appendChild(tabHint);
+
+        // Выбор кликом
         div.addEventListener('mousedown', () => {
           addItemInput.value = id;
           suggestionsBox.style.display = 'none';
-          // addItemManually(id); // Автодобавка по выбору
         });
+
+        // Наведение мышки
+        div.addEventListener('mouseenter', () => {
+          currentSuggestionIndex = currentSuggestions.indexOf(div);
+          updateSuggestionHighlight();
+        });
+
         suggestionsBox.appendChild(div);
       });
 
@@ -3021,6 +3107,9 @@
       suggestionsBox.style.top = rect.bottom + window.scrollY + 'px';
       suggestionsBox.style.width = rect.width + 'px';
       suggestionsBox.style.display = 'block';
+
+      currentSuggestionIndex = -1;
+      currentSuggestions = Array.from(suggestionsBox.children);
     });
 
     document.addEventListener('click', (e) => {
@@ -3028,6 +3117,40 @@
         suggestionsBox.style.display = 'none';
       }
     });
+    addItemInput.addEventListener('keydown', (e) => {
+      if (suggestionsBox.style.display !== 'block') return;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (currentSuggestionIndex < currentSuggestions.length - 1) {
+          currentSuggestionIndex++;
+          updateSuggestionHighlight();
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (currentSuggestionIndex > 0) {
+          currentSuggestionIndex--;
+          updateSuggestionHighlight();
+        }
+      } else if (e.key === 'Tab') {
+        if (currentSuggestionIndex >= 0 && currentSuggestionIndex < currentSuggestions.length) {
+          e.preventDefault();
+          const selected = currentSuggestions[currentSuggestionIndex];
+          addItemInput.value = selected.textContent;
+          suggestionsBox.style.display = 'none';
+        }
+      }
+    });
+
+    function updateSuggestionHighlight() {
+      currentSuggestions.forEach((el, idx) => {
+        el.classList.toggle('suggestion-active', idx === currentSuggestionIndex);
+      });
+      const active = currentSuggestions[currentSuggestionIndex];
+      if (active) {
+        active.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    }
 
     function addItemManually() {
       const input = document.getElementById('addItemInput');
@@ -3061,14 +3184,14 @@
         }
 
         finalId = customId;
-      if (!inventory[finalId]) inventory[finalId] = 0;
-      inventory[finalId] += count;
+        if (!inventory[finalId]) inventory[finalId] = 0;
+        inventory[finalId] += count;
 
-      updateInventory();
-      input.value = '';
-      suggestionsBox.style.display = 'none';
+        updateInventory();
+        input.value = '';
+        suggestionsBox.style.display = 'none';
 
-      return;
+        return;
       }
 
       // Обрабатываем * или цифру в конце
@@ -3778,6 +3901,7 @@
       document.getElementById('xp').value = totalXp;
       updateLevel(totalXp);
       updateProficiency();
+      updateAll();
 
       document.getElementById('xpToAdd').value = '';
       console.log(`Получено ${xpToAdd} опыта`);
@@ -3960,6 +4084,17 @@
       const hp = parseInt(document.getElementById('hp').value);
       const maxHp = parseInt(document.getElementById('maxHp').value);
       const newHp = Math.max(0, Math.min(hp + delta, maxHp));
+
+ // Получаем элемент сердечка
+    const heartIcon = document.getElementById('heart-icon');
+
+    // Условие для изменения стиля сердечка
+    if (newHp < maxHp * 0.3) {
+        heartIcon.classList.add('heartbeat'); // Добавляем класс для анимации
+    } else {
+        heartIcon.classList.remove('heartbeat'); // Убираем класс, если здоровье выше 30%
+    }
+
       if (delta > 0) {
         if (newHp >= maxHp) {
           console.log(`Восстановлено ${delta} здоровья. Вы готовы свернуть горы.`)
@@ -4134,6 +4269,8 @@
     })
 
     function nextDay() {
+      const level = document.getElementById('level').value;
+      hitDiceAvailable = level;
       hungerBuffer -= 0.6;
       doom -= 50;
 
@@ -4278,6 +4415,34 @@
       return Array.from(compressed).concat(Array.from(all));
     }
 
+    function updateHitDice() {
+      const hpDiceEl = document.getElementById('hpDice');
+      const level = parseInt(document.getElementById('level').value || 1);
+      const cls = document.getElementById('class').value;
+      const maxDice = level;
+      const currentDice = hitDiceAvailable || 0;
+      const dieSize = classes[cls]?.hpDie || 0;
+
+      hpDiceEl.value = `${currentDice}д${dieSize}`;
+    }
+    function spendDie() {
+      const level = parseInt(document.getElementById('level').value || 1);
+      const cls = document.getElementById('class').value;
+      const dieSize = classes[cls]?.hpDie || 8;
+
+      if (hitDiceAvailable === null) hitDiceAvailable = level;
+
+      if (hitDiceAvailable <= 0) {
+        alert('У тебя больше нет костей здоровья!\nОни восполнятся после продолжительного отдыха.');
+        return;
+      }
+
+      hitDiceAvailable--;
+      updateHitDice();
+
+      alert(`Брось кость d${dieSize}, добавь модификатор ТЕЛ и впиши результат в поле восстановления HP.`);
+    }
+
     function saveCharacter() {
       const name = document.getElementById('name').value.trim();
       if (!name) return;
@@ -4398,6 +4563,16 @@
       audio.play();
     }
 
+    function highlightElement(element, duration = 1000) {
+      // Добавляем класс подсветки
+      element.classList.add('highlight');
+
+      // Удаляем класс через заданное время
+      setTimeout(() => {
+        element.classList.remove('highlight');
+      }, duration);
+    }
+
     function random(...args) {
       return args[Math.floor(Math.random() * args.length)];
     }
@@ -4453,6 +4628,7 @@
       updateAttacks();
       applyMaxHp();
       updateAC();
+      updateHitDice();
       renderBuffs();
       updateDoomUI()
       updateHungerUI();
