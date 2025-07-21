@@ -2769,8 +2769,8 @@
       'неуязвим': { name: 'неуязвим', desc: 'Я НЕ ЧУВСТВУЮ БОЛИ!\n Я БЕССМЕРТЕН!!!', },
       'бред': { name: 'бред', desc: '"Советую не верить глазам и во всём сомневаться..."', },
       'на_велике': { name: 'на_велике', desc: 'Скорость выше на 50%! Ухуу! \nЦелиться не очень удобно, но главное не получать урона!', },
-      'пьянь': { name: 'пьянь', desc: '🥴Хаха.Ик... Я, короче, боли почти не чувствую, поэтому урона в два раза меньше получаю. Хаха.Ик...', duration: 2160 },
-      'скотина': { name: 'скотина', desc: '🤬Щас зарежу НАХУУУЙ!!!', },
+      'пьянь': { name: 'пьянь', desc: '🥴Хаха.Ик... Я, короче, боли почти не чувствую, поэтому урона меньше получаю(75%). Хаха.Ик...', duration: 2160 },
+      'скотина': { name: 'скотина', desc: '🤬Щас зарежу НАХУУУЙ!!!\n КИДАЙ 1Д6 + ТЕЛ!!!\n\n 1 — ТЫ ПРОБЛЕВАЛСЯ ДО 1 ХП!!!\n\n 2 — ТЫ УСНУЛ В БЛЕВОТЕ!!!\n\n 3 — ТЫ ПЫРНУЛ САМОГО АХУЕВШЕГО ЧЕРТА В КОМНАТЕ!!!\n\n 4 — ТЫ ВЪЁБАЛ БЛИЖНЕМУ!!!\n\n 5 — ты полапал ближнего))\n\n 6 — ТЫ НА ЧИЛЕ!!!', },
     }
     const attributeIncreases = [4, 8, 12, 16, 19];
 
@@ -2870,8 +2870,8 @@
       if (`${race.value}`) ava.innerHTML = `<img src="images/${race.value}.png" style="width: 120px; height: 160px;">`;
 
       hitDiceAvailable = 1;
-      restoreAbilityCharges();
       updateAll();
+      restoreAbilityCharges();
       updateAlignmentOptions();
       updateBackgroundOptions();
       saveCharacter();
@@ -2943,6 +2943,12 @@
           }
         }
       });
+
+      // Особая логика для "на_велике" — увеличим скорость на 50%
+      if (activeBuffs.some(b => b.name === 'на_велике')) {
+        const spd = document.getElementById('spd').value;
+        equipBonuses.spd = Math.round((spd || 0) * 0.5);
+      }
 
       // 3. Применяем новые бонусы
       for (let stat in equipBonuses) {
@@ -3511,6 +3517,8 @@
           inventory[itemId] -= 1;
           if (!equipped[itemId]) equipped[itemId] = 0;
           equipped[itemId] += 1;
+
+          if (item.buff) addBuff(item.buff);
           updateInventory();
           applyEquipBonuses();
           applyMaxHp();
@@ -3989,6 +3997,8 @@
           abilityCharges[id] = ability.charges(lvl, chr_mod);
         }
       });
+      console.log(`заряды умений восстановлены`);
+      updateAbilities();
     }
 
 
@@ -4016,12 +4026,16 @@
       else if (xp >= 2700) newLevel = 4, message = `УРОВЕНЬ 4. Характеристики растут! Выберите, куда вложиться.`;
       else if (xp >= 900) newLevel = 3, message = `УРОВЕНЬ 3.`;
       else if (xp >= 300) newLevel = 2, message = `УРОВЕНЬ 2.`;
-      else if (xp >= 0) newLevel = 1, message = `УРОВЕНЬ 1. У вас проснулась жажда приключений!`;
+      else if (xp >= 0) {newLevel = 1, message = `УРОВЕНЬ 1. У вас проснулась жажда приключений!`;};
 
       // Показываем сообщение только при повышении
-      if (newLevel > currentLevel) {
+if (newLevel > currentLevel) { 
+    setTimeout(() => {
+        restoreAbilityCharges();
         alert(message);
-      }
+    }, 0); // Задержка 0 миллисекунд
+}
+
 
       document.getElementById('level').value = newLevel;
       document.getElementById('upgradeLeft').textContent = getUpgradePoints(newLevel) - usedUpgradePoints;
@@ -4239,9 +4253,10 @@
 
     // Дамажимся
     function addHp() {
-      const delta = Number(document.getElementById('hpToAdd').value.trim());
+      let delta = Number(document.getElementById('hpToAdd').value.trim());
       const hp = parseInt(document.getElementById('hp').value);
       const maxHp = parseInt(document.getElementById('maxHp').value);
+      if (delta < 0 && activeBuffs.some(b => b.name === 'пьянь')) { delta = Math.floor(delta * 0.75) };
       const newHp = Math.max(0, Math.min(hp + delta, maxHp));
 
       // Получаем элемент сердечка
@@ -4250,6 +4265,7 @@
       // Условие для изменения стиля сердечка
       if (newHp < maxHp * 0.3) {
         heartIcon.classList.add('heartbeat'); // Добавляем класс для анимации
+        playSound('sounds/heartbeat.ogg');
       } else {
         heartIcon.classList.remove('heartbeat'); // Убираем класс, если здоровье выше 30%
       }
@@ -4264,7 +4280,6 @@
 
       else if (delta < 0) {
         console.log(`Получено ${delta} урона. Осталось ${newHp} ХП.`)
-        playSound('sounds/damage.ogg');
         if (equipped["велосипед"] > 0 || equipped["велосипед_горный"] > 0) { removeBuff('на_велике'); addBuff('упал') };
       };
 
@@ -4434,7 +4449,7 @@
       hungerBuffer -= 0.6;
       doom -= 50;
       if (activeBuffs.some(b => b.name === 'пьянь')) addBuff('отравлен');
-      if (activeBuffs.some(b => b.name === 'скотина')) {addBuff('отравлен'); alert('Башка трещит! Вы не восстановили ХП!')};
+      if (activeBuffs.some(b => b.name === 'скотина')) { addBuff('отравлен'); alert('Башка трещит! Вы не восстановили ХП!') };
       removeBuff('пьянь');
       removeBuff('скотина');
 
