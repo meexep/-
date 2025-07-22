@@ -14,7 +14,7 @@
 
     .container {
       position: relative;
-      background: #fff;
+      background: #ffffff;
       padding: 20px;
       border-radius: 12px;
       max-width: 600px;
@@ -138,10 +138,27 @@
       height: 100%;
       box-shadow: 0 0 10px #aa0b45;
       background-color: #5a0939;
-      transform: scaleY(1);
+      transform: scaleY(0.1);
       transform-origin: bottom;
       transition: transform 0.3s ease;
       border-radius: 15px;
+    }
+
+    #doomSlider {
+      position: absolute;
+      left: -15.3rem;
+      top: 28.3rem;
+      width: 300px;
+      transform: rotate(-90deg);
+    }
+
+    #doomSliderValue {
+      position: absolute;
+      left: -4.3rem;
+      top: 29rem;
+      font-size: 1.1rem;
+      text-align: center;
+      color: #ad2e1b;
     }
 
     #hunger-bar-container {
@@ -876,6 +893,11 @@
     </div>
     <div class="doom-bar-icon" style="top: 20.2rem; text-shadow: 0 0 10px #000000b0;">😰</div>
     <div class="doom-bar-icon" style="top: 37.5rem; text-shadow: 0 0 10px #ffffffb0;">🙂</div>
+    <div id="doom-slider-container" style="margin-top: 1rem;">
+      <br>
+      <input type="range" id="doomSlider" min="-60" max="60" step="5" value="0">
+      <div id="doomSliderValue">+0</div>
+    </div>
 
     <div id="avatar" class="avatar" onmouseenter="showAvatarInfo()"></div>
 
@@ -1400,10 +1422,14 @@
         name: 'Предъявление документа',
         desc: 'Вне боя. \nВы демонстрируете ксиву цели, которая вас не знает. Цель совершает спасбросок МУД против Сл. = 8 + ваш уровень + ваша ХАР(Запуг). \nПри провале, цель получает Испуг от вас до начала боя. \n\nВАШЕ ЛИЦО ДОЛЖНО СООТВЕТСВОВАТЬ ДОКУМЕНТУ!',
       },
+      spiky: {
+        name: 'Шипастый',
+        desc: 'Если по вам попали рукопашной атакой, атакующий получит 1 колющего урона.',
+      },
 
       test: {
-        name: 'test',
-        desc: 'testtesttest\ntesttesttest',
+        name: 'Тест',
+        desc: 'Тест\n Тест.',
       },
     };
 
@@ -2441,10 +2467,11 @@
         bonuses: { doom: -15 },
       },
       гаш: {
-        desc: 'Пресованая смола. Только курением. \n1д4 часов проверки ИНТ с помехой, спасброски ИНТ = авто-провал.',
+        desc: 'Пресованая смола. Только курением. \n1д4 часов ИНТ -1, спасброски ИНТ = авто-провал.',
         weight: 0.001,
         useable: true,
         bonuses: { doom: -30 },
+        buff: { name: 'рассеянный', duration: 3600 }
       },
       порошок: {
         desc: 'Чтобы безопасно разобраться, нужен ИНТ 13.\nМожно рискнуть и опознать, попробовав на вкус. Тогда сразу после опознания вы обязаны употребить одну дозу.',
@@ -2744,9 +2771,14 @@
     };
 
     const regularBuffs = {
-      'бешенство': { name: 'бешенство', desc: '+2 СИЛ, +2 к скорости, +1 к попаданию врукопашную. Все проверки ИНТ и ХАР авт. проваливаются. \n\nТяжело опознать как гуманоида. Только инстинкты и заранее намеченная цель.' },
+      'выдохся': { name: 'выдохся', desc: 'Тебе бы отдышаться. СИЛ -1.', bonuses: { str: -1 }, },
+      'липкий': { name: 'липкий', desc: 'Ну и гадость. Есть салфетки? ЛОВ -1.', bonuses: { dex: -1 }, },
+      'болеешь': { name: 'болеешь', desc: 'Надо было пить витамины, *АПЧХИ*! ТЕЛ -1.', bonuses: { con: -1 }, },
+      'рассеянный': { name: 'рассеянный', desc: 'Соберись и думай! ИНТ -1.', bonuses: { int: -1 }, },
+      'нервничаешь': { name: 'нервничаешь', desc: 'Вспомни о дыхательной практике. МУД -1.', bonuses: { wis: -1 }, },
+      'воняешь': { name: 'воняешь', desc: 'Фу, просто помойся. ХАР -1.', bonuses: { chr: -1 }, },
+      'бешенство': { name: 'бешенство', desc: '+2 СИЛ, +2 к скорости, +1 к попаданию врукопашную. Все проверки ИНТ и ХАР авт. проваливаются. \n\nТяжело опознать как гуманоида. Только инстинкты и заранее намеченная цель.', bonuses: { str: 2, spd: 2 }, },
       'отравлен': { name: 'отравлен', desc: 'Отравленное существо совершает с помехой броски атаки и проверки характеристик.', duration: 5400 },
-      'воняешь': { name: 'воняешь', desc: 'Фу, ХАР -1.', bonuses: { chr: -1 }, },
       'истощение1': { name: 'истощение1', desc: 'Помеха при проверках характеристик.', },
       'истощение2': { name: 'истощение2', desc: 'Скорость уменьшается вдвое.', },
       'истощение3': { name: 'истощение3', desc: 'Помеха при бросках атаки и спасбросках.', },
@@ -3120,9 +3152,9 @@
             .replace('ЛОВ', '<span style="color: #7c9e78; font-style: oblique; font-weight: bold;">ЛОВ</span>')
             .replace('ТЕЛ', '<span style="color: #9d5252; font-style: oblique; font-weight: bold;">ТЕЛ</span>')
             .replace('ИНТ', '<span style="color: #d7a95d; font-style: oblique; font-weight: bold;">ИНТ</span>')
-            .replace('МУД', '<span style="color: #5e3587; font-style: oblique; font-weight: bold;">МУД</span>')
-            .replace('ХАР', '<span style="color: #4e5ab0; font-style: oblique; font-weight: bold;">ХАР</span>')
-            .replace('навык', '<span style="font-weight: bold;">навык</span>')
+            .replace('МУД', '<span style="color: #cd1ead; font-style: oblique; font-weight: bold;">МУД</span>')
+            .replace('ХАР', '<span style="color: #4d39e3; font-style: oblique; font-weight: bold;">ХАР</span>')
+            .replace('Навык', '<span style="font-weight: bold;">навык</span>')
             .replace(/\n/g, '<br>');
         };
         const profs = equippedProfs;
@@ -3199,7 +3231,9 @@
         return;
       }
 
-      const matches = Object.keys(items).filter(id => id.includes(raw));
+      const itemIds = Object.keys(items);
+      const buffIds = Object.keys(regularBuffs);
+      const matches = [...new Set([...itemIds, ...buffIds].filter(id => id.includes(raw)))];
       if (matches.length === 0) {
         suggestionsBox.style.display = 'none';
         return;
@@ -3303,7 +3337,7 @@
     function addItemManually() {
       const input = document.getElementById('addItemInput');
       let raw = input.value.trim().toLowerCase().replace(/\s+/g, '_');
-      if (!raw) return;
+      if (!items[raw] && regularBuffs[raw]) { addBuff(raw); console.log(`${raw} добавлен вручную`); input.value = ''; suggestionsBox.style.display = 'none'; return };
 
       let count = 1;
       if (raw.includes('*')) {
@@ -3647,6 +3681,9 @@
         if (!buff.duration && standard.duration) {
           buff.duration = standard.duration;
         }
+        if (!buff.bonuses && standard.bonuses) {
+          buff.bonuses = standard.bonuses;
+        }
       }
       const existing = activeBuffs.find(b => b.name === buff.name);
       const conMod = parseInt(document.getElementById('con_mod').dataset.mod || 0);
@@ -3687,7 +3724,7 @@
         buff._interval = null;
       }
       activeBuffs = activeBuffs.filter(b => b.name !== buffName);
-      if (!exhaustion.includes(buffName)) console.log(`${buffName} закончился.`);
+      if (!exhaustion.includes(buffName) && buff) console.log(`${buffName} закончился.`);
       renderBuffs();
       applyEquipBonuses();
     }
@@ -3859,7 +3896,13 @@
         if (!skill) return;
 
         const label = document.createElement('label');
-        label.textContent = `${skill.name} (${skill.stat.toUpperCase()})`;
+        label.textContent = `${skill.name} (${skill.stat})`
+            .replace('str', 'СИЛ')
+            .replace('dex', 'ЛОВ')
+            .replace('con', 'ТЕЛ')
+            .replace('int', 'ИНТ')
+            .replace('wis', 'МУД')
+            .replace('chr', 'ХАР');
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
@@ -3947,7 +3990,19 @@
         const tooltip = document.createElement('div');
         tooltip.className = 'tooltip';
         tooltip.style.display = 'none';
-        tooltip.innerText = data.desc;
+        tooltip.style.display = 'none';
+        if (data.desc) {
+          tooltip.innerHTML = data.desc.replace('Скорость', '<span style="color: #82eb0a; font-style: oblique; font-weight: bold;">Скорость</span>')
+            .replace('ХП', '<span style="color: #d01818; font-style: oblique; font-weight: bold;">ХП</span>')
+            .replace('КБ', '<span style="color: #52598f; font-style: oblique; font-weight: bold;">КБ</span>')
+            .replace('СИЛ', '<span style="color: #726252; font-style: oblique; font-weight: bold;">СИЛ</span>')
+            .replace('ЛОВ', '<span style="color: #7c9e78; font-style: oblique; font-weight: bold;">ЛОВ</span>')
+            .replace('ТЕЛ', '<span style="color: #9d5252; font-style: oblique; font-weight: bold;">ТЕЛ</span>')
+            .replace('ИНТ', '<span style="color: #d7a95d; font-style: oblique; font-weight: bold;">ИНТ</span>')
+            .replace('МУД', '<span style="color: #cd1ead; font-style: oblique; font-weight: bold;">МУД</span>')
+            .replace('ХАР', '<span style="color: #4d39e3; font-style: oblique; font-weight: bold;">ХАР</span>')
+            .replace('навык', '<span style="font-weight: bold;">навык</span>')
+            .replace(/\n/g, '<br>')};
 
         const current = abilityCharges[id];
         if (typeof current === 'number') {
@@ -4026,15 +4081,15 @@
       else if (xp >= 2700) newLevel = 4, message = `УРОВЕНЬ 4. Характеристики растут! Выберите, куда вложиться.`;
       else if (xp >= 900) newLevel = 3, message = `УРОВЕНЬ 3.`;
       else if (xp >= 300) newLevel = 2, message = `УРОВЕНЬ 2.`;
-      else if (xp >= 0) {newLevel = 1, message = `УРОВЕНЬ 1. У вас проснулась жажда приключений!`;};
+      else if (xp >= 0) { newLevel = 1, message = `УРОВЕНЬ 1. У вас проснулась жажда приключений!`; };
 
       // Показываем сообщение только при повышении
-if (newLevel > currentLevel) { 
-    setTimeout(() => {
-        restoreAbilityCharges();
-        alert(message);
-    }, 0); // Задержка 0 миллисекунд
-}
+      if (newLevel > currentLevel) {
+        setTimeout(() => {
+          restoreAbilityCharges();
+          alert(message);
+        }, 0); // Задержка 0 миллисекунд
+      }
 
 
       document.getElementById('level').value = newLevel;
@@ -4254,6 +4309,7 @@ if (newLevel > currentLevel) {
     // Дамажимся
     function addHp() {
       let delta = Number(document.getElementById('hpToAdd').value.trim());
+      if (delta < 0 && equippedAbilities.includes("tough")) {delta += 1; console.log('Получено на единицу меньше урона')};
       const hp = parseInt(document.getElementById('hp').value);
       const maxHp = parseInt(document.getElementById('maxHp').value);
       if (delta < 0 && activeBuffs.some(b => b.name === 'пьянь')) { delta = Math.floor(delta * 0.75) };
@@ -4472,6 +4528,35 @@ if (newLevel > currentLevel) {
       updateAll(); // на будущее, если будет UI
     }
 
+    const doomSlider = document.getElementById('doomSlider');
+    const doomSliderValue = document.getElementById('doomSliderValue');
+
+    let doomBefore = 0;
+
+    doomSlider.addEventListener('mousedown', () => {
+      // Сохраняем исходную точку, если надо
+      doomBefore = doomSlider.value;
+    });
+
+    doomSlider.addEventListener('input', () => {
+      const value = doomSlider.value;
+      // Проверяем, является ли значение положительным
+      const displayValue = value > 0 ? `+${value}` : value;
+      doomSliderValue.textContent = displayValue;
+    });
+
+    doomSlider.addEventListener('mouseup', () => {
+      const toAdd = parseInt(doomSlider.value);
+      const chr = +document.getElementById('chr').value;
+      const wis = +document.getElementById('wis').value;
+      const maxDoomLevel = (chr + wis) * 5;
+      doom = Math.min(Math.max(0, doom + toAdd), maxDoomLevel);
+      if (toAdd < 0) doomSliderValue.textContent = '😇';
+      if (toAdd > 0) doomSliderValue.textContent = '😈';
+      updateAll?.();
+      doomSlider.value = 0;
+      setTimeout(() => doomSliderValue.textContent = '+0', 1500);
+    });
     function updateDoomUI() {
       const bord = document.getElementById("doom-bar-container");
       const fill = document.getElementById("doom-bar-fill");
