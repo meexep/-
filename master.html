@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Мастерская (офлайн)</title>
+    <link rel="icon" href="favicon.ico">
+    <style>
+        .container {
+            position: relative;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 600px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <script defer src="mob_data.js"></script>
+</head>
+
+<body>
+    <div class="container"><h1>Мобы</h1>
+    <input type="text" id="search" placeholder="Поиск моба или тега..." />
+    <div id="results"></div>
+</div>
+    <script>
+        // mob_data.js уже загружен — переменная mobs доступна
+        const searchInput = document.getElementById('search');
+        const resultsDiv = document.getElementById('results');
+        function renderMob(mob) {
+            const danger = mob.danger ?? 0;
+            let xp = 0;
+            let profbonus = '+2';
+
+            if (danger === 0) xp = 0;
+            else if (danger < 0.125) xp = 0;
+            else if (danger < 0.25) xp = 25;
+            else if (danger < 0.5) xp = 50;
+            else if (danger < 1) xp = 100;
+            else if (danger < 2) xp = 200;
+            else if (danger < 3) xp = 450;
+            else if (danger < 4) xp = 700;
+            else if (danger < 5) xp = 1100;
+            else if (danger < 6) { xp = 1800; profbonus = '+3'; }
+            else if (danger < 7) xp = 2300;
+            else if (danger < 8) xp = 2900;
+            else if (danger < 9) xp = 3900;
+            else if (danger < 10) { xp = 5000; profbonus = '+4'; }
+            else if (danger < 11) xp = 5900;
+            else if (danger < 12) xp = 7200;
+            else if (danger < 13) xp = 8400;
+            else if (danger < 14) { xp = 10000; profbonus = '+5'; }
+            else if (danger < 15) xp = 11500;
+            else if (danger < 16) xp = 13000;
+            else if (danger < 17) xp = 15000;
+            else if (danger < 18) { xp = 18000; profbonus = '+6'; }
+            else if (danger < 19) xp = 20000;
+            else if (danger < 20) xp = 22000;
+            else if (danger < 21) xp = 25000;
+            else if (danger < 22) { xp = 33000; profbonus = '+7'; }
+            else if (danger < 23) xp = 41000;
+            else if (danger < 24) xp = 50000;
+            else if (danger < 25) xp = 62000;
+            else if (danger < 26) { xp = 75000; profbonus = '+8'; }
+            else if (danger < 27) xp = 90000;
+            else if (danger < 28) xp = 105000;
+            else if (danger < 29) xp = 120000;
+            else if (danger < 30) { xp = 135000; profbonus = '+9'; }
+            else xp = 155000;
+
+            return `
+    <div style="margin-bottom: 1em; border-bottom: 1px solid #ccc;">
+        <h2>${mob.name} [опас ${danger}], ${xp}xp, ${profbonus} маст</h2>
+        <img src="mobs/${mob.name}.png" alt="" height="100"><br/>
+        ${mob.size ?? ''} ${mob.type ?? ''} ${mob.alignment || 'без мировоззрения'}<br/>
+        <b>КБ:</b> ${mob.ac} | <b>ХП:</b> ${mob.hp} | <b>Скорость:</b> ${mob.spd ?? ''}<br/>
+        <b>Статы:</b> СИЛ ${mob.stats.str}, ЛОВ ${mob.stats.dex}, ТЕЛ ${mob.stats.con}, ИНТ ${mob.stats.int}, МУД ${mob.stats.wis}, ХАР ${mob.stats.cha}<br/>
+        ${mob.saves ? `<b>Спасброски:</b> ${mob.saves}<br/>` : ""}
+        ${mob.skills ? `<b>Навыки:</b> ${mob.skills}<br/>` : ""}
+        ${mob.resistance ? `<b>Сопротивление:</b> ${mob.resistance}<br/>` : ""}
+        ${mob.immunity ? `<b>Иммунитет:</b> ${mob.immunity}<br/>` : ""}
+        ${mob.senses ? `<b>Чувства:</b> ${mob.senses}<br/>` : ""}
+        ${mob.languages ? `<b>Языки:</b> ${mob.languages}<br/>` : ""}
+        ${mob.features ? `<b>Особенности:</b> ${mob.features}<br/>` : ""}
+        ${mob.abilities ? `<b>Умения:</b> ${mob.abilities.map(a => `<span title='${a.desc}'>${a.name}</span>`).join(', ')}<br/>` : ""}        ${mob.description ? `<b>Описание:</b> ${mob.description}<br/>` : ""}
+        ${mob.actions ? `<b>Действия:</b> ${mob.actions}<br/>` : ""}
+        ${mob.tags ? `<b>Тэги:</b> ${mob.tags.join(', ')}<br/>` : ""}
+    </div>
+    `;
+        }
+        function renderMobs(filter = '') {
+            const filtered = mobs.filter(mob =>
+                mob.name.includes(filter) ||
+                mob.tags.some(tag => tag.includes(filter))
+            );
+
+            resultsDiv.innerHTML = filtered.map(renderMob).join('') || 'Ничего не найдено';
+        }
+
+        searchInput.addEventListener('input', () => {
+            renderMobs(searchInput.value.trim().toLowerCase());
+        });
+
+        renderMobs(); // стартовый рендер
+    </script>
+</body>
+
+</html>
