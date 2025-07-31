@@ -6,9 +6,13 @@
     <title>Мастерская (офлайн)</title>
     <link rel="icon" href="favicon.ico">
     <style>
+        body {
+            background: #cfc0bb;
+        }
+
         .container {
             position: relative;
-            background: #ffffff;
+            background: #cfc0bb;
             padding: 20px;
             border-radius: 12px;
             max-width: 600px;
@@ -19,10 +23,11 @@
 </head>
 
 <body>
-    <div class="container"><h1>Мобы</h1>
-    <input type="text" id="search" placeholder="Поиск моба или тега..." />
-    <div id="results"></div>
-</div>
+    <div class="container">
+        <h1>Мобы</h1>
+        <input type="text" id="search" placeholder="Поиск моба или тега..." />
+        <div id="results"></div>
+    </div>
     <script>
         // mob_data.js уже загружен — переменная mobs доступна
         const searchInput = document.getElementById('search');
@@ -30,7 +35,59 @@
         function renderMob(mob) {
             const danger = mob.danger ?? 0;
             let xp = 0;
-            let profbonus = '+2';
+            let profbonus = 2;
+            const strMod = Math.floor((mob.stats.str - 10) / 2);
+            const dexMod = Math.floor((mob.stats.dex - 10) / 2);
+            const conMod = Math.floor((mob.stats.con - 10) / 2);
+            const intMod = Math.floor((mob.stats.int - 10) / 2);
+            const wisMod = Math.floor((mob.stats.wis - 10) / 2);
+            const chrMod = Math.floor((mob.stats.chr - 10) / 2);
+            // Создаем объект для модификаторов и их названий
+            const saveModifiers = {
+                str: strMod + profbonus,
+                dex: dexMod + profbonus,
+                con: conMod + profbonus,
+                int: intMod + profbonus,
+                wis: wisMod + profbonus,
+                chr: chrMod + profbonus,
+            };
+
+            // Формируем строку для отображения спасбросков
+            if (mob.saves && mob.saves.length > 0) {
+                savesDisplay = mob.saves.map(save => {
+                    return `${save.toUpperCase()} (${saveModifiers[save]})`;
+                }).join(', ');
+            };
+            const skillModifiers = {
+                'Акробатика': 'dex',
+                'Уход за животными': 'wis',
+                'Магия': 'int',
+                'Атлетика': 'str',
+                'Обман': 'chr',
+                'История': 'int',
+                'Проницательность': 'wis',
+                'Запугивание': 'chr',
+                'Анализ': 'int',
+                'Медицина': 'wis',
+                'Природа': 'int',
+                'Внимательность': 'wis',
+                'Выступление': 'chr',
+                'Убеждение': 'chr',
+                'Религия': 'int',
+                'Ловкость рук': 'dex',
+                'Скрытность': 'dex',
+                'Выживание': 'wis',
+            };
+            // Создаем объект для модификаторов навыков
+            if (Array.isArray(mob.skills) && mob.skills.length > 0) {
+                    skillResults = mob.skills.map(skill => {
+                    const parentStat = skillModifiers[skill];
+                    const modifier = parentStat ? eval(`${parentStat}Mod`) + profbonus : 0; // Получаем модификатор
+                    return `${skill} (${modifier})`;
+                }).join(', ');
+            };
+            const passivePerception = 10 + wisMod + (mob.skills && mob.skills.includes('Внимательность') ? profbonus : 0);
+
 
             if (danger === 0) xp = 0;
             else if (danger < 0.125) xp = 0;
@@ -41,58 +98,61 @@
             else if (danger < 3) xp = 450;
             else if (danger < 4) xp = 700;
             else if (danger < 5) xp = 1100;
-            else if (danger < 6) { xp = 1800; profbonus = '+3'; }
+            else if (danger < 6) { xp = 1800; profbonus = 3; }
             else if (danger < 7) xp = 2300;
             else if (danger < 8) xp = 2900;
             else if (danger < 9) xp = 3900;
-            else if (danger < 10) { xp = 5000; profbonus = '+4'; }
+            else if (danger < 10) { xp = 5000; profbonus = 4; }
             else if (danger < 11) xp = 5900;
             else if (danger < 12) xp = 7200;
             else if (danger < 13) xp = 8400;
-            else if (danger < 14) { xp = 10000; profbonus = '+5'; }
+            else if (danger < 14) { xp = 10000; profbonus = 5; }
             else if (danger < 15) xp = 11500;
             else if (danger < 16) xp = 13000;
             else if (danger < 17) xp = 15000;
-            else if (danger < 18) { xp = 18000; profbonus = '+6'; }
+            else if (danger < 18) { xp = 18000; profbonus = 6; }
             else if (danger < 19) xp = 20000;
             else if (danger < 20) xp = 22000;
             else if (danger < 21) xp = 25000;
-            else if (danger < 22) { xp = 33000; profbonus = '+7'; }
+            else if (danger < 22) { xp = 33000; profbonus = 7; }
             else if (danger < 23) xp = 41000;
             else if (danger < 24) xp = 50000;
             else if (danger < 25) xp = 62000;
-            else if (danger < 26) { xp = 75000; profbonus = '+8'; }
+            else if (danger < 26) { xp = 75000; profbonus = 8; }
             else if (danger < 27) xp = 90000;
             else if (danger < 28) xp = 105000;
             else if (danger < 29) xp = 120000;
-            else if (danger < 30) { xp = 135000; profbonus = '+9'; }
+            else if (danger < 30) { xp = 135000; profbonus = 9; }
             else xp = 155000;
 
             return `
     <div style="margin-bottom: 1em; border-bottom: 1px solid #ccc;">
-        <h2>${mob.name} [опас ${danger}], ${xp}xp, ${profbonus} маст</h2>
-        <img src="mobs/${mob.name}.png" alt="" height="100"><br/>
+        <h2>${mob.name} [опас ${danger}], ${xp}xp, +${profbonus} маст</h2>
+        <img style="filter: drop-shadow(0 0 3px #191919aa)" src="mobs/${mob.name}.png" alt="" height="100"><br/>
         ${mob.size ?? ''} ${mob.type ?? ''} ${mob.alignment || 'без мировоззрения'}<br/>
         <b>КБ:</b> ${mob.ac} | <b>ХП:</b> ${mob.hp} | <b>Скорость:</b> ${mob.spd ?? ''}<br/>
-        <b>Статы:</b> СИЛ ${mob.stats.str}, ЛОВ ${mob.stats.dex}, ТЕЛ ${mob.stats.con}, ИНТ ${mob.stats.int}, МУД ${mob.stats.wis}, ХАР ${mob.stats.cha}<br/>
-        ${mob.saves ? `<b>Спасброски:</b> ${mob.saves}<br/>` : ""}
-        ${mob.skills ? `<b>Навыки:</b> ${mob.skills}<br/>` : ""}
+        <b>Статы:</b> СИЛ ${mob.stats.str} (${strMod}), ЛОВ ${mob.stats.dex} (${dexMod}), ТЕЛ ${mob.stats.con} (${conMod}), ИНТ ${mob.stats.int} (${intMod}), МУД ${mob.stats.wis} (${wisMod}), ХАР ${mob.stats.chr} (${chrMod})<br/>
+        ${mob.saves ? `<b>Спасброски:</b> ${savesDisplay}<br/>` : ""}
+        ${mob.skills ? `<b>Навыки:</b> ${skillResults}<br/>` : ""}
         ${mob.resistance ? `<b>Сопротивление:</b> ${mob.resistance}<br/>` : ""}
         ${mob.immunity ? `<b>Иммунитет:</b> ${mob.immunity}<br/>` : ""}
-        ${mob.senses ? `<b>Чувства:</b> ${mob.senses}<br/>` : ""}
-        ${mob.languages ? `<b>Языки:</b> ${mob.languages}<br/>` : ""}
+        <b>Чувства:</b> Пассивная Внимательность ${passivePerception}${mob.senses ? `, ${mob.senses}` : ''}<br/>
         ${mob.features ? `<b>Особенности:</b> ${mob.features}<br/>` : ""}
-        ${mob.abilities ? `<b>Умения:</b> ${mob.abilities.map(a => `<span title='${a.desc}'>${a.name}</span>`).join(', ')}<br/>` : ""}        ${mob.description ? `<b>Описание:</b> ${mob.description}<br/>` : ""}
-        ${mob.actions ? `<b>Действия:</b> ${mob.actions}<br/>` : ""}
+        ${mob.abilities ? `<b>Умения:</b> ${mob.abilities.map(a => `<span title='${a.desc}'>${a.name}</span>`).join(', ')}<br/>` : ""}
+        ${mob.actions ? `<b>Действия:</b> ${mob.actions.join('<br/>')}<br/>` : ""}
+        ${mob.description ? `<b>Описание:</b> ${mob.description}<br/>` : ""}        
         ${mob.tags ? `<b>Тэги:</b> ${mob.tags.join(', ')}<br/>` : ""}
     </div>
     `;
         }
         function renderMobs(filter = '') {
-            const filtered = mobs.filter(mob =>
-                mob.name.includes(filter) ||
-                mob.tags.some(tag => tag.includes(filter))
-            );
+            // Разделяем фильтр на массив тегов, убирая пробелы
+            const tags = filter.split(',').map(tag => tag.trim()).filter(tag => tag);
+
+            const filtered = mobs.filter(mob => {
+                // Проверяем, есть ли совпадения по имени или хотя бы один тег из фильтра
+                return mob.name.includes(filter) || tags.every(tag => mob.tags.includes(tag));
+            });
 
             resultsDiv.innerHTML = filtered.map(renderMob).join('') || 'Ничего не найдено';
         }
