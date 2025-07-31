@@ -10,12 +10,31 @@
             background: #cfc0bb;
         }
 
+        .row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            margin-top: 10px;
+        }
+
         .container {
             position: relative;
             background: #cfc0bb;
             padding: 20px;
             border-radius: 12px;
-            max-width: 600px;
+            max-width: 560px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .scene-container {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            background: #ded6d4;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 300px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
     </style>
@@ -28,6 +47,12 @@
         <input type="text" id="search" placeholder="Поиск моба или тега..." />
         <div id="results"></div>
     </div>
+    <div class="scene-container">
+        <h1>Сцена</h1>
+        <input type="text" id="dangerWindow" placeholder="Укажи опасность" />
+        <div id="scene"></div>
+    </div>
+
     <script>
         // mob_data.js уже загружен — переменная mobs доступна
         const searchInput = document.getElementById('search');
@@ -80,7 +105,7 @@
             };
             // Создаем объект для модификаторов навыков
             if (Array.isArray(mob.skills) && mob.skills.length > 0) {
-                    skillResults = mob.skills.map(skill => {
+                skillResults = mob.skills.map(skill => {
                     const parentStat = skillModifiers[skill];
                     const modifier = parentStat ? eval(`${parentStat}Mod`) + profbonus : 0; // Получаем модификатор
                     return `${skill} (${modifier})`;
@@ -161,8 +186,86 @@
             renderMobs(searchInput.value.trim().toLowerCase());
         });
 
-        renderMobs(); // стартовый рендер
+        const dangerInput = document.getElementById('dangerWindow');
+        const sceneDiv = document.getElementById('scene');
+
+        function renderSceneMob(mob) {
+            const danger = mob.danger ?? 0;
+            return `
+    <div class="scene-mob" style="cursor:pointer; display: flex; align-items: center; gap: 10px; margin-bottom: 6px;"
+    onclick="showMobDetails('${mob.name}')">
+        <img src="mobs/${mob.name}.png" height="50" style="border-radius: 4px; filter: drop-shadow(0 0 2px #00000066)">
+        <div>
+            <b>${mob.name}</b><br/>
+            КБ: ${mob.ac}, ХП: ${mob.hp}, УГР: ${danger}
+        </div>
+    </div>
+    `;
+        }
+
+        dangerInput.addEventListener('input', () => {
+            const targetDanger = parseFloat(dangerInput.value);
+            if (isNaN(targetDanger)) return;
+
+            const filter = searchInput.value.trim().toLowerCase();
+            const tags = filter.split(',').map(t => t.trim()).filter(Boolean);
+
+            const pool = mobs.filter(mob =>
+                filter === "" || tags.every(tag => mob.tags.includes(tag))
+            );
+
+            const shuffled = pool.sort(() => Math.random() - 0.5);
+            let totalDanger = 0;
+            const selected = [];
+
+            for (const mob of shuffled) {
+                if (totalDanger >= targetDanger) break;
+
+                const danger = mob.danger ?? 0;
+                if (danger <= 0) continue;
+
+                const maxStack = Math.min(3, Math.floor((targetDanger - totalDanger) / danger));
+                if (maxStack < 1) continue;
+
+                const count = Math.floor(Math.random() * maxStack) + 1; // от 1 до maxStack
+                for (let i = 0; i < count; i++) {
+                    selected.push(mob);
+                    totalDanger += danger;
+                    if (totalDanger >= targetDanger) break;
+                }
+            }
+
+            if (selected.length === 0) {
+                sceneDiv.innerHTML = "Нет подходящих мобов.";
+            } else {
+                sceneDiv.innerHTML = `<b>Суммарная опасность:</b> ${totalDanger.toFixed(2)}<br><br>`;
+                selected.forEach(mob => { sceneDiv.innerHTML += renderSceneMob(mob) })
+            }
+        });
+
+        function showMobDetails(name) {
+            const mob = mobs.find(m => m.name === name);
+            if (!mob) return;
+            const popup = document.getElementById('popup');
+            const content = document.getElementById('popup-content');
+            content.innerHTML = renderMob(mob);
+            popup.style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        setTimeout(() => {
+            renderMobs(); // стартовый рендер
+        }, 300);
     </script>
+    <div id="popup" style="display: none; position: fixed; top: 10%; left: 50%; transform: translateX(-50%);
+    background: #f8f4f2; border: 2px solid #999; border-radius: 12px; padding: 20px; max-width: 90%;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3); z-index: 1000;">
+        <button onclick="closePopup()" style="position: absolute; top: 8px; right: 10px;">✕</button>
+        <div id="popup-content"></div>
+    </div>
 </body>
 
 </html>
