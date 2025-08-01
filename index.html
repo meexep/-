@@ -3405,6 +3405,12 @@
 
     function addItemManually() {
       const input = document.getElementById('addItemInput');
+      if (input.value === 'mistery' || input.value === 'ьшыеукн') {
+        window.open('master.html', '_blank');
+        input.value = '';
+        suggestionsBox.style.display = 'none';
+        return;
+      };
       let raw = input.value.trim().toLowerCase().replace(/\s+/g, '_');
       if (!items[raw] && regularBuffs[raw]) { addBuff(raw); console.log(`${raw} добавлен вручную`); input.value = ''; suggestionsBox.style.display = 'none'; return };
 

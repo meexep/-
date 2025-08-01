@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Мастерская (офлайн)</title>
-    <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="mastericon.ico">
     <style>
         body {
             background: #cfc0bb;
@@ -162,6 +162,7 @@
         ${mob.resistance ? `<b>Сопротивление:</b> ${mob.resistance}<br/>` : ""}
         ${mob.immunity ? `<b>Иммунитет:</b> ${mob.immunity}<br/>` : ""}
         <b>Чувства:</b> Пассивная Внимательность ${passivePerception}${mob.senses ? `, ${mob.senses}` : ''}<br/>
+        ${mob.languages ? `<b>Языки:</b> ${mob.languages}<br/>` : ""}
         ${mob.features ? `<b>Особенности:</b> ${mob.features}<br/>` : ""}
         ${mob.abilities ? `<b>Умения:</b> ${mob.abilities.map(a => `<span title='${a.desc}'>${a.name}</span>`).join(', ')}<br/>` : ""}
         ${mob.actions ? `<b>Действия:</b> ${mob.actions.join('<br/>')}<br/>` : ""}
