@@ -57,6 +57,7 @@
         // mob_data.js уже загружен — переменная mobs доступна
         const searchInput = document.getElementById('search');
         const resultsDiv = document.getElementById('results');
+        let filteredMobs = [];
         function renderMob(mob) {
             const danger = mob.danger ?? 0;
             let xp = 0;
@@ -172,17 +173,21 @@
     `;
         }
         function renderMobs(filter = '') {
-            // Разделяем фильтр на массив тегов, убирая пробелы
-            const tags = filter.split(',').map(tag => tag.trim()).filter(tag => tag);
+            const tags = filter.split(',').map(tag => tag.trim().toLowerCase()).filter(Boolean);
 
-            const filtered = mobs.filter(mob => {
-                // Проверяем, есть ли совпадения по имени или хотя бы один тег из фильтра
-                return mob.name.includes(filter) || tags.every(tag => mob.tags.includes(tag));
+            filteredMobs = mobs.filter(mob => {
+                return tags.every(tag =>
+                    mob.name.toLowerCase().includes(tag) ||
+                    mob.type.toLowerCase().includes(tag) ||
+                    mob.tags.map(t => t.toLowerCase()).includes(tag)
+                );
             });
 
-            resultsDiv.innerHTML = filtered.map(renderMob).join('') || 'Ничего не найдено';
-        }
+            // Сорт по имени
+            filteredMobs.sort((a, b) => a.name.localeCompare(b.name));
 
+            resultsDiv.innerHTML = filteredMobs.map(renderMob).join('') || 'Ничего не найдено';
+        }
         searchInput.addEventListener('input', () => {
             renderMobs(searchInput.value.trim().toLowerCase());
         });
@@ -208,12 +213,7 @@
             const targetDanger = parseFloat(dangerInput.value);
             if (isNaN(targetDanger)) return;
 
-            const filter = searchInput.value.trim().toLowerCase();
-            const tags = filter.split(',').map(t => t.trim()).filter(Boolean);
-
-            const pool = mobs.filter(mob =>
-                filter === "" || tags.every(tag => mob.tags.includes(tag))
-            );
+            const pool = filteredMobs.slice();
 
             const shuffled = pool.sort(() => Math.random() - 0.5);
             let totalDanger = 0;
