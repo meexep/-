@@ -579,7 +579,7 @@
     <input type="text" id="name" onchange="loadCharacter()"
       style="width: 34rem; font-size: larger; font-weight: 600; background: #ececec; color: #000000; text-align:center; display: block; margin: 0 auto;"
       placeholder="ФИО «Кличка»"> <button
-      onclick="saveCharacter(); console.log(`${name} теперь сохраняется. Введи идентично это имя после обновления страницы, и персонаж загрузится.`)"
+      onclick="saveCharacter(); console.log(`${document.getElementById('name').value} теперь сохраняется. Введи идентично это имя после обновления страницы, и персонаж загрузится.`)"
       style="margin-left: 16rem;">Сохранить</button>
 
 
@@ -3128,6 +3128,19 @@
       <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
       ${count > 1 ? ' × ' + count : ''}
     `;
+        const actionsBtn = document.createElement('button');
+        actionsBtn.textContent = '⋮'; // или '⚙️'
+        actionsBtn.style.marginLeft = 'auto'; // если нужно выровнять вправо
+        actionsBtn.style.background = 'transparent';
+        actionsBtn.style.border = 'none';
+        actionsBtn.style.cursor = 'pointer';
+
+        actionsBtn.addEventListener('click', (e) => {
+          e.stopPropagation(); // не даёт всплыть клику
+          const rect = actionsBtn.getBoundingClientRect();
+          showItemContextMenu(id, rect.left + window.scrollX, rect.bottom + window.scrollY);
+        });
+        itemDiv.appendChild(actionsBtn);
         const baseId = getBaseItemId(id);
         const img = document.createElement('img');
         img.src = `images/${baseId}.png`;
@@ -3205,7 +3218,19 @@
       <strong>${id.charAt(0).toUpperCase() + id.slice(1).replace(/_/g, ' ')}</strong>
       ${count > 1 ? ' × ' + count : ''}
     `;
+        const actionsBtn = document.createElement('button');
+        actionsBtn.textContent = '⋮'; // или '⚙️'
+        actionsBtn.style.marginLeft = 'auto'; // если нужно выровнять вправо
+        actionsBtn.style.background = 'transparent';
+        actionsBtn.style.border = 'none';
+        actionsBtn.style.cursor = 'pointer';
 
+        actionsBtn.addEventListener('click', (e) => {
+          e.stopPropagation(); // не даёт всплыть клику
+          const rect = actionsBtn.getBoundingClientRect();
+          showItemContextMenu(id, rect.left + window.scrollX, rect.bottom + window.scrollY);
+        });
+        eqDiv.appendChild(actionsBtn);
         const baseId = getBaseItemId(id);
         const img = document.createElement('img');
         img.src = `images/${baseId}.png`;
